@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>BB07A2F7-3073-4497-A35E-8163958962C5</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="홈" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="menu-profile-INS" transform="translate(-110.000000, -92.000000)">
+            <g id="Group-5" transform="translate(110.000000, 92.000000)">
+                <circle id="Mask" stroke="#EEEEEE" stroke-width="0.5" fill="#F6F6F6" cx="50" cy="50" r="49.75"></circle>
+                <g id="Group-3" transform="translate(30.000000, 37.000000)" fill="#DDDDDD">
+                    <circle id="Oval" cx="5" cy="5" r="5"></circle>
+                    <circle id="Oval-Copy" cx="35" cy="5" r="5"></circle>
+                </g>
+                <path d="M30,60 C30,60 35,73 50,73 C60,73 66.6666667,68.6666667 70,60" id="Path-3" stroke="#DDDDDD" stroke-width="5" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

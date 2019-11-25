@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="92px" height="62px" viewBox="0 0 92 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>28063704-F65F-4DB4-90CA-75BE56572B0A</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="90" height="60"></rect>
+    </defs>
+    <g id="홈" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="menu-license" transform="translate(-16.000000, -236.000000)">
+            <g id="자격증-copy" transform="translate(17.000000, 237.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <rect stroke="#DBDBDB" x="-0.5" y="-0.5" width="91" height="61"></rect>
+                <text id="SCUBALINK" mask="url(#mask-2)" font-family="NanumBarunGothic" font-size="12" font-weight="normal" fill="#BBBBBB" fill-opacity="0.3">
+                    <tspan x="13.14" y="33">SCUBALINK</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

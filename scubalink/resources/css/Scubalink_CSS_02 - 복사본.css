@@ -1,0 +1,3653 @@
+
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  src: url(font/NanumBarunGothic.eot);
+  src: url(font/NanumBarunGothic.eot?#iefix) format('embedded-opentype'),
+       url(font/NanumBarunGothic.woff2) format('woff2'),
+       url(font/NanumBarunGothic.woff) format('woff'),
+       url(font/NanumBarunGothic.ttf) format('truetype');
+}
+
+/*AppleSDGothicNeo 말고 다른 폰트 적용시키기. */
+@font-face{font-family:'AppleSDGothicNeo';
+  src:url('/font/AppleSDGothicNeo.otf') format('otf');
+}
+@font-face{font-family:'NotoSansCJKkr';
+  font-style:normal;
+  src:url('/font/NotoSansCJKkr-Regular.otf') format('otf');
+}
+
+
+
+/**<<<<<<< HEAD:css/Scubalink_CSS_02.css
+=======
+.tab
+{display:none;}
+/* 로그인 화면 '로고'*/
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+/*초기화
+http://meyerweb.com/eric/tools/css/reset/ 
+v2.0 | 20110126
+License: none (public domain)*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, 
+p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, 
+em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, 
+b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 
+table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, 
+details, embed, figure, figcaption, footer, header, hgroup, menu, nav, 
+output, ruby, section, summary, time, mark, audio, video, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  
+  text-decoration: none;
+  font-family: 'NanumBarunGothic';
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+/* For the "inset" look only */
+html {
+    overflow: auto;
+}
+
+
+body{
+  padding-right:0px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*설명 텍스트*/
+.explain_text {
+  font-family: NanumBarunGothic;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height:1.33;
+  letter-spacing: normal;
+  text-align: center;
+  color: #777777;
+  }
+
+.explain_text_bottom{
+  text-align:left;
+}
+/*버튼 CSS */
+.btn-primary{
+  background-color:#145db2;
+}
+/*큰 버튼*/
+.button_Rectangle_font{
+  width:272px;
+  height:50px;
+  margin:auto;
+  font-size:18px;
+  font-weight:bold;
+  font-family:AppleSDGothicNeo;
+}
+
+.button_Rectangle_border{
+  border:solid 2px #145db2;
+  color:#145db2;
+}
+#start_trainer{
+  margin-top:44px;
+  margin-bottom:18px;
+}
+#start_student{
+  background-color:white;
+}
+
+/*로그인 부분 헤더*/
+.glyphicon-menu-left,{
+      left:10px;
+      top:25px;
+      color:black;
+    }
+
+
+.head_text {
+      font-family: AppleSDGothicNeo;
+      font-size: 20px;
+      font-weight: bold;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #4a4a4a;
+      margin-top:14px;
+      margin-bottom:2px;
+    }
+
+#head_rectangle{
+      max-width:100%;
+      height:127px;
+      background-color:#f1f1f1;
+    }
+#prevBtn{
+  width:50px;
+  height:50px;
+}
+
+/*input-group 큰 틀 */
+.input-group{
+  width:272px;
+  height:40px;
+  margin:auto;
+  position:relative;
+
+}
+/*각 input 마다 */
+
+
+
+/*select*/
+select {
+    width:272px;
+    height:40px;
+    padding: .5em .7em; /* 여백으로 높이 설정 */
+    font-family: inherit; /* 폰트 상속 */
+    background: url("../img/ic_dropdown.svg") 
+    no-repeat 95% 50%; /* 네이티브 화살표 대체 */
+    border: 1px solid #979797;
+    border-radius: 2px; /* iOS 둥근모서리 제거 */
+    -webkit-appearance: none; /* 네이티브 외형 감추기 */
+    -moz-appearance: none; appearance: none;
+   
+    }
+select .small
+{width:100px;}
+
+/*캐러셀*/
+.carousel-indicators{
+  background-color:#f1f1f1;
+  position:relative;
+}
+#carouselExampleIndicators{
+  top:20px;
+}
+.carousel-indicators .active{
+  width:6px;
+  height:6px;
+  background-color: #4a90e2;
+  border: solid 1px #4a90e2;
+}
+.carousel-indicators li{
+  width:6px;
+  height:6px;
+  background-color:#dddddd;
+  border: solid 1px #dddddd;
+}
+form .tab select{
+  margin-top:17px;
+}
+#medical_history{
+  margin-top:17px;
+}
+#medical_history p{
+  margin-bottom:5px;
+}
+#medical_history input[type="text"]{
+  margin-top:0px;
+}
+.signup_input{
+  width:272px;
+  height:40px;
+  padding:0.5em 0.7em;
+  font-family:inherit;
+  color:#000000;
+  border-radius:2px;
+  -webkit-appearance:none;
+  -moz-appearance: none; appearance:none;
+  margin-top:0px;
+  bottom:3px;
+  border:solid 1px #979797;
+}
+.signup_input_span_text{
+  margin-left:-40px;
+  margin-top:8px;
+}
+#signup_input_small{
+  width:80px;
+  height:40px;
+  padding:0.5em 0.7em;
+  font-family:inherit;
+  color:#000000;
+  border-radius:2px;
+  -webkit-appearance:none;
+  -moz-appearance: none; appearance:none;
+  margin-top:0px;
+  bottom:3px;
+  border:solid 1px #979797;
+
+}
+
+form input[type="text"],input[type="tel"],input[type="email"],input[type=number] {
+  width: 272px; /* 원하는 너비설정 */
+  height:40px;
+  padding: .5em .7em; /* 여백으로 높이 설정 */
+  font-family: inherit; /* 폰트 상속 */
+  color:#000;
+  
+  border-radius: 2px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none; appearance: none;
+  bottom:3px;
+  border:solid 1px #979797; 
+  }
+  .tab01 input{
+    margin-top:17px;
+  }
+
+
+#small_input{
+  width:80px;
+}
+
+#signup_step03_etc01{
+  position:relative;
+  padding-left:20px;
+  top:-2px;
+}
+#signup_step03_etc01_span{
+  position:absolute;
+  top:30px;
+}
+#signup_step03_etc02{
+  position:relative;
+  padding-left: 20px;
+  bottom:-10px;
+}
+#signup_step03_etc02_span{
+  position:absolute;
+  top:70px;
+}
+
+
+.question_text{
+      font-family:NanumBarunGothic;
+      color:#333333;
+      font-weight:bold;
+    }
+#tab03{
+  margin-top:15px;
+  display:inherit;
+  height:130px;
+}
+
+
+/* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top:18px;
+    width:100%;
+    
+}
+
+/* Hide the browser's default radio button */
+.container input {
+    
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border:2px solid #666666;
+    
+}
+
+.blue{
+  border:2px solid #145db2;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: relative;
+    display: none;
+
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+  top: 0.2em;
+  left: 0.2em;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #145db2;
+}
+
+.form-inline .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+
+/*Input 중 cm, kg, 등 달린 것 */
+.InputAddOn {
+  display: flex;
+  width:272px;
+  height:40px;
+  margin:auto;
+  margin-top:17px;
+}
+.InputAddOn-small {
+  display: flex;
+  width:80px;
+  height:40px;
+  margin:auto;
+  margin-top:17px;
+  bottom:38px;
+}
+
+
+input.InputAddOn-field {
+  flex: 1;
+  width:272px;
+  border:solid 1px #979797;
+  border-right:0;
+  margin-top:0px;
+  border:left:0;
+  /* field styles */
+}
+#experienced_data{
+  margin-top:15px;
+  display:inherit;
+  height:150px;
+  display:none;
+}
+#experienced_data select[name="year"]{
+  width:120px;
+  margin-right:15px;
+}
+#experienced_data select[name="month"]{
+  width:80px;
+}
+
+.InputAddOn-item {
+  border:solid 1px #979797;
+  border-left:0;
+  padding-top:8px;
+  padding-right:10px;
+  /* item styles */
+}
+.InputAddOn-item-small {
+  border:solid 1px #979797;
+  border-left:0;
+  padding-top:8px;
+  padding-right:10px;
+  /* item styles */
+}
+
+ body{
+  margin: 0px;
+  overflow:hidden;
+}
+
+
+.header{
+  margin-bottom:2px;
+  z-index:1;
+  background: #ffffff;
+  width: 100%;
+  height:50px;
+  display: block;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+.header .search{
+  position:absolute;
+  right:55px;
+  top:13px;
+  cursor:pointer;
+}
+.header .plus{
+  position:absolute;
+  right:12px;
+  top:12px;
+  cursor:pointer;
+}
+#back{
+  position:absolute;
+  width:16px;
+  opacity:0.54;
+  top:14px;
+  left:16px;
+  cursor:pointer;
+}
+.header[name="myprofile"] span.header_save{
+  font-size:16px;
+  color:#145db2;
+  line-height:1;
+  cursor:pointer;
+  padding-top:3px;
+}
+.header[name="myprofile"] span.header_save_{
+  font-size:16px;
+  color:#777777;
+  line-height:1;
+  cursor:pointer;
+  padding-top:3px;
+}
+.header[name="certif"] span.header_save{
+  color:#145db2;
+  line-height:1;
+  padding:0px;
+  cursor:pointer;
+}
+
+
+.logo{
+  font-family: NanumBarunGothic;
+  font-size:16px;
+  font-weight: normal;
+  line-height:1;
+  text-align:left;
+  color: #333333;
+  display: block;
+  margin-left: 50px;
+  padding-top: 17px;
+  padding-left:14px;
+}
+.logo_mini{
+  font-family: NanumBarunGothic;
+  font-size: 16px;
+  line-height: 1.25;
+  text-align: left;
+  color: #333333;
+  display:block;
+  margin-left: 50px;
+  padding-top: 14px;
+  padding-left:20px;
+  font-weight:bold;
+}
+.logo_big{
+  font-family: NanumBarunGothic;
+  font-size:20px;
+  font-weight: bold;
+  line-height:1;
+  text-align:left;
+  color: #333333;
+  display: block;
+  margin-left: 50px;
+  padding-top: 14px;
+  padding-left:14px;
+}
+
+/******************** sidemenu ***************/
+.side-nav{
+  position: absolute;
+  top: 0px;
+  left: -256px;
+  width: 256px;
+  background: #ffffff;
+  height: 100%;
+  display: block;
+  z-index: 25;
+  transition: .5s;
+}
+
+.side-nav-head{
+  width: 100%;
+  height: 50px;
+  background: #ffffff;
+  border-bottom:solid 1px rgba(51, 51, 51, 0.1);
+}
+
+.open{
+  left: 0px;
+
+
+}
+
+.side-nav ul{
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.side-nav ul li{
+  display: block;
+  width: 100%;
+  height: 42px;
+  font-size:14px;
+  line-height: 30px;
+  padding-left: 16px;
+  font-family: NanumBarunGothic;
+  cursor: pointer;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:#333333;
+}
+.side-nav .badge{
+  background-color:#145db2;
+  font-size:1px;
+  border:solid 1px #ffffff;
+  width:18px;
+  height:18px;
+  position: absolute;
+  top:83px;
+  left:43px;
+}
+
+.side-nav .badge i{
+  position:relative;
+  right:2px;
+  top:1px;
+}
+.side-nav img.arrow_right{
+  width:16px;
+  height:16px;
+  float:right;
+  margin-right:14px;
+  margin-top:18px;
+}
+.side-nav ul li:first-child span p.explain_text{
+  color:#aaaaaa;
+}
+.side-nav ul li:hover{
+  background: #eee;
+}
+
+.side-nav ul li.none{
+  height: 1px;
+  border-width: 0px;
+  background: #eee;
+  padding:0px
+}
+.side-nav ul li.name{
+  height:64px;
+}
+.side-nav span.INS_badge{
+  position:absolute;
+  left:46px;
+  margin-top:20px;
+}
+.side-nav span.INS_badge img{
+  width:12px;
+  height:12px;
+}
+.side-nav ul li span{
+  float:left;
+}
+.side-nav ul li span img{
+  width:40px;
+  height:40px; 
+  margin-top:8px;
+  margin-right:12px;
+}
+.side-nav h5{
+  margin-top:5px;
+  font-size:14px;
+  color:#333333;
+  font-weight:bold;
+}
+.side-nav ul li span.right{
+  float:right;
+  margin-top:19px;
+  margin-right:14px;
+  opacity:0.54;
+}
+
+/******************** Burger Animation ***************/
+.burger_container{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 13px;
+  left: 15.5px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+
+
+.gone{
+  background: transparent;
+  transition: 250ms;
+}
+
+
+.active{
+  background: #eee;
+}
+
+
+
+.gray_rectangle{
+  margin-top:2px;
+  max-width:100%;
+  background-color:#f4f4f4;
+}
+.gray_rectangle div{
+  padding-top:14px;
+  padding-bottom:16px;
+  margin-left:16px;
+  margin-right:16px;
+}
+.gray_rectangle .morecontent span {
+    display: none;
+}
+.gray_rectangle .morelink:link,.gray_rectangle .morelink:visited,.gray_rectangle .morelink:active,.gray_rectangle .morelink:hover{
+  color:#999999;
+  text-decoration:none !important;
+}
+
+.gray_rectangle span:first-of-type img{
+  width:60px;
+  height:60px;
+  margin-top:-45px;
+}
+.gray_rectangle button.tour_plus span img{
+  width:24px;
+  height:24px;
+  margin-top:0px;
+}
+.gray_rectangle button.tour_plus span#text_tour_education{
+
+}
+.gray_rectangle span.INS_info{
+  display:inline-block;
+  margin-top:26px;
+  margin-left:16px;
+  line-height:1.6;
+}
+.gray_rectangle span.big_img{
+  margin-left:16px;
+}
+.gray_rectangle span.INS_info h5{
+  font-size:14px;
+  font-weight:bold;
+  color:#333333;
+}
+.gray_rectangle span.INS_info p{
+  font-size:12px;
+  color:#777777;
+}
+.gray_rectangle span.INS_info span{
+  font-size:12px;
+  color:#777777;
+  margin-right:20px;
+}
+.gray_rectagnle span.INS_info span:first-of-type{
+  margin-right:25px;
+}
+.gray_rectangle span.INS_info span text{
+  font-size:12px;
+  color:#333333;
+  padding-left:6px;
+}
+.gray_rectangle div.INS_self_info{
+  font-size:12px;
+  color:#333333;
+  line-height:1.42;
+  color:#333333;
+  margin-left:16px;
+  margin-right:16px;
+}
+
+
+
+
+
+
+#text_plus{
+  font-size:30px;
+  position:relative;
+  left:-10px;
+  bottom:8px
+  line-height:1.5;
+}
+#text_tour_education{
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  line-height:1.14;
+  position:relative;
+  top:1px;
+}
+#search_content #text_tour_education{
+  top:-8px;
+}
+
+.gray_rectangle button{
+  height:44px;
+  margin:auto;
+  font-size:14px;
+  font-weight:bold;
+  font-family:NotoSansCJKkr;
+  line-height:1.14;
+  color:#145db2;
+  border: solid 2px #145db2;
+  border-radius: 4px;
+  background-color:#f4f4f4;
+}
+.gray_rectangle button.btn{
+  color:#145db2;
+  border: solid 2px #145db2;
+}
+
+.center-it {
+  margin:auto;
+  text-align:center;
+  margin-top:2px;
+  max-width:100%;
+  background-color:#f4f4f4;"
+}
+/**전체/ 내일정 **/ 
+.center-it div{
+  padding-top:10px;
+  padding-bottom:10px;
+}
+.switch input[type="checkbox"]{
+    position:absolute;
+    left:-999px; 
+    visibility:hidden; 
+    opacity:0; 
+    z-index:-9; 
+}
+.
+.switch label {
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -webkit-transition:all .2s;
+    -moz-transition:all .2s;
+    transition:all .2s;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.switch .switcher {
+    display:inline-block;
+    width:192px;
+    height:26px;
+    background:#f4f4f4;
+    position:relative;
+    -webkit-transition:all .4s;
+    -moz-transition:all .4s;
+    transition:all .4s;
+    border-radius:13px;
+    z-index:1;
+    border:2px solid #aaaaaa;
+    }
+.switch .switcher:before {
+    content:'';
+    position:absolute;
+    z-index:9;
+    background:#f4f4f4;
+    height:22px;
+    width:22px;
+    top:50%;
+    left:0px;
+    border-radius:100%;
+   
+    -webkit-transition:all .2s;
+    -moz-transition:all .2s;
+    transition:all .2s;
+}
+
+.switch.text-switch .switcher {
+  height:26px;
+  cursor:pointer;
+
+}
+
+.switch.text-switch .switcher:before {
+  width:50%;
+  border-radius:13px;
+  height:26px;
+  margin-top:-14px;
+}
+/**빨강색**/
+.switch.text-switch input[type="checkbox"] + label > .switcher:before{
+    -webkit-transform:translateX(101%)
+    -moz-transform:translateX(101%)
+    -ms-transform:translateX(101%);
+    transform: translateX(101%);
+  background:#f4f4f4;
+  border:2px solid #145db2;
+  left:0px;
+}
+
+/**초록색 **/
+.switch.text-switch input[type="checkbox"]:checked + label > .switcher:before {
+    -webkit-transform:translateX(0)
+    -moz-transform:translateX(0)
+    -ms-transform:translateX(0);
+    transform: translateX(0);
+  background:#f4f4f4;
+  border:2px solid #145db2;
+  left:-1px;
+}
+
+.switch-cat {
+  display:inline-block;
+  padding:0;
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  text-align:center;
+  width: 91px;
+  z-index:15;
+  position:relative;
+  font-weight:600;
+  vertical-align:middle;
+  line-height:1.6;
+}
+
+.switch input[type="checkbox"] + label .off-cat
+ {
+  color:#145db2;
+}
+
+.switch input[type="checkbox"]:checked + label .off-cat
+ {
+  color:#aaaaaa;
+}
+
+.switch input[type="checkbox"] + label .on-cat
+ {
+  color:#aaaaaa;
+}
+
+.switch input[type="checkbox"]:checked + label .on-cat
+ {
+  color:#145db2;
+}
+/******Tour head *******/
+.tour_head span{
+  float:left;
+}
+.tour_head span img{
+  width:32px;
+  height:32px;
+  margin-top:8px;
+  margin-left:16px;
+  margin-right:15px;
+  margin-bottom:8px;
+}
+.tour_head span h5{
+  margin-bottom:2px;
+  font-size:14px;
+  padding-top:8px;
+  #333333
+}
+.tour_head span p{
+  font-size:10px;
+  color:#777777;
+  text-align:left;
+}
+.tour_head span.right{
+  float:right;
+  cursor:pointer;
+}
+.tour_head span.right img{
+  width:24px;
+  height:24px;
+  margin-right:8px;
+  margin-top:12px;
+  }
+.tour_head span.INS_badge{
+  position:absolute;
+  left:25px;
+  margin-top:22px;
+}
+.tour_head span.INS_badge img{
+  width:10px;
+  height:10px;
+}
+.tour_head span:nth-of-type(3){
+  padding-top:3px;
+}
+.tour_image img{
+  height:200px;
+  width:100%;
+}
+.tour_bar{
+  width:100%;
+  height:36px;
+  cursor:pointer;
+  }
+/**모집 중**/
+.tour_uncomplete{
+  background-image:linear-gradient(to right, #eebd08, #f76b1c);
+}
+/**모집 완료**/
+.tour_complete
+{
+  background-image: linear-gradient(to right, #145db2, #11bfaf);
+}
+.tour_bar_text_left{
+  float:left;
+  margin-left:20px;
+  margin-top:12px;
+  margin-bottom:5px;
+}
+.tour_bar_text_right{
+  float:right;
+  margin-right:4px;
+  margin-top:12px;
+}
+.tour_bar span p{
+  font-size:12px;
+  line-height:1;
+  color:#ffffff;
+}
+.tour_bar span.right{
+  float:right;
+  margin-right:5px;
+  margin-top:5px;
+}
+
+.tour_contents div{
+  margin-left:16px;
+  margin-right:19px;
+  padding-bottom:2px;
+}
+.tour_contents_when{
+  margin-top:11px;
+  margin-bottom:5px;
+}
+.tour_contents_when h4{
+  font-size:14px;
+  font-weight:bold;
+}
+.tour_contents_where{
+  margin-bottom:6px;
+}
+.tour_contents_where.glyphicon-map-marker{
+  width:8px;
+  height:11.4px;
+}
+.tour_contents_where span{
+  font-size:12px;
+  color:#333333;
+}
+.tour_contents_comment{
+  font-size:12px;
+  color:#333333;
+  line-height:16px;
+}
+
+.tour_contents_etc span{
+  font-size:10px;
+  color:#999999;
+  margin-right:9px;
+
+}
+div#accordion .tour_division{
+  margin-top:0px;
+  background-color:#dddddd;
+}
+.tour_division{
+  height:16px;
+  margin-top:5px;
+  max-width:100%;
+  background-color:#eeeeee;
+}
+.tour_division_last{
+  height:60px;
+  margin-top:5px;
+  max-width:100%;
+  background-color:#eeeeee;
+}
+.my_profile .tour_division{
+  height:8px;
+}
+.header .glyphicon-menu-left, .glyphicon-remove{
+  position:absolute;
+  font-size:20px;
+  top:14px;
+  left:16px;
+  opacity:0.54;
+}
+.header .header_save{
+  font-family:NanumBarunGothic;
+  position:absolute;
+  font-size:16px;
+  top:14px;
+  right:16px;
+  font-weight:500;
+  line-height:1.25;
+  color:#145db2;
+  cursor:pointer;
+  
+}
+.header .header_delete{
+  font-family:NanumBarunGothic;
+  position:absolute;
+  font-size:16px;
+  top:14px;
+  right:77px;
+  font-weight:500;
+  line-height:1.25;
+  color:#145db2;
+ }
+ .header .header_close>img{
+  position:absolute;
+  top:13px;
+  left:15.5px;
+  cursor:pointer;
+ }
+
+img#my_image{
+  display:block;
+  width:100px;
+  height:100px;
+  margin:auto;
+  margin-top:20px;
+}
+.my_profile_image #img-upload{
+  display:block;
+  width:100px;
+  height:100px;
+  margin:auto;
+  margin-top:20px;
+  cursor:pointer;
+}
+.my_profile_image div.btn-file{
+  overflow:unset;
+  height:0px;
+}
+.my_profile_image #camera_img_back_small{
+  position:inherit;
+  top:-36px;
+  left:37px;
+  display:block;
+  margin:auto;
+}
+.my_profile_image #imgInp{
+  width:72px;
+  opacity:0;
+  font-size:23px;
+
+}
+
+
+#myprofile_edit div.basic_information{
+  margin-top:15px;
+}
+#myprofile_edit .tour_division{
+  margin-top:15px;
+}
+.my_profile_information .explain_text_bottom{
+  color:#999999;
+} 
+.my_profile_information{
+  margin:auto;
+  margin-top:22px;
+  padding-left:17px;
+}
+.my_profile_information:nth-last-of-type(1){
+  padding-bottom:60px;
+}
+.my_certif_information{
+  margin:auto;
+  margin-top:10px;
+  padding-left:21px;
+}
+.my_profile_information .info_text{
+  font-size:14px;
+  font-family: NanumBarunGothic;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 3.57;
+  letter-spacing: normal;
+  text-align: left;
+  color: #333333;
+}
+.my_profile_tab{
+  margin-bottom: 15px;
+}
+
+.my_profile_information .set_text{
+  font-family:NanumBarunGothic;
+  font-size:12px;
+  font-weight:bold;
+  line-height:1.67;
+  color:#777777;
+
+}
+.basic_information{
+  margin-top:10px;
+}`
+.basic_information .unit{
+  text-align: right;
+  float: right;
+  font-size: 15px;
+  line-height: 42px;
+  height: 38px;
+  padding: 0 12px 0 0;
+
+}
+
+.basic_information_guide{
+  display:inline-block;
+  width:70px;
+  height:14px;
+  font-family:inherit;
+  font-size:14px;
+  line-height:1;
+  color:#999999;
+}
+.certif_information_guide{
+  display:inline-block;
+  width:70px;
+  height:14px;
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  line-height:1.43;
+  color:#333333;
+}
+.certif_info_text{
+  font-size:14px;
+  color:#333333;
+  line-height:1.43;
+}
+
+.basic_information input[type="text"],input[type="tel"],input[type="email"], input[type=number], input[type=date] {
+  width: 70%;  
+  height: 38px;
+  padding: 0 12px;
+  font-family: inherit; /* 폰트 상속 */
+  color:#000;
+  border-radius: 2px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none; appearance: none;
+  border: solid 1px #979797; 
+  font-size: 14px;
+}
+
+.basic_information select {
+  width:70%;
+  height:38px;
+  padding: 0px 12px;
+  font-family: inherit; /* 폰트 상속 */
+  background: url("../img/ic_dropdown.svg") no-repeat 97% 50%; /* 네이티브 화살표 대체 */
+  border: 1px solid #979797;
+  border-radius: 2px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none; appearance: none;
+  font-size: 14px;
+  cursor: pointer;
+  color:#333333;
+}
+
+.basic_information input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.my_certif_information .basic_information textarea{
+  margin-left:7px;
+}
+.my_certif_information .basic_information textarea:placeholder{
+  color:#bbbbbb;
+}
+.basic_information textarea{
+  font-size:14px;
+  border: 1px solid #979797;
+  border-radius:2px;
+  line-height:1.43;
+  font-family:inherit;
+  padding:10px 10px;
+  width:70%;
+}
+.basic_information #disease{
+  position:relative;
+  bottom:53px;
+  margin-top:53px;
+}
+.basic_information #disease +span.certif_info_text{
+  position:relative;
+  bottom:53px;
+  left:7px;
+}
+.basic_information #id{
+  margin-bottom:15px;
+}
+.t_left{
+  margin-left:75px;
+  margin-top:6px;
+  text-align:inherit;
+}
+
+
+/**자격증**/
+.my_certif{
+  border-bottom:solid 1px #dddddd;
+  cursor:pointer;
+}
+.my_certif:hover{
+  background-color:#eeeeee;
+}
+.my_certif_when{
+  font-size:12px;
+  line-height:1.67;
+  color:#999999;
+  margin-top:16px;
+  margin-bottom:6px;
+  margin-left:17px;
+}
+.my_certif .my_certif_img{
+  position:absolute;
+}
+.my_certif .my_certif_img img{
+  width:90px;
+  height:60px;
+  margin-top:2px;
+  margin-left:17px;
+}
+.my_certif div{
+  margin-left:44px;
+  margin-right:17px;
+  margin-bottom:17px;
+}
+/**my_cerif_image 안의 사진 이미지**/
+#camera_img_back{
+  background-color:#eeeeee;
+  width:40px;
+  height:40px;
+  position:absolute;
+  right:15px;
+  top:200px;
+  box-shadow: 0 1px 2px 0.5px rgba(0, 0, 0, 0.3);
+}
+#camera_img_back_small{
+  background-color:#eeeeee;
+  width:36px;
+  height:36px;
+  position:absolute;
+  left:55%;
+  top:135px;
+  box-shadow: 0 1px 2px 0.5px rgba(0, 0, 0, 0.3);
+
+}
+#card_img{
+  display:block;
+  width:100%;
+  height:200px;
+  margin:auto;
+}
+
+#camera_img{
+  position:absolute;
+  opacity:0.54;
+  top:8px;
+  right:8px;
+  width:20px;
+}
+.my_certif_card #camera_img{
+  top:9px;
+  right:10px;
+}
+.my_certif_explain{
+  float:left;
+  width:140px;
+  margin-left:17px;
+}
+.my_certif_course{
+  font-size:14px;
+  line-height:1.71;
+  color:#333333;
+}
+.my_certif_course_explain{
+  font-size:14px;
+  line-height:1.71;
+  color:#999999;
+  padding-bottom:17px;
+}
+
+/**왼쪽 상단 X표시 **/
+.x{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 16px;
+  left: 15.5px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.x .line{
+  width: 18px;
+  height: 2px;
+  border-radius: 3px;
+  position: absolute;
+  background: #4a4a4a;
+  transition: .5s;
+}
+
+.gone{
+  background: transparent;
+  transition: 250ms;
+}
+
+.my_certif_information .basic_information{
+  margin-top:16px;
+  height:38px;
+}
+.my_certif_information .basic_information:last-of-type{
+  height:100%;
+}
+
+/**자격증 편집 모달 **/
+#certif_delete>.modal-dialog{
+  margin:35px;
+  position:fixed;
+  left:0px;
+  right:0px;
+  top:148px;
+}
+#certif_delete .modal-body{
+  padding-left:22px;
+  padding-right:10px;
+  padding-top:24px;
+}
+#certif_delete .modal-body p{
+  font-size:14px;
+  font-family:NanumBarunGothic;
+  line-height:1.43;
+  color:#333333;
+}
+#certif_delete .modal-footer{
+  border-top:0px;
+  padding-bottom:20px;
+  padding-top:5px;
+}
+#certif_delete .modal-footer button{
+  border-color:#fff;
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.43;
+  color:#145db2;
+  background-color:#fff;
+}
+
+/**자격증 추가**/
+.my_certif_image{
+  height:200px;
+  background-color:#dddddd;
+}
+/**자격증 편집**/
+.my_certif_image > img{
+  width:24px;
+  height:24px;
+  opacity:0.54;
+  position:relative;
+  top:63px;
+  display:block;
+  margin:auto;
+}
+.my_certif_image > p{
+  text-align:center;
+  position:relative;
+  margin-top:80px;
+  font-size:14px;
+  color:#333333;
+  font-family:NanumBarunGothic;
+}
+.my_certif_information span.dot{
+  height:4px;
+  width:4px;
+  background-color:#ff3333;
+  border-radius:50%;
+  display:inline-block;
+  position:relative;
+  left:-20px;
+  top:-10px;
+}
+.my_certif_information .basic_information input,select{
+  position:relative;
+  left:0px;
+}
+.my_certif_information .basic_information input[type=date]:invalid{
+  color:#bbbbbb;
+}
+
+/**알림 설정 **/
+
+.alarm_set{
+  padding-left:17px;
+  padding-top:26px;
+}
+.alarm_set p{
+  line-height:1.67;
+  color:#999999;
+}
+.alarm_set h5{
+  line-height:3;
+  font-family:NanumBarunGothic;
+}
+.alarm_set_email{
+  font-family:NanumBarunGohtic;
+  font-size:12px;
+  text-align:left;
+  margin-top:-15px;
+}
+.alarm_set div{
+  padding-bottom:17px;
+}
+
+
+/**알림 설정 토글 스위치**/
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.toggle_swtich {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  float:right;
+  right:16px;
+  margin-top:-40px;
+}
+#panel-body-FOC .toggle_swtich {
+  margin-top:0px;
+  right:0px;
+}
+.toggle_swtich input {display:none;}
+
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/**공지사항**/
+.notice{
+  padding-left:16px;
+  cursor:pointer;
+}
+.notice:hover{
+  background-color:#f4f4f4;
+}
+
+.notice div{
+  padding-top:16px;
+  padding-bottom:16px;
+  border-bottom:solid 1px #eeeeee;
+}
+.notice div p{
+  font-family:NanumBarunGothic;
+  font-size:12px;
+  text-align:left;
+  line-height:1.67;
+  color:#999999;
+}
+.notice div h5{
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  line-height:1.43;
+  color:#333333;
+}
+.notice div img{
+  position:relative;
+  float:right;
+  opacity:0.54;
+  width:14px;
+  right:16px;
+  bottom:18px;
+}
+
+#notice_detail{
+  padding:16px 16px 0px 16px;
+  font-family:NanumBarunGothic;
+  font-size:14px;
+  line-height:1.43;
+  color:#333333
+
+}
+
+
+
+/**약관 및 정책 tab**/
+.nav-tabs {
+  border-bottom: 2px solid #ffffff;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+  border-width: 0;
+}
+
+.nav-tabs>li>a {
+  border: none;
+  color: #999999;
+}
+
+
+
+.nav-tabs>li>a::after {
+  content: "";
+  background: #145db2;
+  height: 2px;
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  bottom: -1px;
+  transition: all 250ms ease 0s;
+  transform: scale(0);
+}
+
+.nav-tabs>li.active>a::after,
+.nav-tabs>li:hover>a::after {
+  transform: scale(1);
+}
+
+
+
+/**약관 및 정책**/
+#terms_content{
+  margin-top:3px
+}
+
+#terms_content ul li{
+  width:50%;
+  text-align:center;
+  background-color:#ffffff;
+}
+#terms_content>ul>li>a{
+  font-size:13px;
+  font-family:NanumBarunGothic;
+  font-weight:bold;
+}
+#terms_content>ul>li.active>a{
+  color:#145db2;
+}
+#my-tab-content{
+  padding:19px 16px 0px 16px;
+}
+.tab-pane{
+  background-color:#ffffff;
+  padding:0px;
+  font-family:NanumBarunGothic;
+  line-height:1.43;
+  color:#333333;
+  font-size:14px;
+}
+
+
+/**투어 일정-비용**/
+
+#content{
+  margin-top:3px
+}
+#content ul li{
+  text-align:center;
+  background-color:#ffffff;
+}
+#content>ul>li>a{
+  font-size:14px;
+  font-family:NanumBarunGothic;
+  padding-left:0px;
+  padding-right:0px;
+  font-weight:bold;
+}
+#content>ul>li.active>a{
+  color:#145db2;
+}
+
+.tab-pane{
+  background-color:#ffffff;
+  padding:0px;
+  font-family:NanumBarunGothic;
+  line-height:1.43;
+  color:#333333;
+  font-size:14px;
+}
+
+#content_cost{
+  height:65px;
+  background-color:#145db2;
+}
+#content_cost>.row>span{
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+}
+#content_cost>.row>span[class="cost_text_01"]{
+  float:left;
+  margin-left:40px;
+  margin-top:13px;
+}
+#content_cost>.row>span[class="cost_text_02"]{
+  float:right;
+  margin-right:30px;
+  margin-top:13px;
+}
+#content_cost>.row>span[class="cost_text_03"]{
+  float:left;
+  margin-left:40px;
+  margin-top:4px;
+}
+#content_cost>.row>span[class="cost_text_04"]{
+  float:right;
+  margin-right:30px;
+  margin-top:4px;
+}
+#cost>.list-group{
+  height:10px;
+}
+#cost>.list-group>span[class="cost_text_05"]{
+  float:left;
+  font-size:12px;
+  line-height:1.17;
+  color:#333333;
+  margin-left:16px;
+  margin-top:16px;
+}
+#cost>.list-group>span[class="cost_text_06"]{
+  float:right;
+  font-size:14px;
+  line-height:1;
+  color:#333333;
+  margin-right:16px;
+  margin-top:16px;
+}
+#cost>p{
+  margin-top:40px;
+  border-top:1px solid #eeeeee;
+  padding-top:16px;
+  padding-left:16px;
+  font-size:12px;
+  line-height:1.67;
+  color:#999999;
+}
+
+/**비용 설정- 초기화 상태**/
+#panel_basic a{
+  text-decoration:none;
+}
+#panel_basic>.panel-heading{
+  padding-bottom:16px;
+  background-color:#ffffff;
+  padding-top:23px;
+}
+#panel_basic div.panel-body{
+  padding-right:16px;
+}
+#collapseOne>.panel-body, #collapseTwo>.panel-body,#collapseThree>.panel-body,#collapseFour>.panel-body{
+  border:0px;
+}
+
+.panel-title span[class="panel_text_01"]{
+  font-size:18px;
+  font-weight:bold;
+  color:#333333;
+}
+.panel-title span[class="panel_text_02"]{
+  font-size:12px;
+  color:#777777;
+  margin-left:8px;
+}
+
+.panel-title>i{
+  color:#777777;
+}
+#panel_basic>#collapseOne>div span.unit{
+  text-align:right;
+  float:right;
+  font-size:14px;
+  line-height:42px;
+  height:38px;
+  padding:0 8px 0 0;
+  position:relative;
+  bottom:40px;
+  font-weight:normal;
+}
+#panel_basic>#collapseOne>div span.FOC_box_text{
+  position:relative;
+  left:75px;
+  bottom:25px;
+  font-size:15px;
+  font-weight:normal;
+  color:#000000;
+}
+#panel_basic>#collapseOne>div span{
+  font-size:14px;
+  font-weight:bold;
+  line-height:1;
+  color:#333333;
+}
+
+#accordion #panel_basic button.edit_detail{
+  font-size:12px;
+  width:22px;
+  height:14px;
+  top:0px;
+}
+#panel_basic button.edit_detail{
+  width:50px;
+  height:30px;
+  border-radius:15px;
+  font-size:14px;
+  font-weight:bold;
+  color:#145db2;
+  line-height:1;
+  background-color:#ffffff;
+  float:right;
+  position:relative;
+  top:-31px;
+}
+.panel-body{
+  border:0px;
+  padding-left:16px;
+  padding-right:8px;
+}
+#collapseThree>.panel-body, #collapseFour>.panel-body{
+  padding-right:16px;
+}
+#collapseTwo>.panel-body{
+  padding-left:16px;
+  padding-right:16px;
+}
+#collapseThree>.panel-body{
+  padding-top:0;
+}
+
+.panel-body>p[class="panel_text_03"]{
+  font-size:14px;
+  line-height:1.43;
+  color:#333333;
+}
+#collapseOne>.panel-body p[class="panel_text_03"]:first-of-type{
+  margin-top:15px;
+}
+
+.panel-body>p[class="panel_text_02"]{
+  font-size:12px;
+  color:#777777;
+  line-height:1.67;
+}
+
+.panel-body div p[class="panel_text_04"]{
+  font-size:12px;
+  color:#999999;
+  line-height:1.67;
+  margin-top:68px;
+}
+.panel-body>#panel-body-FOC{
+  margin-top:31px;
+  margin-bottom:12px;
+}
+.panel-body .FOC_box{
+  width:70px;
+  height:40px;
+  padding:0;
+  color:#000;
+  border-radius:2px;
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+  font-size:15px;
+  float:left;
+  margin-bottom:16px;
+
+}
+.panel-body .FOC_box>input[type=number]{
+  width:70px;
+  padding-right:0;
+}
+.panel-body .FOC_box>span[class="unit"]{
+  text-align:right;
+  float:right;
+  font-size:14px;
+  line-height:42px;
+  height:38px;
+  padding:0 11px 0 0;
+  position:relative;
+  bottom:40px;
+}
+
+/**비용 입력 **/
+#collapseTwo .panel-body div[class="col-xs-12"]{
+  border-radius:2px;
+  background-color:#eeeeee;
+  height:40px;
+} 
+#collapseTwo .panel-body div[class="col-xs-12"]>span{
+  font-size:14px;
+  line-height:3;
+  color:#333333;
+}
+#collapseTwo .panel-body div[class="col-xs-12"]>div[class="btn"],#collapseTwo .panel-body div[class="col-xs-12"]>div[class="btn collapsed"]{
+  width:80px;
+  height:26px;
+  border-radius:16px;
+  border:solid 1px #979797;
+  font-size:12px;
+  color:#777777;
+  float:right;
+  position:relative;
+  top:7px;
+}
+
+#collapseTwo .panel-body div[class="col-xs-12"]>div[class="btn"]>span{
+  position:relative;
+  bottom:2px;
+}
+#collapseTwo .panel-body span.remove_div{
+  background-color:#ffffff;
+  float:right;
+  position:relative;
+  top:-172px;
+  right:10px;
+  cursor:pointer;
+
+}
+#collapseTwo .panel-body span.remove_div img{
+  width:16px;
+  opacity:0.6;
+}
+#collapseTwo .panel-body #room_type span.remove_div{
+  display:none;
+}
+
+.panel-body .FOC_box{
+  width:70px;
+  height:40px;
+  padding:0;
+  color:#000;
+  border-radius:2px;
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+  font-size:15px;
+  float:left;
+  margin-bottom:16px;
+
+}
+.panel-body #FOC_box_1{
+  margin-right:50px;
+}
+.panel-body .FOC_box>input[type=number]{
+  width:70px;
+  padding-right:30px;
+}
+
+.input_cost{
+  border:solid 2px #dddddd;
+  border-radius:2px;
+  margin-top:16px;
+  padding-left:16px;
+  padding-top:14px;
+  margin-bottom:16px;
+}
+#field .input_cost{
+  margin-bottom:0px;
+}
+.input_cost>select{
+  width:184px;
+  font-size:14px;
+  font-weight:bold;
+  color:#333333;
+  line-height:1;
+  margin-bottom:7px;
+}
+.input_cost>select option{
+  font-weight:bold;
+  max-width:184px !important;
+  color:#333333;
+}
+.input_cost>.input_box_01{
+  margin-right:50px;
+  width:184px;
+  height:40px;
+  padding:0;
+  color:#000;
+  border-radius:2px;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  font-size:15px;
+}
+.input_cost>.input_box_01 input{
+  width:184px;
+}
+.input_cost>.input_box_01 span[class="unit"]{
+  float:right;
+  font-size:15px;
+  text-align:right;
+  line-height:42px;
+  height:38px; 
+  padding:0 8px 0 0; 
+  position:relative;
+  bottom:40px
+}
+.input_cost>.input_box_01 span[class="FOC_box_text"]{
+  position:relative;
+  left:190px;
+  bottom:25px;
+  font-size:15px;
+  font-weight:normal;
+  color:#000000;
+}
+.input_cost>.input_box_01 span[class="FOC_box_text"]{
+  position:relative;
+  left:190px;
+  bottom:25px;
+  font-size:15px;
+  font-weight:normal;
+  color:#000000;
+  }  
+.input_cost>div[class="FOC_box"]{
+  position:relative;
+  left:205px;
+  bottom:40px;
+}
+/**비용 체크박스 **/
+
+.cost_checkbox_container{
+  display:inline-block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color:#333333;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height:1.5;
+}
+.cost_checkbox_container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.cost_checkmark{
+  background: url("../img/ic-check-box-outline-blank.svg");
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  opacity:0.54;
+}
+
+
+
+
+/* When the checkbox is checked, add a blue background */
+
+.cost_checkbox_container input:checked ~ .cost_checkmark {
+  background: url(../img/ic-check-box.svg);
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  opacity:1;
+}
+
+
+.input_cost>div[class="cost_check_box_1"]>label:first-child{
+  left:-70px;
+  top:12px;
+}
+
+.input_cost>div[class="cost_check_box_1"] i,.input_cost>div[class="cost_check_box_2"] i{
+  color:#000000;
+  opacity:0.54;
+  font-size:15px;
+  cursor:pointer;
+}
+.input_cost>div[class="cost_check_box_1"] i img,.input_cost>div[class="cost_check_box_2"] i img{
+  width:16px;
+  height:16px;
+}
+
+.input_cost>div[class="cost_check_box_2"] i{
+  top:3px;
+  left:8px;
+  }
+
+.input_cost div[class="cost_check_box_2"]{
+  position:relative;
+  top:-30px;
+  margin-bottom:-30px;
+}
+
+#plus_cost{
+    height:48px;
+  margin:auto;
+  font-size:14px;
+  font-weight:bold;
+  color:#145db2;
+  border: solid 2px #145db2;
+  border-radius: 4px;
+  background-color:#ffffff;
+}
+
+/** 3. 강사 수익 **/
+.instructor_profit{
+  margin-top:30px;
+}
+#collapseThree .instructor_profit label[class="container"]{
+  margin:0;
+  font-size:14px;
+  font-weight:bold;
+  color:#333333;
+}
+#collapseThree .instructor_profit div[class="FOC_box"]{
+  float:right;
+  position:relative;
+  top:-60px;
+}
+#collapseThree .instructor_profit label:first-child{
+  padding-bottom:34px;
+}
+
+#collapseThree .instructor_profit label:nth-of-type(2){
+  color:#145db2;
+}
+.instructor_profit div.FOC_box:nth-of-type(1),.instructor_profit div.FOC_box:nth-of-type(1) input{
+  width:120px;
+}
+#collapseThree .instructor_profit label:nth-of-type(2) p{
+  font-size:12px;
+  font-weight:normal;
+  color:#777777;
+  margin-top:2px;
+}
+.instructor_profit div.FOC_box:nth-of-type(2),.instructor_profit div.FOC_box:nth-of-type(2) input{
+  width:80px;
+}
+#collapseThree .panel-body{
+  margin-bottom:-60px;
+}
+
+
+/**4. 교육생 비용**/
+span[class="cost_detail"]{
+  width:92px;
+  height:24px;
+  margin-left:8px;
+}
+span[class="cost_detail"] button{
+  background-color:#ffffff;
+  width:92px;
+  border-radius:16px;
+  border:solid 1px #999999;
+  font-size:12px;
+  color:#777777;
+
+}
+#collapseFour>.panel-body>div[class="row"]{
+  margin-bottom:16px;
+}
+#collapseFour>.panel-body>div[class="row"] span:first-child{
+  margin-left:16px;
+  float:left;
+  font-size:12px;
+  line-height:1.17;
+  font-weight:bold;
+  color:#333333
+}
+#collapseFour>.panel-body>div[class="row"] span:nth-child(2){
+  margin-right:16px;
+  float:right;
+  font-size:14px;
+  line-height:1;
+  color:#333333
+}
+#collapseFour hr{
+  border-top:1px solid #333333;
+}
+#collapseFour span[class="cost_per"]{
+  font-weight:bold;
+}
+#collapseFour .profit_per{
+  margin-bottom:2px;
+}
+
+#collapseFour .profit_per span:first-child{
+  margin-left:16px;
+  float:left;
+  font-size:12px;
+  line-height:1.17;
+  font-weight:normal;
+  color:#333333
+}
+#collapseFour .profit_per span:nth-child(2){
+  margin-right:16px;
+  float:right;
+  font-size:14px;
+  line-height:1;
+  color:#333333
+}
+#collapseFour .profit_per_explain span:nth-child(2){
+  font-size:12px;
+  font-weight:normal;
+  color:#999999;
+  margin-right:16px;
+  float:right;
+}
+#collapseFour .profit_per_explain span:first-child{
+  font-size:12px;
+  font-weight:normal;
+  color:#999999;
+  margin-left:16px;
+  float:left;
+}
+.final_cost{
+  height:60px;
+  width:100%;
+  background-color:#145db2;
+}
+.final_cost div[class="row"]:first-child{
+  padding-left:25px;padding-right:30px; margin:0; padding-top:13px
+}
+.final_cost div[class="row"]:nth-child(2){
+  padding-left:25px;padding-right:30px; margin:0; padding-top:8px
+}
+.final_cost div[class="row"] span:first-child{
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  float:left;
+}
+.final_cost div[class="row"] span:nth-child(2){
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  float:right;
+}
+
+
+
+/** 자세한 계산식 **/ 
+.calc_cost{
+  height:40px;
+  width:100%;
+  background-color:#eeeeee;
+}
+.calc_cost>span:first-child{
+  float:left;
+  font-size:14px;
+  font-weight:bold;
+  line-height:1;
+  color:#333333;
+  padding-left:16px;
+  margin:0;
+  padding-top:13px;
+}
+.calc_cost>span:nth-child(2){
+  float:right;
+  font-size:14px;
+  font-weight:bold;
+  line-height:1;
+  color:#333333;
+  padding-right:16px;
+  margin:0;
+  padding-top:13px;
+}
+.calc_cost_semi>div{
+  padding-bottom:5px;
+  height:30px;
+  border-top:solid 1px #eeeeee;
+}
+.calc_cost_semi>div>span:first-child{
+  float:left;
+  font-size:12px;
+  line-height:1.17;
+  color:#333333;
+  padding-left:16px;
+  padding-top:16px
+}
+.calc_cost_semi>div>span:nth-child(2){
+  float:right;
+  font-size:14px;
+  line-height:1;
+  color:#333333;
+  padding-right:16px;
+  padding-top:16px;
+}
+.calc_cost_semi>p{
+  padding-left:16px;
+  font-size:12px;
+  line-height:1.33;
+  color:#999999
+}
+.calc_cost_semi>p:first-of-type{
+  padding-top:5px;
+}
+.calc_cost_semi>p:last-of-type{
+  padding-bottom:15px;
+}
+div#calc_cost_last{
+  padding-top:20px;
+  padding-bottom:91px;
+}
+
+/** overlay 조작 **/
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+#overlay[class="open"]{
+  display:block
+}
+
+.search-form .input-group {
+  float: right !important;
+  transition: all 0.35s, border-radius 0s;
+  width: 32px;
+  height: 32px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+}
+.search-form .input-group input.form-control {
+  margin-left: -25px;
+  border:none;
+  background: transparent;
+  box-shadow: none;
+  display:block;
+  padding: 1rem 2rem;
+}
+
+.search-form .input-group input.form-control::-webkit-input-placeholder {
+  display: none;
+}
+.search-form .input-group input.form-control:-moz-placeholder {
+  /* Firefox 18- */
+  display: none;
+}
+.search-form .input-group input.form-control::-moz-placeholder {
+  /* Firefox 19+ */
+  display: none;
+}
+.search-form .input-group input.form-control:-ms-input-placeholder {
+  display: none;
+}
+.search-form .input-group:hover,
+.search-form .input-group.hover {
+  width: 100%;
+  border-radius: 25px 25px 25px 25px;
+}
+
+.search-form .input-group span.form-control-feedback {
+  position: absolute;
+  top: -5px;
+  bottom: 0px;
+  right: -2px;
+  left: 5px;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  color: #3596e0;
+  left: initial;
+  font-size: 14px;
+}
+
+/** certif_add **/
+.my_certif_image div #img-upload.on{
+  position:relative;
+  top:-118px;
+  height:200px;
+  width:100%;
+}
+.btn-file{
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right:1px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: pointer;
+    
+}
+.my_certif_image input[type="file"]#imgInp{
+  width:100%;
+  height:100%;
+}
+.my_certif_card>img{
+  width:100%;
+  height:200px;
+  margin:auto;
+  cursor:pointer;
+}
+.my_certif_card>div{
+  position:inherit;
+}
+
+
+/**투어 교육 상세일정 더 보기 **/
+#tour_schedule_head div.overlay{
+  position:absolute;
+  z-index:8;
+  top:0;
+  left:0;
+  background:rgba(0,0,0,0.5);
+  width:100%;
+  height:200px;
+}
+#tour_schedule_head img.back_img{
+  width:100%;
+  height:200px;
+  display:block;
+}
+#tour_schedule_head .tour_content{
+  position:absolute;
+  z-index:9;
+  top:18px;
+  width:100%;
+}
+#back_white{
+  filter:invert(100%);
+  width:16px;
+  float:left;
+  margin-left:20px;
+}
+#tour_schedule_head .tour_content span.glyphicon{
+  color:white;
+  float:right;
+  margin-right:18px;
+  font-size:18px;
+}
+#tour_schedule_head .tour_content p:nth-of-type(1){
+  font-size:20px;
+  font-weight:bold;
+  line-height:1;
+  color:#ffffff;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:32px
+}
+#tour_schedule_head .tour_content p:nth-of-type(2){
+  font-size:14px;
+  color:#ffffff;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:61px
+}
+#tour_schedule_head .tour_content div.tour_mem_num{
+  font-size:14px;
+  line-height:1.8;
+  color:#ffffff;
+  text-align:center;
+  position:absolute;
+  top:91px;
+  left:50%;
+  transform:translateX(-50%);
+  height:28px;
+  border-radius:14px;
+  border:solid 2px #ffffff;
+  width:100px
+}
+#tour_schedule_head .tour_content span.dropdown{
+  float:right;
+}
+#tour_schedule_head .tour_content span.dropdown button{
+  background-color:rgba(255,255,255,0);
+}
+#tour_schedule_head .tour_content span.dropdown ul{
+  top:0%;
+  right:9px;
+  min-width:58px;
+  float:right;
+  left:auto;
+}
+#tour_schedule_head .tour_check{
+  width:288px;
+  height:40px;
+  border-radius:20px;
+  background-color:#f4f4f4;
+  box-shadow:inset 0 1px 1px 0 rgba(0,0,0,0.2);
+  position:relative;
+  top:133px;
+  display:block;
+  margin:auto;
+  line-height:2.5
+}
+#tour_schedule_head .tour_check span{
+  width:80px;
+  display:inline-block;
+  text-align:center;
+  color:#777777;
+  font-weight:bold;
+  font-size:14px;
+}
+
+
+
+#tour_schedule_head .switch-field {
+  overflow: hidden;
+  border-radius:14px;
+  height:40px;
+  position:relative;
+  top:133px;
+  display:block;
+  margin:auto;
+  width:246px;
+}
+#tour_schedule_head .switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+#tour_schedule_head .switch-field label {
+  float: left;
+}
+
+#tour_schedule_head .switch-field label {
+  display: inline-block;
+  width: 82px;
+  background-color: #f4f4f4;
+  font-size: 14px;
+  font-weight: bold;
+  color:#777777;
+  text-align: center;
+  text-shadow: none;
+  padding: 12px 0;
+  border:none;
+
+}
+
+#tour_schedule_head .switch-field label:hover {
+  cursor: pointer;
+}
+
+#tour_schedule_head .switch-field input:checked + label {
+  background-color: #145db2;
+  color:#ffffff;
+}
+#tour_schedule_head .switch-field label.blue {
+  background-color: #145db2;
+  color:#ffffff;
+}
+#tour_schedule_head .switch-field label:first-of-type {
+  border-radius: 14px 0 0 14px;
+}
+
+#tour_schedule_head .switch-field label:last-of-type {
+  border-radius: 0 14px 14px 0;
+}
+
+#tour_basic_info .my_profile_information p.tour_basic_explain{
+  margin-top:4px;
+  font-size:14px;
+  line-height:1.43;
+  color:#333333;
+  margin-left:12px;
+  margin-right:25px;
+  }
+#tour_basic_info .basic_information span.basic_information_guide{
+  width:50px;
+}
+#tour_basic_info .basic_information span.info_text{
+  line-height:1.43;
+}
+#tour_basic_info .basic_information p.explain_date{
+  font-size:12px;
+  line-height:1.67;
+  color:#333333;
+  margin-left:53px;
+}
+#tour_basic_info .basic_information{
+  margin-top:14px;
+}
+#tour_basic_info .tour_instructor{
+  padding:7px 0 0px 0;
+}
+
+#tour_basic_info span.INS_badge{
+  position:relative;
+  left:-12px;
+  top:11px;
+}
+#tour_basic_info span.INS_badge img{
+  width:14px;
+  height:14px;
+}
+#tour_basic_info .tour_instructor img{
+  width:40px;
+  height:40px;
+}
+#tour_basic_info .tour_instructor span.badge{
+  background-color:#145db2;
+  font-size:1px;
+  border:solid 1px #ffffff;
+  width:18px;
+  height:18px;
+  position:relative;
+  left:-17px;
+  top:10px
+}
+#tour_basic_info .tour_instructor span.badge i{
+  position:relative;
+  right:3px;
+}
+#tour_basic_info .tour_instructor span.tour_ins_name{
+  font-size:14px;
+  font-weight:bold;
+  line-height:1;
+  color:#333333;
+  top:-6px;
+  left:-12px;
+  position:relative;
+}
+#tour_basic_info .tour_instructor div.explain_text{
+  color:#999999;
+  line-height:0;
+  position:absolute;
+  left:120px;
+  margin-top:-8px;
+}
+#tour_basic_info .tour_instructor span.glyphicon{
+  float:right;
+  opacity:0.54;
+  top:-25px;
+  right:13px;
+}
+#tour_basic_info div.more{
+  white-space:pre;
+  font-size:14px;
+  line-height:1.43;
+}
+#tour_basic_info div.more a.morelink{
+  display:block;
+  width:24px;
+  margin:auto;
+  padding-bottom:12px;
+}
+#division_in{
+  position:relative;
+  top:-58px;
+  height:1px;
+}
+#tour_basic_info div.panel-heading{
+  padding-bottom:5px;
+  border-bottom:0px;
+}
+#tour_basic_info div.panel-heading i{
+  top:6px;
+}
+#tour_basic_info div.panel-heading span{
+  font-size:16px;
+  line-height:2;
+}
+#tour_basic_info div.panel-body pre{
+  background-color:#ffffff;
+  font-size:14px;
+  line-height:1.43;
+}
+
+#tour_basic_info div#collapseFour div.row{
+  margin-bottom:12px;
+}
+#tour_basic_info div#collapseFour div.row span:first-child{
+  font-weight:normal;
+}
+#tour_basic_info div#collapseFour div.row span:nth-child(2){
+  font-size:12px;
+  line-height:1.17;
+}
+
+#tour_basic_info #tour_attend button{
+  width:106px;
+  height:28px;
+  border-radius:14px;
+  background-color:#145db2;
+  font-size:14px;
+  line-height:1;
+  color:#ffffff;
+  text-align:center;
+  margin-left:22px;
+  margin-top:-5px;
+  cursor:initial;
+}
+#tour_basic_info #tour_attend .panel-body{
+  margin-top:0px;
+  padding-top:0px;
+}
+#tour_basic_info #tour_attend .instructor_profit label{
+  font-size:14px;
+  margin-top:0px;
+  color:#333333;
+}
+#tour_basic_info #tour_attend .instructor_profit label.blue_text{
+  color:#145db2;
+}
+#tour_basic_info #tour_attend .instructor_profit label p:first-of-type{
+  font-size:12px;
+  color:#333333;
+  line-height:2;
+}
+#tour_basic_info #tour_attend .instructor_profit label span.right_arrow{
+  float:right;
+  margin-top:-37px;
+}
+#tour_basic_info #tour_attend .instructor_profit label span.right_arrow img{
+  width:20px;
+}
+#tour_basic_info .panel-default{
+  margin-bottom:0px;
+}
+#tour_basic_info .tour_division{
+  margin-top:0px;
+}
+
+#tour_basic_info .tour_instructor{
+  padding-bottom:7px;
+  cursor:pointer;
+}
+#tour_basic_info .tour_instructor span.right_arrow{
+  float:right;
+  top:8px;
+  position:relative;
+  right:8px;
+}
+#tour_basic_info .tour_instructor span.right_arrow>img{
+  width:20px;
+  height:20px;
+}
+
+#tour_basic_info #tour_info_edit{
+  float:right;
+  font-size:14px;
+  font-weight:bold;
+  line-height:2;
+  color:#145db2;
+  width:50px;
+  height:30px;
+  position:relative;
+  text-align:center;
+  margin-top:3px;
+  cursor:pointer;
+}
+#tour_basic_info #collapseFour .panel-body .row:first-of-type{
+  margin-bottom:16px;
+}
+#tour_basic_info #collapseFour .panel-body .row:first-of-type span{
+  font-size:14px;
+  font-weight:bold;
+  color:#000000;
+}
+#tour_basic_info #collapseOne span.morecontent>span{
+  font-weight:normal;
+}
+
+#tour_basic_info div.tour_comment span.right_arrow{
+  float:right;
+  top:-2px;
+  position:relative;
+  right:4px;
+}
+#tour_basic_info div.panel-heading{
+  padding-right:0px;
+}
+#tour_basic_info div.tour_comment span.right_arrow img{
+  width:20px;
+  height:20px;
+}
+#tour_basic_info div.tour_comment .comment span.INS_badge img{
+  width:12px;
+  height:12px;
+}
+/**tour_comment 댓글 **/ 
+#tour_basic_info .tour_comment .panel-heading .panel-title span:first-of-type{
+  float:right;
+  line-height:1.7;
+  cursor:pointer;
+}
+#tour_basic_info .tour_comment .panel-title i{
+  opacity:0.2;
+}
+#tour_basic_info .tour_comment .panel-heading .panel-title span span{
+  line-height:1.43;
+  color:#aaaaaa;
+  font-size:14px;
+  margin-right:4px;
+  margin-top:3px;
+}
+#tour_basic_info .tour_comment .panel-body{
+  padding-left:0px;
+  padding-right:0px;
+}
+#tour_basic_info .tour_comment .panel-body div.comment{
+  border-bottom:solid 1px #eeeeee;
+  padding:10px 8px 12px 16px;
+}
+#tour_basic_info .tour_comment .panel-body img{
+  width:32px;
+  height:32px;
+}
+#tour_basic_info .tour_comment .panel-body .badge{
+  background-color:#145db2;
+  font-size:1px;
+  border:solid 1px #ffffff;
+  width:18px;
+  height:18px;
+  position:absolute;
+  left:37px;
+  margin-top:15px;
+}
+#tour_basic_info .tour_comment .panel-body .badge i{
+  position:relative;
+  right:3px;
+}
+#tour_basic_info .tour_comment .panel-body span.comment_name{
+  font-size:14px;
+  font-weight:bold;
+  color:#000000;
+  position:absolute;
+  left:57px;
+  margin-top:5px;
+}
+#tour_basic_info .tour_comment .panel-body span.comment_date{
+  font-size:10px;
+  color:#999999;
+  position:absolute;
+  margin-top:8px;
+  left:102px
+}
+#tour_basic_info .tour_comment .panel-body p.comment_content{
+  font-size:14px;
+  line-height:1.29;
+  padding-left:43px;
+  padding-right:8px;
+}
+#tour_basic_info .tour_comment .panel-body .tour_comment_input textarea{
+  border:none;
+  border-top:1px solid #e5e5e5;
+  font-size:14px;
+  line-height:1.14;
+  width:80%;
+  padding-left:16px;
+  padding-top:12px
+}
+#tour_basic_info .tour_comment .panel-body .tour_comment_input button{
+  background-color:#ffffff;
+  color:#145db2;
+  line-height:16px;
+  float:right;
+  font-size:14px;
+}
+
+/** 참여자 정보 보기 **/
+.only_ins_read{
+  background-color:#eeeeee;
+  height:32px;
+  width:100%;
+  padding-left:16px;
+  line-height:1.8;
+}
+.only_ins_read span{
+  font-size:12px;
+  color:#777777;
+}
+
+.stu_info_box{
+  margin-top:16px;
+  padding:0px 16px 16px 16px;
+  border-bottom:solid 1px #eeeeee;
+}
+.stu_info_box img{
+  width:40px;
+  height:40px;
+}
+.stu_info_box span:nth-of-type(2) h5{
+  color:#333333;
+  font-size:14px;
+  position:absolute;
+  left:71px;
+  margin-top:-35px;
+}
+.stu_info_box span:nth-of-type(2) p{
+  position:absolute;
+  left:71px;
+  margin-top:-17px;
+  font-size:12px;
+  color:#333333;
+}
+.stu_info_box>p:first-of-type{
+  font-size:12px;
+  color:#333333;
+  margin-top:8px
+}
+.stu_info_box>p:nth-of-type(2){
+  font-size:14px;
+  color:#bbbbbb;
+  margin-top:3px
+}
+.stu_info_box>p:nth-of-type(3){
+  font-size:14px;
+  color:#333333;
+  margin-top:3px;
+  line-height:1.43;
+}
+.stu_info_box textarea{
+  font-size:14px;
+  color:#333333;
+  line-height:1.43;
+  margin-top:8px;
+  padding-left:8px
+}
+.stu_info_box #textarea_explain{
+  font-size:12px;
+  color:#777777;
+  margin-top:5px;
+}
+
+/** 상세일정 등록 **/
+#tour_detail{
+  border:none;
+  font-size:14px;
+  line-height:1.43;
+  width:100%;
+  color:#333333;
+  padding-left:16px;
+  padding-top:20px;
+  height:1200px
+}
+
+/**투어/교육 등록**/
+#tour_edu_plus{
+  padding-left:16px;
+  padding-right:16px;
+}
+#tour_edu_plus .tour_input{
+  margin-top:24px;
+}
+#tour_edu_plus .tour_input p{
+  font-size:14px;
+  color:#333333
+}
+#tour_edu_plus .tour_input p span{
+  color:#ff3333;
+}
+#tour_edu_plus .tour_input input{
+  height:40px;
+  margin-top:8px;
+  font-size:14px;
+   border:solid 1px #979797; 
+}
+#tour_edu_plus .tour_input input[type="date"]{
+  min-width:134px;
+  max-width:45%;
+  color:#333333;
+  padding-left:12px;
+  padding-right:0px;
+
+}
+#tour_edu_plus .tour_input input[type="number"]{
+  width:184px;
+  text-align:center;
+}
+#tour_edu_plus .tour_input input[type="number"]+span{
+  position:relative;
+  left:-28px;
+  font-size:14px;
+  color:#333333;
+}
+#tour_edu_plus .tour_input textarea{
+  border-radius:2px;
+  border:solid 1px #979797;
+  margin-top:8px;
+  height:72px;
+}
+
+#tour_edu_plus .tour_input .my_certif_image{
+  margin-top:8px;
+}
+#tour_edu_plus .tour_input .my_certif_image i{
+  width:19px;
+  margin:auto;
+  display:block;
+  opacity:0.7;
+  top:69px;
+}
+
+#tour_edu_plus input[type="button"]{
+  background-color:#145db2;
+  border:none;
+  color:#ffffff;
+  width:100%;
+  height:50px;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:36px
+}
+
+#none_comment{
+  font-size:14px;
+  text-align:center;
+  color:#bbbbbb;
+  padding-top:25px;
+  padding-bottom:25px;
+  border-bottom:solid 1px #e5e5e5
+}
+
+
+.morecontent span {
+    display: none;
+}
+.morelink:link, .morelink:visited, .morelink:active, .morelink:hover{
+  color:#999999;
+  text-decoration:none !important;
+}
+
+
+/**home-search**/
+.header form.search_INS input{
+  width:90%;
+  height:48px;
+  border:none;
+  outline:none;
+  margin-left:50px;
+  padding-right:50px;
+  font-size:14px;
+  color:#000000;
+  cursor:text;
+}
+.header form.search_INS input::placeholder{
+ font-size:14px;
+ color:#aaaaaa; 
+}
+.header form.search_INS button{
+  background-color:#ffffff;
+  float:right;
+  position:absolute;
+  margin-top:9px;
+  right:16px;
+  top:0px;
+}
+.header form.search_INS button img{
+  width:32px;
+}
+.search_c_2 button img{
+  width:27px;
+}
+.search_c_2 button{
+  top:0px;
+  float:right;
+  width:20px;
+  background-color:#ffffff;
+  float:right;
+  position:relative;
+  
+}
+
+
+#search_content{
+  margin-top:16px;
+  margin-left:16px;
+  margin-right:13px;
+}
+#search_content .search_title0{
+  font-size:12px;
+  color:#777777;
+  margin-bottom:16px;
+}
+#search_content .search_c_1 div:nth-of-type(2){
+  font-size:14px;
+  color:#aaaaaa;
+}
+#search_content .search_c_2 li{
+  font-size:14px;
+  line-height:1.14;
+  color:#333333;
+  height:20px;
+  margin-bottom:16px;
+}
+
+#search_content .search_c_3 img{
+  margin-left:20px;
+}
+
+ul.member_list li{
+  margin-bottom:24px;
+}
+ul.member_list li span:first-of-type img{
+  width:40px;
+  height:40px;
+}
+ul.member_list li span:nth-of-type(2){
+  position:absolute;
+  margin-top:25px;
+  left:45px;
+}
+ul.member_list li span:nth-of-type(3){
+  display:inline-block;
+  margin-left:12px;
+  position:absolute;
+  margin-top:6px;
+}
+ul.member_list li span:nth-of-type(3) h5{
+  font-size:14px;
+  color:#333333;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+ul.member_list li span:nth-of-type(3) p{
+  font-size:12px;
+  color:#777777;
+}
+ul.member_list li span:nth-of-type(3) p.myBGN{
+  font-size:12px;
+  color:#333333;
+}
+
+#search_content .search_c_5 p.n_search_data1{
+  font-size:14px;
+  color:#333333;
+  line-height:20px;
+}
+#search_content .search_c_5 p.n_search_data1 text{
+  font-weight:bold;
+}
+#search_content .search_c_5 p.n_search_data2{
+  font-size:12px;
+  color:#777777;
+  line-height:18px;
+}
+
+
+/**home-menu-myBGN-**/
+input#myBGN::placeholder{
+  color:#333333;
+  font-size:16px;
+  font-weight:bold;
+}
+input#myBGN+button{
+  margin-top:12px;
+}
+input#myBGN+button img{
+  width:24px;
+}
+
+#search_content button#plus_cost{
+  margin-top:0px;
+}
+#search_content div#myBGN_title{
+  padding-top:65px;
+  font-size:14px;
+  color:#333333;
+  font-weight:bold;
+  padding-bottom:23px;
+}
+
+#toastMessage {
+    visibility: hidden;
+    min-width: 320px;
+    margin-left: -160px;
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    top:30%;
+    z-index: 1;
+    left: 50%;
+    font-size: 14px;
+}
+
+#toastMessage.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {top: 0; opacity: 0;} 
+    to {top: 30%; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 30%; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {top: 30%; opacity: 1;} 
+    to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {top: 30%; opacity: 1;}
+    to {top: 0; opacity: 0;}
+}
+
+img.arrow-bottom{
+  transform:rotate(90deg);
+  float:right !important;
+  width:20px;
+}
+
+/**tour-cost-explain**/
+.input_cost div.modal-content{
+  background-color:#eeeeee;
+}
+.input_cost div.modal-body{
+  padding-bottom:0px;
+}
+.input_cost div.modal-body>div:first-of-type{
+  display:table;
+  margin:auto;
+  font-size:14px;
+  font-weight:bold;
+}
+.input_cost div.modal-body>div:nth-of-type(2),.input_cost div.modal-body>div:nth-of-type(3){
+  margin-top:16px;
+}
+.input_cost div.modal-body div.modal_text{
+  margin-left:39px;
+  margin-top:-22px;
+  font-size:14px;
+  color:#333333;
+  line-height:1.43;
+  padding-right:5px;
+}
+.input_cost div.modal-body>div:nth-of-type(3) span img{
+  opacity:0.54;
+}
+.input_cost div.modal-footer{
+  border:none;
+}
+.input_cost div.modal-footer button{
+  width:54px;
+  height:26px;
+  border-radius:16px;
+  border:solid 1px #979797;
+  font-size:12px;
+  color:#777777;
+  background-color:#eeeeee;
+}
+#collapseTwo div.cost_explain{
+  margin-bottom:50px;
+}
+#collapseTwo div.cost_explain i img{
+  width:15px;
+  margin-top:-2px;
+}
+#collapseTwo div.cost_explain i:nth-of-type(2) img{
+  transform:rotate(270deg);
+}
+#collapseTwo div.cost_explain div.well{
+  font-size:12px;
+  line-height:1.67;
+  color:#333333;
+  padding-left:8px;
+  margin-bottom:-35px;
+}
+#collapseTwo div.cost_explain div.well p:first-of-type{
+  padding-top:25px;
+}
+#collapseTwo div.cost_explain div.well p text{
+  font-weight:bold;
+}
+#collapseTwo .input_cost select{
+  border:solid 1px #145db2;
+  color:#145db2;
+}
+#collapseTwo .input_cost div.input_box_01 span.FOC_box_text img{
+  width:14px;
+}
+#collapseTwo .cost_check_box_1 i:first-of-type{
+  position:relative;
+  margin-left:16px;
+  top:-19px;
+}
+#collapseTwo .cost_check_box_1 label:nth-of-type(2){
+  left:84px;
+  bottom:35px;
+}
+#collapseTwo .cost_check_box_1 i:nth-of-type(2){
+  position:relative;
+  left:84px;
+  top:-36px;
+}
+#collapseTwo .cost_check_box_2 i:first-of-type{
+  top:3px;
+  left:8px;
+}
+#collapseTwo .cost_check_box_2 label:nth-of-type(2){
+  margin-left:28px;
+  top:1px;
+}
+div.final_cost{
+  position:fixed;
+  bottom:0px;
+  left:-1px;
+}
+
+#direct_input_0,#direct_input_1{
+  height:0px;
+}
+#direct_input_0 input,#direct_input_1 input{
+  margin-left:81px;
+  top:-38px;
+  width:174px;
+  border-right:none;
+}
+
+a[class="accordion-toggle"].collapsed img.arrow-bottom{
+  transform:rotate(90deg);
+}
+a[class="accordion-toggle"] img.arrow-bottom{
+  transform:rotate(270deg);
+}
+
+/**tour-cost-explanation **/
+div.input_cost input.selboxDirect{
+  width:155px;
+  height:37px;
+  position:relative;
+  margin-left:-186px;
+  border:none;
+  padding:.5em .7em;
+  color:#145db2;
+  font-weight:bold;
+  font-size:14px;
+}
+div.input_cost input.selboxDirect:focus {
+  outline: none;
+}
+
+#room_type span.check_text{
+  font-size:14px;
+  font-weight:bold;
+  color:#333333;
+}
+
+/**tour-comment**/
+#tour_comment textarea{
+  max-height:64px;
+  resize:none;
+  position:absolute;
+  bottom:0px;
+  border-top:solid 1px #e5e5e5;
+}
+#tour_comment button{
+  position:absolute;
+  right:0px;
+  bottom:0px;
+  width:20%;
+  border-top:solid 1px #e5e5e5;
+  max-height:64px;
+  height:44px;
+}
+#tour_comment button:disabled{
+  opacity:0.1;
+  border-top:solid 1px #000000;
+}
+#wr_comment{
+  width:100%;
+  height:42px;
+  background-color:#ffffff;
+  font-size:14px;
+  color:#333333;
+  margin-bottom:-15px;
+}
+#wr_comment img#comment_img{
+  width:16px;
+}
+#space_last{
+  height:80px;
+  background-color:#f3f3f3;
+}
+
+#CONTENT_OFF div:first-of-type{
+  text-align:center;
+  height:160px;
+  font-size:14px;
+  line-height:1.71;
+  color:#333333;
+  padding-top:56px;
+}
+#CONTENT_OFF div:nth-of-type(2){
+  background-color:#f4f4f4;
+  height:-webkit-fill-available;
+}
+
+
+
+
+/* 19.08.11 cost -->
+/*CSS 정리 필요 */
+
+/*radio*/
+input[type="radio"]{
+  display: none;
+}
+
+input[type="radio"] + label span{
+  display: inline-block;
+  /*width: 24px;*/
+  height: 24px;
+  font-size: 15px;
+  line-height: 27px;
+  margin: 0;
+  padding: 0;
+  padding-left: 32px;
+  background: url(../img/ic_radio_off.svg) no-repeat;
+}
+
+input[type="radio"]:checked + label span{
+  background: url(../img/ic_radio_on.svg) no-repeat;
+}
+
+.input_box select{
+  color: #000;
+}
+
+
+.input_radio{
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.ir_wrap{
+  display: inline-block;
+  padding: 8px 16px 8px 0;
+  height: 24px;
+}
+
+
+#cost_header{
+  margin-left:16px;
+  margin-top:16px;
+  margin-bottom:16px;
+}
+#cost_header span:first-child{
+  font-size:12px;
+  color:#333333;
+  line-height:1.67;
+}
+#cost_header span:nth-child(2){
+  font-weight:bold;
+  color:#333333;
+}
+
+#cost_list{
+  margin-left:16px;
+  margin-right:16px;
+}
+
+#cost_member div{
+  float:left;
+  width:100px;
+  margin-right:40px;
+}
+
+#cost_member div .ex_text{
+  font-size:12px;
+  color:#777777;
+}
+#cost_member div .ex_text:nth-child(2){
+  margin-bottom:4px;
+}
+#cost_member div .c_text{
+  position:relative;
+  float:right;
+  top:-26px;
+  padding-right:10px;
+  font-size:12px;
+  color:#333333;
+}
+#cost_member div input{
+  width:100px;
+  height:40px;
+  padding-right:30px;
+  margin-top:4px;
+}
+
+#cost_currency{
+  margin-left:16px;
+  margin-right:16px;
+  margin-bottom:24px;
+}
+#cost_currency div{
+  font-size:12px;
+  color:#333333;
+  margin-bottom:4px;
+}
+#cost_currency select{
+  background: url(../img/ic_dropdown.svg) no-repeat 97% 50%;
+  cursor:pointer;
+  color:#333333;
+  font-size:14px;
+  margin-bottom:24px
+}
+
+#cost_c_radio{
+  margin-left:16px;
+  margin-right:16px;
+  margin-top:24px;
+}
+.ex_text{
+  font-size:12px;
+  color:#333333;
+}
+.p_text{
+  font-size:14px;
+  color:#333333;
+}
+#cost_c_radio div:nth-child(2){
+  position:relative;
+  top:7px;
+}
+#cost_c_radio div:nth-child(3){
+  margin-top:30px;
+}
+#cost_c_radio .s_radio{
+  position:relative;
+  top:7px;
+}
+#cost_c_radio label{
+  border:0px;
+}
+#cost_c_radio .box{
+  width:136px;
+  float:right;
+}
+#cost_c_radio .box input{
+  width:136px;
+  padding-right:0;
+}
+#cost_c_radio .unit{
+  text-align:center;
+  float:right;
+  padding-right:12px;
+  position:relative;
+  top:-23px;
+  font-size:12px;
+  color:#333333;
+}
+#cost_list ul li{
+  width:100%;
+  height:40px;
+  border-radius:2px;
+  background-color:#f4f4f4;
+  display:flex;
+  justify-content: space-between;
+  margin-bottom:12px;
+  padding-top:10px;
+  padding-bottom:10px;
+  font-size:14px;
+}
+#cost_list ul li .name{
+  margin-left:16px;
+}
+
+#cost_list ul li input[type=text]{
+  background-color:#f4f4f4;
+  cursor:context-menu;
+  border:none;
+}
+
+#cost_list ul li input[type=text].input-border{
+    border-bottom: 1px solid #ccc !important;
+}
+
+#cost_list ul li .saveInfo{
+  display:none;
+}
+#cost_list ul li .edit,
+#cost_list ul li .delete{
+  background-color:#f4f4f4;
+  opacity:0.6;
+}
+#cost_list ul li .delete{
+  padding:0px;
+  margin-right:16px;
+}
+#cost_list ul li .delete img{
+  width:20px;
+}
+#cost_list button{
+  cursor:pointer;
+}
+
+#form-add{
+   height:48px;
+  margin:auto;
+  font-size:14px;
+  font-weight:bold;
+  color:#145db2;
+  border: solid 2px #145db2;
+  border-radius: 4px;
+  background-color:#ffffff;
+}
+
+#room_type div.input_cost{
+  border-radius:4px;
+  background-color:#f4f4f4;
+  border:#f4f4f4;
+  padding-bottom:12px;
+  padding-top:12px;
+}
+
+input.cost_name{
+  background-color:#f4f4f4;
+  border:none;
+  font-size:16px;
+  color:#3333;
+}
