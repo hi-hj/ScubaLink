@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 홈</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #input_search { width: 272px; height: 48px; border: none; outline: none; margin-left: 50px; padding: .5em .7em; padding-right: 50px; font-size: 14px; color: #000000; cursor: text; font-family: inherit; border-radius: 2px; -webkit-appearance: none; }
+            #btn_search_clear { background-color: #ffffff; float: right; position: absolute; margin-top: 9px; right: 16px; top: 0px; }
+            #btn_search_clear img { width: 32px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="myprofile">
+            <div id="btn_back"><img src="img/left-arrow.svg" id="back" alt="" /></div>
+            <div>
+                <input id="input_search" type="text" placeholder="이메일 주소로 강사 검색" />
+                <div id="btn_search_clear" class="hidden"><img src="img/ic-del-circle.svg" alt="" /></div>
+            </div>
+        </div>
+
+        <div id="search_content">
+
+
+            <!--01. 검색 전- 최근 검색어 없음-->
+            <div id="search_wrap_01" class="search_c_1 <% if(searchList.length > 0) { %>hidden<% } %>">
+                <div class="search_title0">최근 검색어</div>
+                <div>검색 기록이 없어요.</div>
+            </div>
+
+            <!--02. 검색 전- 최근 검색어 있음-->
+            <div id="search_wrap_02" class="search_c_2 <% if(searchList.length == 0) { %>hidden<% } %>">
+                <div class="search_title0">최근 검색어</div>
+                <div>
+                    <ol id="items-list">
+<% for(var i=0; i<searchList.length; i++) { %>
+                        <li seachvalue="<%= searchList[i].email %>">
+                            <span onclick="searchIns('<%= searchList[i].email %>');"><%= searchList[i].email %></span>
+                            <button class="delete" onclick="removeSearchHistory('<%= searchList[i].email %>');"><img src="img/ic-del-circle.svg" alt="" /></button>
+                        </li>
+<% } %>
+                    </ol>
+                </div>
+            </div>
+
+            <!--03. 강사 검색 중 -->
+            <div id="search_wrap_03" class="search_c_3 hidden">
+                <div class="search_title0">검색 중...<img src="img/searching.gif" alt="" /></div>
+            </div>
+
+            <!--04. 강사 검색 결과 -->
+            <div id="search_wrap_04" class="search_c_4 hidden">
+                <div class="search_title0">검색 결과</div>
+                <div>
+                    <ul id="search_result_wrap" class="member_list"></ul>
+                </div>
+            </div>
+
+            <!--05. 강사 검색 결과 없음 -->
+            <div id="search_wrap_05" class="search_c_5 hidden">
+                <div class="search_title0">검색 결과</div>
+                <div class="n_search_data">
+                    <p class="n_search_data1">검색 결과가 없습니다</p>
+                    <p class="n_search_data1"><text>이메일 주소 전체</text>를 정확히 입력해주세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script type="text/javascript" src="js/common.js"></script>
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_search_clear').onclick = function() {
+                document.getElementById('input_search').value = "";
+                this.classList.add("hidden");
+            };
+
+            document.getElementById('input_search').onkeydown = function(event) {
+                if( event.keyCode == 13 && this.value != "" && this.value != " " ) {
+                    searchIns(this.value);
+                }
+            };
+
+            document.getElementById('input_search').onkeyup = function(event) {
+                if(this.value.length == 0)
+                    document.getElementById('btn_search_clear').classList.add("hidden");
+                else
+                    document.getElementById('btn_search_clear').classList.remove("hidden");
+            };
+
+            function removeSearchHistory(email) {
+                httpSend.send("/search/ins/remove", {
+                    email    : email
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    for( var i=0; i<document.getElementById('items-list').getElementsByTagName("li").length; i++ ) {
+                        if( document.getElementById('items-list').getElementsByTagName("li")[i].getAttribute("seachvalue") == email )
+                            document.getElementById('items-list').getElementsByTagName("li")[i].remove();
+                    }
+
+                    if( document.getElementById('items-list').getElementsByTagName("li").length == 0 ) {
+                        document.getElementById('search_wrap_02').classList.add("hidden");
+                        document.getElementById('search_wrap_03').classList.add("hidden");
+                        document.getElementById('search_wrap_04').classList.add("hidden");
+                        document.getElementById('search_wrap_05').classList.add("hidden");
+
+                        document.getElementById('search_wrap_01').classList.remove("hidden");
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function searchIns(email) {
+                document.getElementById('search_wrap_01').classList.add("hidden");
+                document.getElementById('search_wrap_02').classList.add("hidden");
+                document.getElementById('search_wrap_04').classList.add("hidden");
+                document.getElementById('search_wrap_05').classList.add("hidden");
+
+                document.getElementById('search_wrap_03').classList.remove("hidden");
+
+                httpSend.send("/search/ins", {
+                    email    : email
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    if(result.userList.length == 0) {
+                        document.getElementById('search_wrap_01').classList.add("hidden");
+                        document.getElementById('search_wrap_02').classList.add("hidden");
+                        document.getElementById('search_wrap_03').classList.add("hidden");
+                        document.getElementById('search_wrap_04').classList.add("hidden");
+
+                        document.getElementById('search_wrap_05').classList.remove("hidden");
+                    }
+                    else {
+                        var html = "";
+                        for( var i=0; i< result.userList.length; i++ ) {
+                            html += " <li onclick='moveToProfile(\""+result.userList[i].id+"\");'>";
+                            html += "     <span><img src='"+((result.userList[i].image==undefined || result.userList[i].image=="") ? "/img/default_user.png" : result.userList[i].image)+"' alt='' class='img-circle' /></span>";
+                            html += "     <span><img src='img/ic.png' alt='' /></span>";
+                            html += "     <span>";
+                            html += "         <h5>"+result.userList[i].name+"</h5>";
+                            html += "         <p>"+((result.userList[i].group==undefined || result.userList[i].group=="") ? "소속단체 없음" : result.userList[i].group)+"</p>";
+                            html += "     </span>";
+                            html += " </li>";
+                        }
+                        document.getElementById('search_result_wrap').innerHTML = html;
+
+                        document.getElementById('search_wrap_01').classList.add("hidden");
+                        document.getElementById('search_wrap_02').classList.add("hidden");
+                        document.getElementById('search_wrap_03').classList.add("hidden");
+                        document.getElementById('search_wrap_05').classList.add("hidden");
+
+                        document.getElementById('search_wrap_04').classList.remove("hidden");
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function moveToProfile(profileId) {
+                location.href = "/profile/"+profileId;
+            }
+        </script>
+    </body>
+</html>

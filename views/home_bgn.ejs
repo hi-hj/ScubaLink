@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 홈</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            .tour { background: white; }
+            .tour_head { height: 48px; }
+            #CONTENT_ON { min-height: -webkit-fill-available; background: #f4f4f4; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <span class="logo">투어/교육</span>
+            <div class="burger_container"><img class="burger_img menu" src="img/ic-menu.svg" alt="" /></div>
+            <span id="btn_search" class="search" style="right:16px"><img src="img/search.svg" alt="" /></span>
+        </div>
+
+        <div id="overlay"></div>
+
+        <div class="side-nav">
+            <div class="side-nav-head"></div>
+
+            <ul>
+                <li class="name" onclick="location.href='/profile_bgn';">
+                    <span><img id="profile_image" src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="" class="img-circle"></span>
+                    <span>
+                        <h5 id="profile_name"><%= name %></h5>
+                        <p class="explain_text" style="text-align: left;">교육생</p>
+                    </span>
+                    <img class="arrow_right" src='/img/ic-arrow-ltr.svg' />
+                </li>
+                <li class="none"></li>
+                <li onclick="location.href='/license';">내 자격증</li>
+                <li>알림 설정</li>
+                <!-- <li class="none"></li> -->
+                <li onclick="location.href='/notice';">공지사항</li>
+                <li onclick="location.href='/policy';">약관 및 정책</li>
+                <li onclick="sendEmail();">이메일 보내기</li>
+                <li onclick="sendSMS();">문자 보내기</li>
+
+
+                <!-- <li class="none"></li> -->
+                <li id="btn_logout">로그아웃</li>
+            </ul>
+        </div>
+
+        <div class="center-it">
+            <div class="switch text-switch clearfix" >
+                <input type="checkbox" name="show_title" id="show_title" checked="checked" />
+                <label for="show_title">
+                    <span class="switcher">
+                        <span class="switch-cat on-cat">전체</span>
+                        <span class="switch-cat off-cat">내 일정</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+<% if( tourList.length == 0 ) { %>
+        <div id="CONTENT_OFF" class="">
+<% } else { %>
+        <div id="CONTENT_OFF" class="hidden">
+<% } %>
+            <div>
+                오른쪽 상단 돋보기 아이콘을 눌러
+                <br>강사님을 찾아보세요
+            </div>
+            <!--아래 회색 배경 -->
+            <div></div>
+        </div>
+
+<% if( tourList.length == 0 ) { %>
+        <div id="CONTENT_ON" class="hidden">
+<% } else { %>
+        <div id="CONTENT_ON" class="">
+            <div id="home_student_content_01" class="">
+
+<% for(var i=0; i<tourList.length; i++) { %>
+                  <div class="tour">
+                      <div class="tour_head" onclick="location.href='/profile/<%= tourList[i].ins_id %>';">
+                          <div style='width: 1px; height: 48px; display: inline-block;'></div>
+                          <span><img src='<% if( !locals.tourList[i].ins_image || tourList[i].ins_image == undefined || tourList[i].ins_image == '' ) { %>/img/default_user.png<% } else { %><%= tourList[i].ins_image %><% } %>' alt='' class='img-circle' /></span>
+                          <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
+                          <span>
+                              <h5><%= tourList[i].ins_name %></h5>
+                              <p class="explain_text"><% if( !locals.tourList[i].ins_group || tourList[i].ins_group == undefined || tourList[i].ins_group == '' ) { %>소속 없음<% } else { %><%= tourList[i].ins_group %><% } %></p>
+                          </span>
+                      </div>
+
+                      <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
+
+                      <div class="tour_bar <% if( tourList[i].participant_count >= tourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= tourList[i]._id %>';">
+                          <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 중</p></span>
+                          <span class="right"><img src="img/ic-keyboard-arrow-right-white.svg" alt="" /></span>
+                          <span class="tour_bar_text_right"><p>자세히 보기</p></span>
+                      </div>
+
+                      <div class="tour_contents">
+                          <div class="tour_contents_when">
+                              <h4><%= tourList[i].startdate.substr(4,2) %>.<%= tourList[i].startdate.substr(6,2) %> ~ <%= tourList[i].enddate.substr(4,2) %>.<%= tourList[i].enddate.substr(6,2) %> / <%= tourList[i].name %></h4>
+                          </div>
+                          <div class="tour_contents_where">
+                              <span><img src="img/ic-map-marker.svg" alt="" /></span>
+                              <span><%= tourList[i].place %></span>
+                          </div>
+                          <div class="tour_contents_comment"><%= tourList[i].description %></div>
+                          <div class="tour_contents_etc">
+                              <span>댓글 <%= tourList[i].comment_count %></span>
+                          </div>
+                      </div>
+                      <div class="tour_division"></div>
+                  </div>
+<% } %>
+            </div>
+
+            <div id="home_student_content_02" class="hidden">
+<% for(var i=0; i<scheduleTourList.length; i++) { %>
+                  <div class="tour">
+                      <div class="tour_head" onclick="location.href='/profile/<%= scheduleTourList[i].ins_id %>';">
+                          <div style='width: 1px; height: 48px; display: inline-block;'></div>
+                          <span><img src='<% if( !locals.scheduleTourList[i].ins_image || scheduleTourList[i].ins_image == undefined || scheduleTourList[i].ins_image == '' ) { %>/img/default_user.png<% } else { %><%= scheduleTourList[i].ins_image %><% } %>' alt='' class='img-circle' /></span>
+                          <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
+                          <span>
+                              <h5><%= scheduleTourList[i].ins_name %></h5>
+                              <p class="explain_text"><% if( !locals.scheduleTourList[i].ins_group || scheduleTourList[i].ins_group == undefined || scheduleTourList[i].ins_group == '' ) { %>소속 없음<% } else { %><%= scheduleTourList[i].ins_group %><% } %></p>
+                          </span>
+                      </div>
+
+                      <div class="tour_image" onclick="location.href='/tour/<%= scheduleTourList[i]._id %>';"><img src="<% if( !locals.scheduleTourList[i].image || scheduleTourList[i].image == undefined || scheduleTourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= scheduleTourList[i].image %><% } %>" alt="" /></div>
+
+                      <div class="tour_bar <% if( scheduleTourList[i].participant_count >= scheduleTourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= scheduleTourList[i]._id %>';">
+                          <span class="tour_bar_text_left"><p><%= scheduleTourList[i].participant_count %>/<%= scheduleTourList[i].member %> 모집 중</p></span>
+                          <span class="right"><img src="img/ic-keyboard-arrow-right-white.svg" alt="" /></span>
+                          <span class="tour_bar_text_right"><p>자세히 보기</p></span>
+                      </div>
+
+                      <div class="tour_contents">
+                          <div class="tour_contents_when">
+                              <h4><%= scheduleTourList[i].startdate.substr(4,2) %>.<%= scheduleTourList[i].startdate.substr(6,2) %> ~ <%= scheduleTourList[i].enddate.substr(4,2) %>.<%= scheduleTourList[i].enddate.substr(6,2) %> / <%= scheduleTourList[i].name %></h4>
+                          </div>
+                          <div class="tour_contents_where">
+                              <span><img src="img/ic-map-marker.svg" alt="" /></span>
+                              <span><%= scheduleTourList[i].place %></span>
+                          </div>
+                          <div class="tour_contents_comment"><%= scheduleTourList[i].description %></div>
+                          <div class="tour_contents_etc">
+                              <span>댓글 <%= scheduleTourList[i].comment_count %></span>
+                          </div>
+                      </div>
+                      <div class="tour_division"></div>
+                  </div>
+<% } %>
+            </div>
+<% } %>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            var week = new Array('일', '월', '화', '수', '목', '금', '토');
+
+            document.getElementById('btn_logout').onclick = function() {
+                httpSend.send("/logout", { }, "POST", function(result) {
+                    location.href = "/";
+                });
+            };
+
+            document.getElementById('btn_search').onclick = function() {
+                location.href = "/home_search";
+            };
+
+            document.getElementById('overlay').onclick = function() {
+                $(".burger_container").click();
+            };
+
+            document.getElementById('show_title').onclick = function() {
+                if( document.getElementById('show_title').checked == false ) {
+                    document.getElementById('home_student_content_01').classList.add("hidden");
+                    document.getElementById('home_student_content_02').classList.remove("hidden");
+                }
+                else {
+                    document.getElementById('home_student_content_01').classList.remove("hidden");
+                    document.getElementById('home_student_content_02').classList.add("hidden");
+                }
+            }
+
+            window.onpageshow = function (event) {
+                if( document.getElementById('show_title').checked == false ) {
+                    document.getElementById('home_student_content_01').classList.add("hidden");
+                    document.getElementById('home_student_content_02').classList.remove("hidden");
+                }
+                else {
+                    document.getElementById('home_student_content_01').classList.remove("hidden");
+                    document.getElementById('home_student_content_02').classList.add("hidden");
+                }
+
+                httpSend.send("/profile/select", {
+
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    if( result.name != undefined && result.name != "" )
+                        document.getElementById('profile_name').innerHTML = result.name;
+
+                    if( result.group != undefined && result.group != "" )
+                        document.getElementById('profile_group').innerHTML = result.group;
+
+                    if( result.image != undefined && result.image != "" )
+                        document.getElementById('profile_image').src = result.image;
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+
+                httpSend.send("/tour/select/bgn", {
+
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    if( result.tourList.length == 0 ) {
+                        document.getElementById('CONTENT_ON').classList.add("hidden");
+                        document.getElementById('CONTENT_OFF').classList.remove("hidden");
+                    }
+                    else {
+                        var html = "";
+                        for( var i=0; i<result.tourList.length; i++ ) {
+                            html += " <div class='tour'>";
+                            html += "     <div class='tour_head' onclick='location.href=\"/profile/"+result.tourList[i].ins_id+"\";'>";
+                            html += "         <div style='width: 1px; height: 48px; display: inline-block;'></div>"
+
+                            if( result.tourList[i].ins_image == undefined || result.tourList[i].ins_image == "" )
+                                html += "     <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
+                            else
+                                html += "     <span><img src='"+result.tourList[i].ins_image+"' alt='' class='img-circle' /></span>";
+
+                            html += "         <span class='INS_badge'><img src='img/ic.png' alt='' /></span>";
+                            html += "         <span>";
+                            html += "             <h5>"+result.tourList[i].ins_name+"</h5>";
+
+                            if( result.tourList[i].ins_group == undefined || result.tourList[i].ins_group == "" )
+                                html += "         <p class='explain_text'>소속 없음</p>";
+                            else
+                                html += "         <p class='explain_text'>"+result.tourList[i].ins_group+"</p>";
+
+                            html += "         </span>";
+                            html += "     </div>";
+
+                            if( result.tourList[i].image == undefined || result.tourList[i].image == "" )
+                                html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
+                            else
+                                html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='"+result.tourList[i].image+"' alt='' /></div>";
+
+                            html+= "      <div class='tour_bar "+(result.tourList[i].participant_count >= result.tourList[i].member ? "tour_complete" : "tour_uncomplete")+"' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
+                            html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 중</p></span>";
+                            html+= "          <span class='right'><img src='img/ic-keyboard-arrow-right-white.svg' alt='' /></span>";
+                            html+= "          <span class='tour_bar_text_right'><p>자세히 보기</p></span>";
+                            html+= "      </div>";
+                            html+= "      <div class='tour_contents'>";
+                            html+= "          <div class='tour_contents_when'>";
+
+                            var tempDate1 = new Date(result.tourList[i].startdate.substr(0,4)+"-"+result.tourList[i].startdate.substr(4,2)+"-"+result.tourList[i].startdate.substr(6,2)+"T00:00:00");
+                            var tempDate2 = new Date(result.tourList[i].enddate.substr(0,4)+"-"+result.tourList[i].enddate.substr(4,2)+"-"+result.tourList[i].enddate.substr(6,2)+"T00:00:00");
+                            html+= "              <h4>"+result.tourList[i].startdate.substr(4,2)+"."+result.tourList[i].startdate.substr(6,2)+week[tempDate1.getDay()]+" ~ "+result.tourList[i].enddate.substr(4,2)+"."+result.tourList[i].enddate.substr(6,2)+week[tempDate2.getDay()]+" / "+result.tourList[i].name+"</h4>";
+
+                            html+= "          </div>";
+                            html+= "          <div class='tour_contents_where'>";
+                            html+= "              <span><img src='img/ic-map-marker.svg' alt='' /></span>";
+                            html+= "              <span>"+result.tourList[i].place+"</span>";
+                            html+= "          </div>";
+                            html+= "          <div class='tour_contents_comment'>"+result.tourList[i].description+"</div>";
+                            html+= "          <div class='tour_contents_etc'>";
+                            html+= "              <span>댓글 "+result.tourList[i].comment_count+"</span>";
+                            html+= "          </div>";
+                            html+= "      </div>";
+                            html+= "      <div class='tour_division'></div>";
+                            html+= "  </div>";
+                        }
+                        document.getElementById('home_student_content_01').innerHTML = html;
+
+                        html = "";
+                        for( var i=0; i<result.scheduleTourList.length; i++ ) {
+                            html += " <div class='tour'>";
+                            html += "     <div class='tour_head' onclick='location.href=\"/profile/"+result.scheduleTourList[i].ins_id+"\";'>";
+                            html += "         <div style='width: 1px; height: 48px; display: inline-block;'></div>"
+
+                            if( result.scheduleTourList[i].ins_image == undefined || result.scheduleTourList[i].ins_image == "" )
+                                html += "     <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
+                            else
+                                html += "     <span><img src='"+result.scheduleTourList[i].ins_image+"' alt='' class='img-circle' /></span>";
+
+                            html += "         <span class='INS_badge'><img src='img/ic.png' alt='' /></span>";
+                            html += "         <span>";
+                            html += "             <h5>"+result.scheduleTourList[i].ins_name+"</h5>";
+
+                            if( result.scheduleTourList[i].ins_group == undefined || result.scheduleTourList[i].ins_group == "" )
+                                html += "         <p class='explain_text'>소속 없음</p>";
+                            else
+                                html += "         <p class='explain_text'>"+result.scheduleTourList[i].ins_group+"</p>";
+
+                            html += "         </span>";
+                            html += "     </div>";
+
+                            if( result.scheduleTourList[i].image == undefined || result.scheduleTourList[i].image == "" )
+                                html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.scheduleTourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
+                            else
+                                html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.scheduleTourList[i]._id+"\";'><img src='"+result.scheduleTourList[i].image+"' alt='' /></div>";
+
+                            html+= "      <div class='tour_bar "+(result.scheduleTourList[i].participant_count >= result.scheduleTourList[i].member ? "tour_complete" : "tour_uncomplete")+"' onclick='location.href=\"/tour/"+result.scheduleTourList[i]._id+"\";'>";
+                            html+= "          <span class='tour_bar_text_left'><p>"+result.scheduleTourList[i].participant_count+"/"+result.scheduleTourList[i].member+" 모집 중</p></span>";
+                            html+= "          <span class='right'><img src='img/ic-keyboard-arrow-right-white.svg' alt='' /></span>";
+                            html+= "          <span class='tour_bar_text_right'><p>자세히 보기</p></span>";
+                            html+= "      </div>";
+                            html+= "      <div class='tour_contents'>";
+                            html+= "          <div class='tour_contents_when'>";
+
+                            var tempDate1 = new Date(result.scheduleTourList[i].startdate.substr(0,4)+"-"+result.scheduleTourList[i].startdate.substr(4,2)+"-"+result.scheduleTourList[i].startdate.substr(6,2)+"T00:00:00");
+                            var tempDate2 = new Date(result.scheduleTourList[i].enddate.substr(0,4)+"-"+result.scheduleTourList[i].enddate.substr(4,2)+"-"+result.scheduleTourList[i].enddate.substr(6,2)+"T00:00:00");
+                            html+= "              <h4>"+result.scheduleTourList[i].startdate.substr(4,2)+"."+result.scheduleTourList[i].startdate.substr(6,2)+week[tempDate1.getDay()]+" ~ "+result.scheduleTourList[i].enddate.substr(4,2)+"."+result.scheduleTourList[i].enddate.substr(6,2)+week[tempDate2.getDay()]+" / "+result.scheduleTourList[i].name+"</h4>";
+
+                            html+= "          </div>";
+                            html+= "          <div class='tour_contents_where'>";
+                            html+= "              <span><img src='img/ic-map-marker.svg' alt='' /></span>";
+                            html+= "              <span>"+result.scheduleTourList[i].place+"</span>";
+                            html+= "          </div>";
+                            html+= "          <div class='tour_contents_comment'>"+result.scheduleTourList[i].description+"</div>";
+                            html+= "          <div class='tour_contents_etc'>";
+                            html+= "              <span>댓글 "+result.scheduleTourList[i].comment_count+"</span>";
+                            html+= "          </div>";
+                            html+= "      </div>";
+                            html+= "      <div class='tour_division'></div>";
+                            html+= "  </div>";
+                        }
+                        document.getElementById('home_student_content_02').innerHTML = html;
+
+                        document.getElementById('CONTENT_OFF').classList.add("hidden");
+                        document.getElementById('CONTENT_ON').classList.remove("hidden");
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function sendEmail() {
+                window.open('mailto:test@example.com,test@naver.com?subject=제목&body=내용');
+            }
+
+            function sendSMS() {
+                if( /Android/i.test(navigator.userAgent)) {
+                    window.open('sms:010-1111-2222;010-3333-4444;010-5555-6666?body=내용');
+                }
+                else {
+                    window.open('sms:/open?addresses=01011112222,01033334444,01055556666&body=내용');
+                }
+            }
+        </script>
+    </body>
+</html>

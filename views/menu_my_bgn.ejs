@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 홈</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="myprofile">
+            <div id="btn_back"><img src="img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="header_title" class="logo">내 교육생</span>
+        </div>
+
+        <div id="search_content">
+          	<div>
+            		<button type="button" id="plus_cost" class="btn btn-block col-xs-12" onclick="toastMessage(); copyText('http://www.scubalink.net/profile/<%= id %>');">
+            			   <span>초대 링크 복사하기</span>
+            		</button>
+          	</div>
+
+            <div id="toastMessage">초대 링크가 복사되었습니다</div>
+
+      	    <div id="myBGN_title">교육생</div>
+
+          	<div>
+            		<ul id="follower_list_wrap" class="member_list">
+
+<% for(var i=0; i<followerList.length; i++) { %>
+                    <li>
+                        <span><img src="<% if(!followerList[i].image || followerList[i].image == undefined || followerList[i].image == "") { %>/img/default_user.png<% } else {%><%= followerList[i].image %><% } %>" alt="" class="img-circle" /></span>
+                        <span></span>
+
+                        <span>
+                            <h5><%= followerList[i].name %></h5>
+                            <p class="myBGN">메모</p>
+                        </span>
+                    </li>
+<% } %>
+            		</ul>
+          	</div>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            function copyText(text) {
+                function selectElementText(element) {
+                    if (document.selection) {
+                      var range = document.body.createTextRange();
+                      range.moveToElementText(element);
+                      range.select();
+                    }
+                    else if (window.getSelection) {
+                      var range = document.createRange();
+                      range.selectNode(element);
+                      window.getSelection().removeAllRanges();
+                      window.getSelection().addRange(range);
+                    }
+                }
+
+                var element = document.createElement('DIV');
+                element.textContent = text;
+                document.body.appendChild(element);
+                selectElementText(element);
+
+                document.execCommand('copy');
+                element.remove();
+            }
+        </script>
+    </body>
+</html>

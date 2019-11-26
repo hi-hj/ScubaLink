@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 상세일정 등록</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_save { top: 0; padding-top: 0; line-height: 50px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="certif">
+            <span id="header_title" class="logo_mini">상세일정 등록</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+            <span class="header_save btn" id="btn_save">저장</span>
+        </div>
+
+        <textarea id="tour_detail" class="form-control autosize" placeholder="일정을 입력하세요."><%= schedule %></textarea>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            var tourId = '<%= _id %>';
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_save').onclick = function() {
+                httpSend.upload("/tour/update", {
+                    tourId    : tourId,
+                    schedule  : document.getElementById('tour_detail').value
+                }, function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+
+
+
+        </script>
+    </body>
+</html>

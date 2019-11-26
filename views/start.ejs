@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 로그인</title>
+
+        <link href="/css/Scubalink_CSS.css" rel="stylesheet">
+        <style>
+            .sns_login_button {
+                width: 231.25px;
+                height: 50px;
+                border-radius: 5px;
+                display: block;
+                margin: auto;
+                font-weight: 500;
+                margin-top: 16px;
+                font-size: 18px;
+                cursor: pointer;
+                line-height: 19px;
+            }
+        </style>
+
+        <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+        <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+
+    <body id="login">
+        <div class="login_logo">SCUBALINK</div>
+
+        <div id="naver_id_login" class="sns_login_button">
+            <img src="/img/ic_naver.svg" alt="네이버로 로그인하기"/>
+            <span>네이버로 시작하기</span>
+        </div>
+
+        <div id="custom-login-btn" class="btn btn_kakao sns_login_button" onclick="loginWithKakao();">
+            <img src="/img/ic_kakao.svg" alt="카카오로 로그인하기"/>
+            <span>카카오로 시작하기</span>
+        </div>
+
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script>
+            var naver_id_login = new naver_id_login("2MAOSyU6GoHd9AzDHq_G", "http://www.scubalink.net/");
+            var state = naver_id_login.getUniqState();
+            naver_id_login.setButton("green", 3, 50);
+            naver_id_login.setDomain("http://www.scubalink.net/");
+            naver_id_login.setState(state);
+            naver_id_login.init_naver_id_login();
+
+            function naverSignInCallback() {
+                httpSend.send("/join/sns", {
+                    id          : naver_id_login.getProfileData('id'),
+                    email       : naver_id_login.getProfileData('email'),
+                    nickname    : naver_id_login.getProfileData('name'),
+                    sns         : "naver"
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    if(result.type == 0) {
+                        location.href = "/join";
+                    }
+                    else {
+                        location.href = "/";
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            if(naver_id_login.is_callback == true) {
+                naver_id_login.get_naver_userprofile("naverSignInCallback()");
+            }
+
+            Kakao.init('e8a753b45df51ca113a49f4d4d847c67');
+            function loginWithKakao() {
+                Kakao.Auth.login({
+                    success: function(authResult) {
+                        Kakao.API.request({
+                            url: '/v1/user/me',
+                            success: function(kakaoResult) {
+                                console.log(kakaoResult);
+
+                                httpSend.send("/join/sns", {
+                                    id      : kakaoResult.id,
+                                    email   : kakaoResult.kaccount_email,
+                                    sns     : "kakao"
+                                }, "POST", function(result) {
+                                    console.log(result);
+
+                                    if(result.type == 0) {
+                                        location.href = "/join";
+                                    }
+                                    else {
+                                        location.href = "/";
+                                    }
+                                }, function(errorCode, errorMessage) {
+                                    console.log(errorMessage);
+                                });
+                            }
+                        });
+                    },
+                    fail: function(error) {
+                        console.log(error);
+                    }
+                });
+            };
+        </script>
+    </body>
+</html>

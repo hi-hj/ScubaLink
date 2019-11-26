@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 회원가입</title>
+
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css">
+
+        <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+
+    <body id="welcome">
+        <p class="w_title">반가워요!</p>
+
+        <p class="explain t_center">
+            이제 간단한 정보를 등록할 차례입니다.<br>
+            어떤 타입으로 등록하시겠어요?
+        </p>
+
+        <a href="/join_ins" style="width: 272px; height: 50px; display: block; margin: 0 auto;"><button type="button" class="btn btn_full">강사로 시작</button></a>
+        <a href="/join_bgn_01" style="width: 272px; height: 50px; display: block; margin: 0 auto;"><button type="button" class="btn btn_ghost">교육생으로 시작</button></a>
+
+        <script>
+            var naver_id_login = new naver_id_login("2MAOSyU6GoHd9AzDHq_G", "http://www.scubalink.net/");
+            //naver_id_login.init_naver_id_login();
+
+            function naverSignInCallback() {
+                var a = {
+                    id          : naver_id_login.getProfileData('id'),
+                    email       : naver_id_login.getProfileData('email'),
+                    nickname    : naver_id_login.getProfileData('name'),
+                    type        : "naver"
+                };
+                console.log(a);
+            }
+
+            if(naver_id_login.is_callback == true) {
+                naver_id_login.get_naver_userprofile("naverSignInCallback()");
+            }
+        </script>
+    </body>
+</html>

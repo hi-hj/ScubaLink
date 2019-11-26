@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 내 프로필</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="myprofile">
+            <span class="logo">내 프로필</span>
+            <div id="btn_back"><img src="img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="btn_edit" class="header_save">편집</span>
+        </div>
+
+        <div class="my_profile">
+            <div class="my_profile_image">
+                <img src="<% if(!locals.image || image == undefined || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="" class="img-circle" id="img-upload" />
+            </div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">기본정보</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이름</span>
+                    <span id="info_name" class="info_text"><%= name %></span>
+                </div>
+
+                <div class="basic_information">
+                    <span name="birth" class="basic_information_guide">태어난해</span>
+                    <span id="info_birth" class="info_text"><%= birth %>년</span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">연락처</span>
+                    <span id="info_tel" class="info_text"><% if(tel.length == 11) { %><%= tel.substr(0,3) %>****<%= tel.substr(7,4) %><% } else if(tel.length == 10) { %><%= tel.substr(0,3) %>***<%= tel.substr(6,4) %><% } else {%><%= tel %><%}%></span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이메일</span>
+                    <span id="info_email" class="info_text"><%= email %></span>
+                </div>
+            </div>
+
+            <div class="tour_division"></div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">신체정보</p>
+                    <p class="explain_text explain_text_bottom">수영장 교육, 장비 대여 시 필요한 정보입니다.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span name="sex" class="basic_information_guide">성별</span>
+                    <span id="info_gender" class="info_text"><% if(gender == "1") { %>남자<% } else {%> 여자<%}%></span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">키</span>
+                    <span id="info_height" class="info_text"><%= height %>cm</span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">몸무게</span>
+                    <span id="info_weight" class="info_text"><%= weight %>kg</span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">발사이즈</span>
+                    <span id="info_foot" class="info_text"><%= foot %>mm</span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide" id="disease" style="position:inherit">특이병력</span>
+                    <span id="info_disease" class="info_text"><% if( !locals.disease || disease == undefined || disease == "") { %>없음<% } else {%><%= disease %><% } %></span>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_edit').onclick = function() {
+                location.href = "/profile_edit";
+            };
+
+            window.onpageshow = function (event) {
+                httpSend.send("/profile/select", {
+
+                }, "POST", function(result) {
+                    document.getElementById('info_name').innerHTML = result.name;
+                    document.getElementById('info_birth').innerHTML = result.birth+"년";
+                    if( result.tel.length == 11 )
+                        document.getElementById('info_tel').innerHTML = result.tel.substr(0,3)+"****"+result.tel.substr(7,4);
+                    else if( result.tel.length == 10 )
+                        document.getElementById('info_tel').innerHTML = result.tel.substr(0,3)+"***"+result.tel.substr(6,4);
+                    else
+                        document.getElementById('info_tel').innerHTML = result.tel;
+                    document.getElementById('info_email').innerHTML = result.email;
+                    document.getElementById('info_height').innerHTML = result.height+"cm";
+                    document.getElementById('info_weight').innerHTML = result.weight+"kg";
+                    document.getElementById('info_foot').innerHTML = result.foot+"mm";
+
+                    if( result.gender == "1" )
+                        document.getElementById('info_gender').innerHTML = "남자";
+                    else if( result.gender == "2" )
+                        document.getElementById('info_gender').innerHTML = "여자";
+
+                    if( result.disease == undefined || result.disease == "" )
+                        document.getElementById('info_disease').innerHTML = "없음";
+                    else
+                        document.getElementById('info_disease').innerHTML = result.disease;
+
+                    if( result.image != undefined && result.image != "" )
+                        document.getElementById('img-upload').src = result.image;
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

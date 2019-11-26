@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 자격증 편집</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 26px; opacity: 0.54; top: 0; left: 0; margin-top: 7px; margin-left: 7px; }
+            #btn_save, #btn_remove { top: 0; padding-top: 0; line-height: 50px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+
+            .my_certif_card #img-upload { width: 100%; height: 200px; margin: auto; cursor: pointer; }
+            .t_left { margin-left: 79px; margin-top: 0; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <span id="header_title" class="logo_mini">자격증 편집</span>
+            <div id="btn_back" class="header_close">
+                <img id="back" src="/img/ic-close.svg" alt="" />
+            </div>
+            <span id="btn_save" class="header_save">저장</span>
+            <a data-toggle="modal" href="#certif_delete"><span id="btn_remove" class="header_delete">삭제</span></a>
+        </div>
+
+        <div class="modal fade" id="certif_delete" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p >해당 자격증을 정말 삭제 하겠습니까?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" style="margin-right:32px">취소</button>
+                        <button type="button" data-dismiss="modal" onclick="doRemove();">삭제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="my_certif_card">
+            <div style="width: 100%; height: 200px; background-color: #dddddd;">
+                <img id='img-upload' src="<% if(!locals.image || image == undefined || image == "") { %>/img/blank_certif.png<% } else {%><%= image %><% } %>" alt="" />
+            </div>
+
+            <div class="btn-file">
+                <button type="button" class="img-circle" id="camera_img_back">
+                    <input type="file" id="imgInp" name='certImage' />
+                    <img id="camera_img" src="/img/photo-camera.svg" alt="" />
+                </button>
+            </div>
+        </div>
+
+
+
+        <div class="my_certif_information">
+            <div class="basic_information">
+                <span class="certif_information_guide">발급날짜</span>
+                <span class="dot"></span>
+                <input id="input_cert_date" type="date" placeholder="2018/01/03" value="<%= issuedate.substr(0,4) %>-<%= issuedate.substr(4,2) %>-<%= issuedate.substr(6,2) %>" />
+                <p class="explain t_err t_left" id="input_date_empty_error">발급날짜를 선택하세요.</p>
+            </div>
+
+            <div class="basic_information">
+                <span name="birth" class="certif_information_guide">교육단체</span>
+                <span class="dot"></span>
+                <select id="input_cert_group" name="birth" required onchange="showfield1(this.options[this.selectedIndex].value)">
+                    <option value="SDI TDI" <% if(issuegroup == "SDI TDI") { %>selected<% } %>>SDI TDI</option>
+                    <option value="PADI" <% if(issuegroup == "PADI") { %>selected<% } %>>PADI</option>
+                    <option value="SSI" <% if(issuegroup == "SSI") { %>selected<% } %>>SSI</option>
+                    <option value="NAUI" <% if(issuegroup == "NAUI") { %>selected<% } %>>NAUI</option>
+                    <option value="CMAS" <% if(issuegroup == "CMAS") { %>selected<% } %>>CMAS</option>
+                    <option value="BSAC" <% if(issuegroup == "BSAC") { %>selected<% } %>>BSAC</option>
+                    <option value="IANTD" <% if(issuegroup == "IANTD") { %>selected<% } %>>IANTD</option>
+                    <option value="KUDA" <% if(issuegroup == "KUDA") { %>selected<% } %>>KUDA</option>
+                    <option value="Other" <% if(issuegroup != "SDI TDI" && issuegroup != "PADI" && issuegroup != "SSI" && issuegroup != "NAUI" && issuegroup != "CMAS" && issuegroup != "BSAC" && issuegroup != "IANTD" && issuegroup != "KUDA") { %>selected<% } %>>직접입력</option>
+                </select>
+                <div id="direct_input_0" class="input_cert_group_custom">
+                    <% if(issuegroup != "SDI TDI" && issuegroup != "PADI" && issuegroup != "SSI" && issuegroup != "NAUI" && issuegroup != "CMAS" && issuegroup != "BSAC" && issuegroup != "IANTD" && issuegroup != "KUDA") { %>
+                        <input type="text" name="other" placeholder="직접입력" value="<%= issuegroup %>"/>
+                    <% } %>
+                </div>
+                <p class="explain t_err t_left" id="input_group_empty_error">교육단체를 선택하세요.</p>
+            </div>
+
+            <div class="basic_information">
+                <span name="sex" class="certif_information_guide">교육과정</span>
+                <span class="dot"></span>
+                <select id="input_cert_course" name="birth" required onchange="showfield2(this.options[this.selectedIndex].value)">
+                    <option value="오픈워터" <% if(course == "오픈워터") { %>selected<% } %>>오픈워터</option>
+                    <option value="어드밴스드" <% if(course == "어드밴스드") { %>selected<% } %>>어드밴스드</option>
+                    <option value="레스큐" <% if(course == "레스큐") { %>selected<% } %>>레스큐</option>
+                    <option value="강사" <% if(course == "강사") { %>selected<% } %>>강사</option>
+                    <option value="Other" <% if(course != "오픈워터" && course != "어드밴스드" && course != "레스큐" && course != "강사" ) { %>selected<% } %>>직접입력</option>
+                </select>
+                <div id="direct_input_1" class="input_cert_course_custom">
+                    <% if( course != "오픈워터" && course != "어드밴스드" && course != "레스큐" && course != "강사" ) { %>
+                        <input type="text" name="other" placeholder="직접입력" value="<%= course %>"/>
+                    <% } %>
+                </div>
+                <p class="explain t_err t_left" id="input_course_empty_error">교육과정을 선택하세요.</p>
+            </div>
+
+            <div class="basic_information">
+                <span class="certif_information_guide" id="disease">스페셜티</span>
+                <textarea id="input_cert_description" name="disease" rows="4" cols="26"  placeholder="선택사항입니다.
+예시: 딥, 나이트, 보트, 조류"><%= special %></textarea>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            var certId = '<%= _id %>';
+
+            document.getElementById('btn_back').onclick = function() {
+                location.replace("/license_detail/"+certId);
+            };
+
+            document.getElementById('btn_save').onclick = function() {
+                // 발급날짜 빈칸 체크
+                var inputDate = document.getElementById('input_cert_date').value.replace(/-/gi, "").replace(/\./gi, "");
+                if( inputDate == "" ) {
+                    document.getElementById('input_date_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_date_empty_error').style.display = "none";
+                }
+
+                // 교육단체 빈칸 체크
+                var inputGroup = "";
+                if( document.getElementById('input_cert_group').value == "" ) {
+                    document.getElementById('input_group_empty_error').style.display = "block";
+                    return;
+                }
+                else if( document.getElementById('input_cert_group').value == "Other" ) {
+                    if( document.getElementsByClassName('input_cert_group_custom')[0].getElementsByTagName('input')[0].value == "" ) {
+                        document.getElementById('input_group_empty_error').style.display = "block";
+                        return;
+                    }
+                    else {
+                        document.getElementById('input_group_empty_error').style.display = "none";
+                        inputGroup = document.getElementsByClassName('input_cert_group_custom')[0].getElementsByTagName('input')[0].value;
+                    }
+                }
+                else {
+                    document.getElementById('input_group_empty_error').style.display = "none";
+                    inputGroup = document.getElementById('input_cert_group').value;
+                }
+
+                // 교육과정 빈칸 체크
+                var inputCourse = "";
+                if( document.getElementById('input_cert_course').value == "" ) {
+                    document.getElementById('input_course_empty_error').style.display = "block";
+                    return;
+                }
+                else if( document.getElementById('input_cert_course').value == "Other" ) {
+                    if( document.getElementsByClassName('input_cert_course_custom')[0].getElementsByTagName('input')[0].value == "" ) {
+                        document.getElementById('input_course_empty_error').style.display = "block";
+                        return;
+                    }
+                    else {
+                        document.getElementById('input_course_empty_error').style.display = "none";
+                        inputCourse = document.getElementsByClassName('input_cert_course_custom')[0].getElementsByTagName('input')[0].value;
+                    }
+                }
+                else {
+                    document.getElementById('input_course_empty_error').style.display = "none";
+                    inputCourse = document.getElementById('input_cert_course').value;
+                }
+
+                var editParamaters = {};
+                editParamaters.certId = certId;
+                editParamaters.issuedate = inputDate;
+                editParamaters.issuegroup = inputGroup;
+                editParamaters.course = inputCourse;
+                editParamaters.special = document.getElementById('input_cert_description').value;
+
+                if( document.getElementById('imgInp').files[0] != undefined )
+                    editParamaters.certImage = document.getElementById('imgInp').files[0];
+
+                httpSend.upload("/certification/update", editParamaters, function(result) {
+                    location.replace("/license_detail/"+certId);
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+
+            function doRemove() {
+                httpSend.send("/certification/remove", {
+                    certId: certId
+                }, "POST", function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

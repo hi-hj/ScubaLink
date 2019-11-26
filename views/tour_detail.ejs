@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 상세일정</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back_white { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+
+            #tour_schedule_head .tour_content { top: 0; padding-top: 18px; }
+            #tour_schedule_head .switch-field { margin: 0; left: 50%; transform: translateX(-50%); top: 130px; }
+            #tour_basic_info #tour_attend button {margin-top: 0;}
+            .container:hover input ~ .checkmark { background-color: #fff; }
+
+            #tour_basic_info #tour_attend .instructor_profit div.blue_text { color: #145db2; }
+            #tour_basic_info #tour_attend .instructor_profit div { font-size: 14px; margin-top: 0px; color: #333333; }
+            #tour_basic_info #tour_attend .instructor_profit div p:first-of-type { font-size: 12px; color: #333333; line-height: 2; }
+            #tour_basic_info #tour_attend .instructor_profit div span.right_arrow { float: right; margin-top: -37px; }
+            #tour_basic_info #tour_attend .instructor_profit div span.right_arrow img { width: 20px; }
+
+            #btn_tour_schedule_large { height: 48px; margin: auto; font-size: 14px; font-weight: bold; color: #145db2; border: solid 2px #145db2; border-radius: 4px; background-color: #ffffff; }
+
+            #collapseFour>.panel-body div[class="row"] span:first-child { margin-left: 16px; float: left; font-size: 12px; line-height: 1.17; font-weight: bold; color: #333333; }
+            #collapseFour>.panel-body div[class="row"] span:nth-child(2) { margin-right: 16px; float: right; font-size: 14px; line-height: 1; color: #333333; }
+
+            #tour_basic_info pre.more { white-space: pre; font-size: 14px; line-height: 1.43; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
+            #tour_basic_info .tour_comment .panel-body span.comment_date { position: relative; left: 0; padding-left: 10px; }
+            #tour_basic_info .tour_comment .panel-body pre.comment_content { padding-left: 40px; }
+        </style>
+    </head>
+
+    <body>
+        <div id="tour_schedule_head">
+            <div class="overlay"></div>
+
+            <img id="tour_image" class="back_img" src="<% if( !locals.image || image == undefined || image == '' ) { %>/img/back_gray.png<% } else { %><%= image %><% } %>" alt="" />
+
+            <div class="tour_content">
+                <div id="btn_back"><img src="/img/left-arrow.svg" id="back_white" alt="" /></div>
+
+<% if( userId == ins_id ) { %>
+                <span class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="glyphicon glyphicon-option-vertical"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="/tour_edit/<%= _id %>">수정</a></li>
+                        <li><a onclick="removeTour();">삭제</a></li>
+                    </ul>
+                </span>
+<% } %>
+
+                <p id="tour_name" style="top: 55px; max-height: 40px; overflow: hidden;"><%= name %></p>
+                <p class="hidden"></p>
+
+                <div class="tour_mem_num"><span id="tour_current_member_count"><%= participant.length %></span>/<span id="tour_member_count"><%= member %></span>명 모집중</div>
+
+                <div class="switch-field">
+<%
+var isParticipant = false;
+for(var i=0; i<participant.length; i++) {
+    if( participant[i].id == userId ) {
+        isParticipant = true;
+        break;
+    }
+}
+
+var isWaiting = false;
+for(var i=0; i<waiting.length; i++) {
+    if( waiting[i].id == userId ) {
+        isWaiting = true;
+        break;
+    }
+}
+
+var isInteresting = false;
+for(var i=0; i<interesting.length; i++) {
+    if( interesting[i].id == userId ) {
+        isInteresting = true;
+        break;
+    }
+}
+%>
+                    <label id="switch_3_left_l" <% if(isWaiting) { %> class="blue"<% } %>>미정</label>
+                    <label id="switch_3_center_l" <% if(isInteresting) { %> class="blue"<% } %>>관심있어요</label>
+                    <label id="switch_3_right_l" <% if(isParticipant) { %> class="blue"<% } %>>참석!</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="tour_basic_info">
+            <div class="my_profile_information">
+<% if( !locals.description || description == undefined || description == '' ) { %>
+                <p id="tour_description" class="tour_basic_explain hidden"></p>
+<% } else { %>
+                <p id="tour_description" class="tour_basic_explain"><%= description %></p>
+<% } %>
+
+                <div class="basic_information" id="id">
+                    <span class="basic_information_guide">기간</span>
+                    <span id="tour_date_01" class="info_text"></span>
+                    <p id="tour_date_02" class="explain_date"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> - <%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></p>
+                </div>
+
+                <!--장소-->
+                <div class="basic_information">
+                    <span class="basic_information_guide">장소</span>
+                    <span id="tour_place" class="info_text"><%= place %></span>
+                </div>
+
+                <div class="basic_information">
+                    <span name="birth" class="basic_information_guide">비용</span>
+<%
+    function addComma(str) {
+        var regexp = /\B(?=(\d{3})+(?!\d))/g;
+        return str.toString().replace(regexp, ',');
+    }
+%>
+                    <span id="tour_total_cost" class="info_text"><% if(cost.details.length == 0) { %>입력 전<% } else { %><%= addComma(cost.total) %>원<% } %></span>
+                </div>
+
+                <div class="basic_information tour_instructor">
+                    <span class="basic_information_guide">강사</span>
+                    <div style="display: inline-block; height: 100%; width: calc(100% - 60px);" onclick="location.href='/profile/<%= ins_id %>';">
+                        <span class="info_text">
+                            <img src="<% if( !locals.ins_image || ins_image == undefined || ins_image == '' ) { %>/img/default_user.png<% } else { %><%= ins_image %><% } %>" alt="" class="img-circle" />
+                        </span>
+
+                        <span class="INS_badge"><img src='/img/ic.png' alt="" /></span>
+
+                        <span class="tour_ins_name"><%= ins_name %></span>
+                        <div class="explain_text"><% if( !locals.ins_group || ins_group == undefined || ins_group == '' ) { %>소속 없음<% } else { %><%= ins_group %><% } %></div>
+                        <span class="right_arrow"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour_division" id="division_in"></div>
+            <div class="tour_division"></div>
+
+            <!--상세일정-->
+            <div class="panel panel-default" id="panel_basic">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span class="panel_text_01">상세일정</span>
+                    </h4>
+
+                    <button id="btn_tour_schedule" class="edit_detail <% if(userId != ins_id || schedule == "") { %>hidden<% } %>" onclick="location.href='/tour/schedule/<%= _id %>';">수정</button>
+                </div>
+
+
+                <div class="panel-body">
+
+<% if(userId == ins_id) {
+      if(schedule == "") { %>
+                    <pre id="tour_schedule" class="more hidden"></pre>
+                    <button id="btn_tour_schedule_large" type="button" class="btn btn-block col-xs-12" onclick="location.href='/tour/schedule/<%= _id %>';">
+                        <span id="text_tour_education">상세일정 등록</span>
+                    </button>
+<%    } else { %>
+                    <pre id="tour_schedule" class="more"><%= schedule %></pre>
+                    <button id="btn_tour_schedule_large" type="button" class="btn btn-block col-xs-12 hidden" onclick="location.href='/tour/schedule/<%= _id %>';">
+                        <span id="text_tour_education">상세일정 등록</span>
+                    </button>
+<%    }
+   } else {
+      if(schedule == "") { %>
+                    <pre id="tour_schedule" class="more">입력 전</pre>
+<%    } else { %>
+                    <pre id="tour_schedule" class="more"><%= schedule %></pre>
+<%    }
+   } %>
+                </div>
+            </div>
+
+            <div class="tour_division"></div>
+
+            <!--비용-->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <span class="panel_text_01">비용</span>
+
+                    <span id="tour_info_edit" class="<% if(userId != ins_id || cost.details.length == 0) { %>hidden<% } %>" onclick="location.href='/tour/cost/<%= _id %>';">수정</span>
+                </h4>
+            </div>
+
+            <div id="collapseFour" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+<% if(userId == ins_id) {
+      if(cost.details.length == 0) { %>
+                    <div id="tour_cost_wrap" class="hidden"></div>
+
+                    <button type="button" id="plus_cost" class="btn btn-block col-xs-12" onclick="location.href='/tour/cost/<%= _id %>';">
+                        <span id="text_tour_education">비용 등록</span>
+                    </button>
+<%    } else { %>
+                    <div id="tour_cost_wrap">
+                        <div class="row">
+                            <span>교육생 비용</span>
+                            <span>350,000원/1명</span>
+                        </div>
+
+                        <div class="row">
+                            <span>교통(고속버스)</span>
+                            <span>40,000원/1명</span>
+                        </div>
+
+                        <div class="row">
+                            <span>교육비</span>
+                            <span>60,000원/1명</span>
+                        </div>
+
+                        <div class="row profit_per_explain">
+                            <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="plus_cost" class="btn btn-block col-xs-12 hidden" onclick="location.href='/tour/cost/<%= _id %>';">
+                        <span id="text_tour_education">비용 등록</span>
+                    </button>
+<%    }
+   } else {
+      if(cost.details.length == 0) { %>
+                    <div id="tour_cost_wrap">
+                        <div class="more">입력 전</div>
+                    </div>
+<%    } else { %>
+                    <div id="tour_cost_wrap">
+                        <div class="row">
+                            <span>교육생 비용</span>
+                            <span>350,000원/1명</span>
+                        </div>
+
+                        <div class="row">
+                            <span>교통(고속버스)</span>
+                            <span>40,000원/1명</span>
+                        </div>
+
+                        <div class="row">
+                            <span>교육비</span>
+                            <span>60,000원/1명</span>
+                        </div>
+
+                        <div class="row profit_per_explain">
+                            <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>
+                        </div>
+                    </div>
+<%    }
+   } %>
+                </div>
+            </div>
+
+            <div class="tour_division"></div>
+
+            <!--참석자-->
+            <div id="tour_attend">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span class="panel_text_01">참석자</span>
+                        <button class="btn"><span id="tour_current_member_count_02" style="line-height: initial; font-size: 100%;"><%= participant.length %></span>/<span id="tour_member_count_02" style="line-height: initial; font-size: 100%;"><%= member %></span>명 모집중</button>
+                    </h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="instructor_profit">
+                        <div class="container <% if(isParticipant) { %>blue_text<% } %>">참석합니다 <span id="participant_count"><%= participant.length %></span>명
+                            <p id="participant_name"><%  for(var i=0; i<participant.length; i++) { if( i == 0 ) { %><%= participant[i].name %><% } else { %>, <%= participant[i].name %><% } } %></p>
+                            <input type="radio" id="switch_3_right" name="swtich_3" <% if(isParticipant) { %>checked="checked"<% } %> />
+                            <span class="checkmark"></span>
+                            <span class="right_arrow"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
+                        </div>
+
+                        <div class="container <% if(isInteresting) { %>blue_text<% } %>">관심있어요 <span id="interesting_count"><% if( interesting.length == 1 && interesting[0].id == undefined ) { %>0<% } else {%><%= interesting.length %><% } %></span>명
+                            <p id="interesting_name"><%  for(var i=0; i<waiting.length; i++) { if( i == 0 ) { %><%= interesting[i].name %><% } else { %>, <%= interesting[i].name %><% } } %></p>
+                            <input type="radio" id="switch_3_center" name="swtich_3" <% if(isInteresting) { %>checked="checked"<% } %> <% if( userId == ins_id ) { %>disabled<% } %> />
+                            <span class="checkmark"></span>
+                        </div>
+
+                        <div class="container <% if(isWaiting) { %>blue_text<% } %>">미정 <span id="waiting_count"><% if( waiting.length == 1 && waiting[0].id == undefined ) { %>0<% } else {%><%= waiting.length %><% } %></span>명
+                            <input type="radio" id="switch_3_left" name="swtich_3" <% if(isWaiting) { %>checked="checked"<% } %> <% if( userId == ins_id ) { %>disabled<% } %> />
+                            <span class="checkmark"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour_division"></div>
+
+            <!--댓글-->
+            <div class="tour_comment">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span onclick="location.href='/tour_comment/<%= _id %>?t=1';">
+                            <span class="right_arrow"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
+                            <span>전체보기</span>
+                        </span>
+                        <span id="comment_count" class="panel_text_01">댓글 <%= commentList.length %></span>
+                    </h4>
+                </div>
+
+
+                <div class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="comment_wrap">
+  <% for(var i=0; i<(commentList.length >= 3 ? 3 : commentList.length); i++) { %>
+                            <div class="comment">
+                                <span><img src="<% if(!commentList[i].image || commentList[i].image == undefined || commentList[i].image == "") { %>/img/default_user.png<% } else {%><%= commentList[i].image %><% } %>" alt="" class="img-circle" /></span>
+  <% if(commentList[i].type == 1) { %>
+                                <span class="INS_badge"><img src='/img/ic.png' alt='' /></span>
+  <% } %>
+                                <span class="comment_name"><%= commentList[i].name %><span class="comment_date"><%= commentList[i].date.substr(0,4) %>. <%= commentList[i].date.substr(4,2) %>. <%= commentList[i].date.substr(6,2) %> <%= (parseInt(commentList[i].time.substr(0,2)) < 12 ? '오전' : '오후') %> <%= (parseInt(commentList[i].time.substr(0,2)) == 0 ? '12' : ( parseInt(commentList[i].time.substr(0,2)) > 12 ? parseInt(commentList[i].time.substr(0,2))-12 : parseInt(commentList[i].time.substr(0,2)) )) %>:<%= commentList[i].time.substr(2,2) %></span></span>
+                                <pre class="comment_content"><%= commentList[i].comment %></pre>
+                            </div>
+  <% } %>
+
+  <% if( commentList.length == 0 ) { %>
+                            <div id="none_comment"> 첫 댓글을 달아보세요</div>
+  <% } %>
+                        </div>
+
+                        <button id="wr_comment" onclick="location.href='/tour_comment/<%= _id %>?t=2';">댓글쓰기 <img id="comment_img" src="/img/ic-chat.svg" alt="" /></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="space_last"></div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            if( document.getElementById('tour_name').offsetHeight <= 20 ) {
+                document.getElementsByClassName('tour_mem_num')[0].style.top = "91px";
+            }
+            else {
+                document.getElementsByClassName('tour_mem_num')[0].style.top = "105px";
+            }
+
+            var tourId = '<%= _id %>';
+
+            var week = new Array('일', '월', '화', '수', '목', '금', '토');
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementsByClassName('container')[0].onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[0].classList.contains('blue_text') )
+                    return;
+
+                participateTour();
+            }
+            document.getElementsByClassName('container')[1].onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[1].classList.contains('blue_text') )
+                    return;
+
+                interestTour();
+            }
+            document.getElementsByClassName('container')[2].onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[2].classList.contains('blue_text') )
+                    return;
+
+                waitTour();
+            }
+
+            document.getElementById('switch_3_right_l').onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[0].classList.contains('blue_text') )
+                    return;
+
+                participateTour();
+            }
+            document.getElementById('switch_3_center_l').onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[1].classList.contains('blue_text') )
+                    return;
+
+                interestTour();
+            }
+            document.getElementById('switch_3_left_l').onclick = function() {
+                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[2].classList.contains('blue_text') )
+                    return;
+
+                waitTour();
+            }
+
+            window.onpageshow = function (event) {
+                httpSend.send("/tour/detail", {
+                    id: tourId
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    var startdate = result.startdate;
+                    var enddate = result.enddate;
+                    var tempDate1 = new Date(startdate.substr(0,4)+"-"+startdate.substr(4,2)+"-"+startdate.substr(6,2)+"T00:00:00");
+                    var tempDate2 = new Date(enddate.substr(0,4)+"-"+enddate.substr(4,2)+"-"+enddate.substr(6,2)+"T00:00:00");
+                    var tourDateGap = (tempDate2-tempDate1)/1000/24/60/60;
+
+                    document.getElementById('tour_date_01').innerHTML = tourDateGap+"박 "+(tourDateGap+1)+"일";
+                    document.getElementById('tour_date_02').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+". "+week[tempDate1.getDay()] + " - " + enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+". "+week[tempDate2.getDay()];
+
+                    if( result.description == undefined || result.description == "" ) {
+                        document.getElementById('tour_description').classList.add("hidden");
+                    }
+                    else {
+                        document.getElementById('tour_description').innerHTML = result.description;
+                        document.getElementById('tour_description').classList.remove("hidden");
+                    }
+
+                    if( result.image == undefined || result.image == "" ) {
+                        document.getElementById('tour_image').src = "/img/back_gray.png";
+                    }
+                    else {
+                        document.getElementById('tour_image').src = result.image;
+                    }
+
+                    document.getElementById('tour_name').innerHTML = result.name;
+                    document.getElementById('tour_member_count').innerHTML = result.member;
+                    document.getElementById('tour_member_count_02').innerHTML = result.member;
+                    document.getElementById('tour_place').innerHTML = result.place;
+
+                    if( document.getElementById('tour_name').offsetHeight <= 20 ) {
+                        document.getElementsByClassName('tour_mem_num')[0].style.top = "91px";
+                    }
+                    else {
+                        document.getElementsByClassName('tour_mem_num')[0].style.top = "105px";
+                    }
+
+                    if( result.cost.details.length == 0 )
+                        document.getElementById('tour_total_cost').innerHTML = "입력 전";
+                    else
+                        document.getElementById('tour_total_cost').innerHTML = addComma(result.cost.total)+"원";
+
+                    // 일정
+                    if( '<%= userId %>' != '<%= ins_id %>' || result.schedule == "" ) {
+                        document.getElementById('btn_tour_schedule').classList.add("hidden");
+                    }
+                    else {
+                        document.getElementById('btn_tour_schedule').classList.remove("hidden");
+                    }
+
+                    if( '<%= userId %>' == '<%= ins_id %>' ) {
+                        if( result.schedule == "" ) {
+                            document.getElementById('tour_schedule').classList.add("hidden");
+                            document.getElementById('btn_tour_schedule_large').classList.remove("hidden");
+                        }
+                        else {
+                            document.getElementById('tour_schedule').innerHTML = result.schedule;
+                            document.getElementById('tour_schedule').classList.remove("hidden");
+
+                            document.getElementById('btn_tour_schedule_large').classList.add("hidden");
+                        }
+                    }
+                    else {
+                        if( result.schedule == "" ) {
+                            document.getElementById('tour_schedule').innerHTML = "입력 전";
+                            document.getElementById('tour_schedule').classList.remove("hidden");
+                        }
+                        else {
+                            document.getElementById('tour_schedule').innerHTML = result.schedule;
+                            document.getElementById('tour_schedule').classList.remove("hidden");
+                        }
+                    }
+
+                    // 비용
+                    if( '<%= userId %>' != '<%= ins_id %>' || result.cost.details.length == 0 ) {
+                        document.getElementById('tour_info_edit').classList.add("hidden");
+                    }
+                    else {
+                        document.getElementById('tour_info_edit').classList.remove("hidden");
+                    }
+
+                    if( '<%= userId %>' == '<%= ins_id %>' ) {
+                        if( result.cost.details.length == 0 ) {
+                            document.getElementById('tour_cost_wrap').classList.add("hidden");
+                            document.getElementById('plus_cost').classList.remove("hidden");
+                        }
+                        else {
+                            var tempHtml = "";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교육생 비용</span>";
+                            tempHtml += "     <span>350,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교통(고속버스)</span>";
+                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교육비</span>";
+                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row profit_per_explain'>";
+                            tempHtml += "     <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>";
+                            tempHtml += " </div>";
+
+                            document.getElementById('tour_cost_wrap').innerHTML = tempHtml;
+                            document.getElementById('tour_cost_wrap').classList.remove("hidden");
+
+                            document.getElementById('plus_cost').classList.add("hidden");
+                        }
+                    }
+                    else {
+                        if( result.cost.details.length == 0 ) {
+                            document.getElementById('tour_cost_wrap').innerHTML = "<div class='more'>입력 전</div>";
+                            document.getElementById('tour_cost_wrap').classList.remove("hidden");
+                        }
+                        else {
+                            var tempHtml = "";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교육생 비용</span>";
+                            tempHtml += "     <span>350,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교통(고속버스)</span>";
+                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row'>";
+                            tempHtml += "     <span>교육비</span>";
+                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += " </div>";
+                            tempHtml += " <div class='row profit_per_explain'>";
+                            tempHtml += "     <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>";
+                            tempHtml += " </div>";
+
+                            document.getElementById('tour_cost_wrap').innerHTML = tempHtml;
+                            document.getElementById('tour_cost_wrap').classList.remove("hidden");
+                        }
+                    }
+
+/*
+                    var bgnCost = 0;
+                    var html = "";
+                    var popupHtml = "";
+                    for( var i=0; i<document.getElementsByClassName('input_cost').length; i++ ) {
+                        var object = document.getElementsByClassName('input_cost')[i];
+                        var tempTitle = "";
+                        if( object.getElementsByClassName('input_details_type')[0].value == "1" ) {
+                            tempTitle = "교통";
+                        }
+                        else if( object.getElementsByClassName('input_details_type')[0].value == "2" ) {
+                            tempTitle = "식비";
+                        }
+                        else if( object.getElementsByClassName('input_details_type')[0].value == "3" ) {
+                            tempTitle = "숙박비";
+                        }
+                        else if( object.getElementsByClassName('input_details_type')[0].value == "4" ) {
+                            tempTitle = "보트다이빙";
+                        }
+                        else if( object.getElementsByClassName('input_details_type')[0].value == "5" ) {
+                            tempTitle = "장비대여료";
+                        }
+                        else if( object.getElementsByClassName('input_details_type')[0].value == "6" ) {
+                            tempTitle = object.getElementsByClassName('input_details_title')[0].value;
+                        }
+
+                        var tempCost = object.getElementsByClassName('input_details_cost')[0].value * object.getElementsByClassName('input_details_count')[0].value
+
+                        if( tempTitle == "" || object.getElementsByClassName('input_details_cost')[0].value == "" || object.getElementsByClassName('input_details_count')[0].value == "")
+                            continue;
+
+                        var costTypeTxt = "";
+                        var costTypeDesc = "";
+                        var costType = 0;
+                        var costPrice = 0;
+
+                        if( object.getElementsByClassName('input_details_option1')[0].checked ) {
+                            costTypeTxt = "공동";
+                            costTypeDesc = "<p>= 공동비용 / 교육생 수</p>";
+
+                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
+                                costTypeTxt += ",강사";
+                            }
+
+                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
+                                costTypeTxt += ",FOC";
+                                costTypeDesc += "<p>- ((공동비용 / 교육생 수) x FOC 적용 인원 수 / 교육생 수)</p>";
+                            }
+
+                            costTypeDesc += "<p>= "+addComma(tempCost)+"원 / "+bgnCount+"명</p>";
+
+                            costPrice = parseInt(tempCost / bgnCount);
+
+                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
+                                var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
+                                costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / "+bgnCount+"명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
+                                costPrice -= parseInt(parseInt(tempCost / bgnCount)*applyFocCount/bgnCount);
+                            }
+
+                        }
+                        else {
+                            costTypeTxt = "개인";
+                            costTypeDesc = "<p>= 개인비용</p>";
+
+                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
+                                costTypeTxt += ",강사";
+                                costTypeDesc += "<p>+ (개인비용 x 강사 수 / 교육생 수)</p>";
+                            }
+
+                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
+                                costTypeTxt += ",FOC";
+                                costTypeDesc += "<p>- (개인비용 x FOC 적용 인원 수 / 교육생 수)</p>";
+                            }
+
+                            if( object.getElementsByClassName('input_details_option2')[0].checked ||
+                                object.getElementsByClassName('input_details_option3')[0].checked ||
+                                object.getElementsByClassName('input_details_option4')[0].checked) {
+                                costTypeDesc += "<p>= "+addComma(tempCost)+"원 / 1명</p>";
+                            }
+                            costPrice = tempCost;
+
+                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
+                                costTypeDesc += "<p>+ (("+addComma(tempCost)+"원 / 1명) x 1명 / "+bgnCount+"명)</p>";
+                                costPrice += parseInt(tempCost / bgnCount);
+                            }
+
+                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
+                                var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
+                                costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / 1명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
+                                costPrice -= parseInt(tempCost*applyFocCount/bgnCount);
+                            }
+                        }
+
+                        html += " <div class='row'>";
+                        html += "     <span>"+tempTitle+"</span>";
+                        html += "     <span>+"+addComma(costPrice)+"원 / 1명</span>";
+                        html += " </div>";
+
+                        popupHtml += "  <div class='calc_cost_semi'>";
+                        popupHtml += "      <div>";
+                        popupHtml += "          <span>"+tempTitle+"("+costTypeTxt+")</span>";
+                        popupHtml += "          <span>+"+addComma(costPrice)+"원 / 1명</span>";
+                        popupHtml += "      </div>";
+                        popupHtml +=        costTypeDesc;
+                        popupHtml += "      <p>= "+addComma(costPrice)+"원 / 1명</p>";
+                        popupHtml += "  </div>";
+
+                        bgnCost += costPrice;
+                    }
+
+                    document.getElementById('summury_cost').innerHTML = html;
+                    */
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+
+                httpSend.send("/comment/find", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    var html = "";
+                    for( var i=0; i<(result.commentList.length >= 3 ? 3 : result.commentList.length); i++ ) {
+                        html += " <div class='comment'>";
+                        if( result.commentList[i].image == undefined || result.commentList[i].image == "" )
+                            html += " <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
+                        else
+                            html += " <span><img src='"+result.commentList[i].image+"' alt='' class='img-circle' /></span>";
+                        if(result.commentList[i].type == 1)
+                            html += " <span class='INS_badge'><img src='/img/ic.png' alt='' /></span>";
+                        html += "     <span class='comment_name'>"+result.commentList[i].name+"<span class='comment_date'>"+result.commentList[i].date.substr(0,4)+". "+result.commentList[i].date.substr(4,2)+". "+result.commentList[i].date.substr(6,2)+" "+(parseInt(result.commentList[i].time.substr(0,2)) < 12 ? '오전' : '오후')+" "+(parseInt(result.commentList[i].time.substr(0,2)) == 0 ? '12' : (parseInt(result.commentList[i].time.substr(0,2)) > 12 ? parseInt(result.commentList[i].time.substr(0,2))-12 : parseInt(result.commentList[i].time.substr(0,2))))+":"+result.commentList[i].time.substr(2,2)+"</span></span>";
+                        html += "     <pre class='comment_content'>"+result.commentList[i].comment+"</pre>";
+                        html += " </div>";
+                    }
+
+                    if( result.commentList.length == 0 ) {
+                        html += "<div id='none_comment'> 첫 댓글을 달아보세요</div>";
+                    }
+
+                    document.getElementById('comment_wrap').innerHTML = html;
+                    document.getElementById('comment_count').innerHTML = "댓글 "+result.commentList.length;
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+
+
+            }
+
+            function participateTour() {
+                httpSend.send("/tour/participate", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    document.getElementById('switch_3_right').checked = true;
+
+                    document.getElementById('switch_3_right_l').classList.add('blue');
+                    document.getElementById('switch_3_center_l').classList.remove('blue');
+                    document.getElementById('switch_3_left_l').classList.remove('blue');
+
+                    document.getElementsByClassName('container')[0].classList.add('blue_text');
+                    document.getElementsByClassName('container')[1].classList.remove('blue_text');
+                    document.getElementsByClassName('container')[2].classList.remove('blue_text');
+
+                    document.getElementsByClassName('checkmark')[0].classList.add('blue');
+                    document.getElementsByClassName('checkmark')[1].classList.remove('blue');
+                    document.getElementsByClassName('checkmark')[2].classList.remove('blue');
+
+                    renewTourMember(result);
+                }, function(errorCode, errorMessage) {
+                    if( errorCode == "T001" )
+                        alert(errorMessage);
+                    else
+                        console.log(errorMessage);
+                });
+            }
+
+            function interestTour() {
+                httpSend.send("/tour/interest", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    document.getElementById('switch_3_center').checked = true;
+
+                    document.getElementById('switch_3_right_l').classList.remove('blue');
+                    document.getElementById('switch_3_center_l').classList.add('blue');
+                    document.getElementById('switch_3_left_l').classList.remove('blue');
+
+                    document.getElementsByClassName('container')[0].classList.remove('blue_text');
+                    document.getElementsByClassName('container')[1].classList.add('blue_text');
+                    document.getElementsByClassName('container')[2].classList.remove('blue_text');
+
+                    document.getElementsByClassName('checkmark')[0].classList.remove('blue');
+                    document.getElementsByClassName('checkmark')[1].classList.add('blue');
+                    document.getElementsByClassName('checkmark')[2].classList.remove('blue');
+
+                    renewTourMember(result);
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function waitTour() {
+                httpSend.send("/tour/wait", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    document.getElementById('switch_3_left').checked = true;
+
+                    document.getElementById('switch_3_right_l').classList.remove('blue');
+                    document.getElementById('switch_3_center_l').classList.remove('blue');
+                    document.getElementById('switch_3_left_l').classList.add('blue');
+
+                    document.getElementsByClassName('container')[0].classList.remove('blue_text');
+                    document.getElementsByClassName('container')[1].classList.remove('blue_text');
+                    document.getElementsByClassName('container')[2].classList.add('blue_text');
+
+                    document.getElementsByClassName('checkmark')[0].classList.remove('blue');
+                    document.getElementsByClassName('checkmark')[1].classList.remove('blue');
+                    document.getElementsByClassName('checkmark')[2].classList.add('blue');
+
+                    renewTourMember(result);
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function renewTourMember(result) {
+                document.getElementById('participant_count').innerHTML = result.participant.length;
+                document.getElementById('interesting_count').innerHTML = ( (result.interesting.length == 1 && result.interesting[0].id == undefined) ? 0 : result.interesting.length );
+                document.getElementById('waiting_count').innerHTML = ( (result.waiting.length == 1 && result.waiting[0].id == undefined) ? 0 : result.waiting.length );
+
+                var tempParticipant = "";
+                for(var i=0; i<result.participant.length; i++) {
+                    if( result.participant[0].name == undefined )
+                        break;
+
+                    if( i == 0 )
+                        tempParticipant += result.participant[i].name;
+                    else
+                        tempParticipant += (", "+result.participant[i].name);
+                }
+
+                var tempInteresting = "";
+                for(var i=0; i<result.interesting.length; i++) {
+                    if( result.interesting[0].name == undefined )
+                        break;
+
+                    if( i == 0 )
+                        tempInteresting += result.interesting[i].name;
+                    else
+                        tempInteresting += (", "+result.interesting[i].name);
+                }
+                document.getElementById('participant_name').innerHTML = tempParticipant;
+                document.getElementById('interesting_name').innerHTML = tempInteresting;
+
+                document.getElementById('tour_current_member_count').innerHTML = result.participant.length;
+                document.getElementById('tour_current_member_count_02').innerHTML = result.participant.length;
+            }
+
+            function removeTour() {
+                httpSend.send("/tour/remove", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function addComma(num) {
+                var regexp = /\B(?=(\d{3})+(?!\d))/g;
+                return num.toString().replace(regexp, ',');
+            }
+        </script>
+    </body>
+</html>

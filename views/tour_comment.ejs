@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+
+        <title>스쿠버 링크 : 참여자</title>
+
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+            #tour_basic_info .tour_comment .panel-body span.comment_date { position: relative; left: 0; padding-left: 10px; }
+            #tour_basic_info .tour_comment .panel-body pre.comment_content { padding-left: 40px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="certif">
+            <span id="header_title" class="logo">댓글 <%= commentList.length %></span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+        </div>
+
+        <div id="tour_basic_info">
+            <div class="tour_comment">
+                <div class="panel-body" style="padding-top:8px; padding-bottom: 44px;">
+                    <div id="comment_wrap">
+<% for(var i=0; i<commentList.length; i++) { %>
+                        <div class="comment">
+                            <span><img src="<% if(!commentList[i].image || commentList[i].image == undefined || commentList[i].image == "") { %>/img/default_user.png<% } else {%><%= commentList[i].image %><% } %>" alt="" class="img-circle" /></span>
+<% if(commentList[i].type == 1) { %>
+                            <span class="INS_badge"><img src='/img/ic.png' alt='' /></span>
+<% } %>
+                            <span class="comment_name"><%= commentList[i].name %><span class="comment_date"><%= commentList[i].date.substr(0,4) %>. <%= commentList[i].date.substr(4,2) %>. <%= commentList[i].date.substr(6,2) %> <%= (parseInt(commentList[i].time.substr(0,2)) < 12 ? '오전' : '오후') %> <%= (parseInt(commentList[i].time.substr(0,2)) == 0 ? '12' : ( parseInt(commentList[i].time.substr(0,2)) > 12 ? parseInt(commentList[i].time.substr(0,2))-12 : parseInt(commentList[i].time.substr(0,2)) )) %>:<%= commentList[i].time.substr(2,2) %></span></span>
+                            <pre class="comment_content"><%= commentList[i].comment %></pre>
+                        </div>
+<% } %>
+
+<% if( commentList.length == 0 ) { %>
+                        <div id="none_comment"> 첫 댓글을 달아보세요</div>
+<% } %>
+                    </div>
+
+                    <div class="tour_comment_input" id="tour_comment" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 44px; border-top: 1px solid #e5e5e5; background-color: #fff;">
+                        <textarea id="input_tour_comment" placeholder="댓글달기" style="border: none;" resize:vertical></textarea>
+                        <button id="btn_tour_comment" style="border: none;">보내기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            var tourId = '<%= _id %>';
+            var init = false;
+            var t = '<%= t %>';
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_tour_comment').onclick = function() {
+                if( document.getElementById('input_tour_comment').value == "" )
+                    return;
+
+                var tempComment = document.getElementById('input_tour_comment').value;
+                document.getElementById('input_tour_comment').value = "";
+                document.getElementById('input_tour_comment').style.height = "43px";
+                document.getElementById('btn_tour_comment').style.height = "43px";
+
+
+                httpSend.send("/comment/add", {
+                    tourId    : tourId,
+                    comment   : tempComment
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    drawComment(result);
+
+                    document.documentElement.scrollTop = 1000000;
+                    document.body.scrollTop = 1000000;
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+
+            window.onpageshow = function (event) {
+                httpSend.send("/comment/find", {
+                    tourId: tourId
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    //drawComment(result);
+
+                    if( !init ) {
+                        init = true;
+                        if( t == 2 ) {
+                            document.documentElement.scrollTop = 1000000;
+                            document.body.scrollTop = 1000000;
+                        }
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+
+            function drawComment(result) {
+                var html = "";
+                for( var i=0; i<result.commentList.length; i++ ) {
+                    html += " <div class='comment'>";
+                    if( result.commentList[i].image == undefined || result.commentList[i].image == "" )
+                        html += " <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
+                    else
+                        html += " <span><img src='"+result.commentList[i].image+"' alt='' class='img-circle' /></span>";
+                    if(result.commentList[i].type == 1)
+                        html += " <span class='INS_badge'><img src='/img/ic.png' alt='' /></span>";
+                    html += "     <span class='comment_name'>"+result.commentList[i].name+"<span class='comment_date'>"+result.commentList[i].date.substr(0,4)+". "+result.commentList[i].date.substr(4,2)+". "+result.commentList[i].date.substr(6,2)+" "+(parseInt(result.commentList[i].time.substr(0,2)) < 12 ? '오전' : '오후')+" "+(parseInt(result.commentList[i].time.substr(0,2)) == 0 ? '12' : (parseInt(result.commentList[i].time.substr(0,2)) > 12 ? parseInt(result.commentList[i].time.substr(0,2))-12 : parseInt(result.commentList[i].time.substr(0,2))))+":"+result.commentList[i].time.substr(2,2)+"</span></span>";
+                    html += "     <pre class='comment_content'>"+result.commentList[i].comment+"</pre>";
+                    html += " </div>";
+                }
+
+                if( result.commentList.length == 0 ) {
+                    html += "<div id='none_comment'> 첫 댓글을 달아보세요</div>";
+                }
+
+                document.getElementById('comment_wrap').innerHTML = html;
+                document.getElementById('header_title').innerHTML = "댓글 "+result.commentList.length;
+            }
+        </script>
+    </body>
+</html>

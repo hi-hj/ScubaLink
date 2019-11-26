@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 회원가입</title>
+
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css" />
+    </head>
+
+    <body id="join" class= "trainee">
+        <div id="header">
+            <button id="btn_back" type="button" class="btn_ic">
+                <i class="btn_prev"> </i>
+            </button>
+
+            <div class="step">
+                <span class="s_dot s_deactive"></span>
+                <span class="s_dot s_active"></span>
+                <span class="s_dot s_deactive"></span>
+            </div>
+
+            <p class="j_title">신체정보</p>
+            <p class="explain t_center">수영장 교육, 장비 대여 시<br>필요한 정보입니다.</p>
+        </div>
+
+        <form id="main" action="" method="">
+            <div class="input_box input_full">
+                <select id="input_gender" name="sex">
+                    <option value="" selected disabled="disabled"/>성별</option>
+                    <option value="1">남</option>
+                    <option value="2">여</option>
+                </select>
+                <p class="explain t_left">수영장 교육, 락커룸 대여, 장비(수트,BC 등) 대여 시 고려되는 정보입니다.</p>
+                <p class="explain t_err t_left" id="input_gender_empty_error">성별을 선택하세요.</p>
+            </div>
+
+            <div class="input_box add_unit">
+                <div class="input_num">
+                    <input id="input_height" type="number" pattern="\d*" placeholder="키" min=5 max= 300 />
+                    <span class="unit" name="height">cm</span>
+                </div>
+                <p class="explain t_left">5cm 단위로 입력해주세요.</p>
+                <p class="explain t_err t_left" id="input_height_empty_error">빈 칸을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_height_value_error">값이 올바르지 않습니다.</p>
+            </div>
+
+            <div class="input_box">
+                <div class="input_num">
+                    <input id="input_weight" type="number" pattern="\d*" placeholder="몸무게" min=5 max=300 />
+                    <span class="unit" name="weight">kg</span>
+                </div>
+                <p class="explain t_left">5kg 단위로 입력해주세요.</p>
+                <p class="explain t_err t_left" id="input_weight_empty_error">빈 칸을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_weight_value_error">값이 올바르지 않습니다.</p>
+            </div>
+
+            <div class="input_box">
+                <div class="input_num">
+                    <input id="input_foot" type="number" pattern="\d*" placeholder="발사이즈" name="foot_size" min=5 max=400 />
+                    <span class="unit" name="foot_size">mm</span>
+                </div>
+                <p class="explain t_left">5mm 단위로 입력해주세요.</p>
+                <p class="explain t_err t_left" id="input_foot_empty_error">빈 칸을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_foot_value_error">값이 올바르지 않습니다.</p>
+            </div>
+
+            <div class="input_box">
+                <p class="explain t_left">특이병력(선택 입력)</p>
+                <input id="input_disease" type="text" placeholder="비염, 근시 등" name="disease" />
+                <p class="explain t_left">회원님께 맞는 장비 대여와 안전한 교육 및 다이빙을 위해 필요한 정보입니다.</p>
+            </div>
+
+            <button type="button" class="btn btn_full" id="nextBtn">다음</button>
+        </form>
+
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            }
+
+            document.getElementById('nextBtn').onclick = function() {
+                // 성별 빈칸 체크
+                if( document.getElementById('input_gender').value == "" ) {
+                    document.getElementById('input_gender_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_gender_empty_error').style.display = "none";
+                }
+
+                // 키 빈칸 체크
+                if( document.getElementById('input_height').value == "" ) {
+                    document.getElementById('input_height_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_height_empty_error').style.display = "none";
+                }
+
+                // 키 5~300cm 체크
+                if( parseInt(document.getElementById('input_height').value) < 5 ||
+                    parseInt(document.getElementById('input_height').value) > 300 ) {
+                    document.getElementById('input_height_value_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_height_value_error').style.display = "none";
+                }
+
+                // 몸무게 빈칸 체크
+                if( document.getElementById('input_weight').value == "" ) {
+                    document.getElementById('input_weight_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_weight_empty_error').style.display = "none";
+                }
+
+                // 몸무게 5~300kg 체크
+                if( parseInt(document.getElementById('input_weight').value) < 5 ||
+                    parseInt(document.getElementById('input_weight').value) > 300 ) {
+                    document.getElementById('input_weight_value_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_weight_value_error').style.display = "none";
+                }
+
+                // 발길이 빈칸 체크
+                if( document.getElementById('input_foot').value == "" ) {
+                    document.getElementById('input_foot_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_foot_empty_error').style.display = "none";
+                }
+
+                // 발길이 5~400cm 체크
+                if( parseInt(document.getElementById('input_foot').value) < 5 ||
+                    parseInt(document.getElementById('input_foot').value) > 400 ) {
+                    document.getElementById('input_foot_value_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_foot_value_error').style.display = "none";
+                }
+
+                // 다음 이동
+                console.log("success");
+                console.log({
+                    userGender    : document.getElementById('input_gender').value,
+                    userHeight    : document.getElementById('input_height').value,
+                    userWeight    : document.getElementById('input_weight').value,
+                    userFoot      : document.getElementById('input_foot').value,
+                    userDisease   : document.getElementById('input_disease').value
+                });
+
+                location.href = "/join_bgn_03_params?g="+document.getElementById('input_gender').value+"&h="+document.getElementById('input_height').value+"&w="+document.getElementById('input_weight').value+"&f="+document.getElementById('input_foot').value+"&d="+encodeURI(document.getElementById('input_disease').value);
+            }
+        </script>
+    </body>
+</html>

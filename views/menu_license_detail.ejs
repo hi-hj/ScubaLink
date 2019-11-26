@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 자격증 편집</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 26px; opacity: 0.54; top: 0; left: 0; margin-top: 7px; margin-left: 7px; }
+            #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+
+            .my_certif_card #img-upload { width: 100%; height: 200px; margin: auto; cursor: pointer; }
+            .basic_information #disease +span.certif_info_text { left: 0; }
+        </style>
+    </head>
+
+
+    <body>
+        <div class="header">
+            <span id="header_title" class="logo_mini">자격증</span>
+            <div id="btn_back" class="header_close">
+                <img id="back" src="/img/ic-close.svg" alt="" />
+            </div>
+            <span id="btn_edit" class="header_save">편집</span>
+        </div>
+
+        <div class="my_certif_card">
+            <div style="width: 100%; height: 200px; background-color: #dddddd;">
+                <img id='img-upload' src="<% if(!locals.image || image == undefined || image == "") { %>/img/blank_certif.png<% } else {%><%= image %><% } %>" alt="" />
+            </div>
+        </div>
+
+        <div class="my_certif_information" style="margin-top:24px">
+            <div class="basic_information">
+                <span class="certif_information_guide">발급날짜</span>
+                <span class="certif_info_text"><%= issuedate.substr(0,4) %>/<%= issuedate.substr(4,2) %>/<%= issuedate.substr(6,2) %></span>
+            </div>
+
+            <div class="basic_information">
+              <span name="birth" class="certif_information_guide">교육단체</span>
+              <span class="certif_info_text"><%= issuegroup %></span>
+            </div>
+
+            <div class="basic_information">
+              <span name="sex" class="certif_information_guide">교육과정</span>
+              <span class="certif_info_text"><%= course %></span>
+            </div>
+
+            <div class="basic_information">
+              <span class="certif_information_guide" id="disease">스페셜티</span>
+              <span class="certif_info_text"><% if(!locals.special || special == undefined || special == "") { %>없음<% } else { %><%= special %><% } %></span>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript">
+            var certId = '<%= _id %>';
+
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_edit').onclick = function() {
+                location.replace("/license_edit/"+certId);
+            };
+        </script>
+    </body>
+</html>

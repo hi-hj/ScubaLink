@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 회원가입</title>
+
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css" />
+    </head>
+
+
+    <body id="join" class= "trainee">
+        <div id="header">
+            <button id="btn_back" type="button" class="btn_ic">
+              <i class="btn_prev"> </i>
+            </button>
+
+            <div class="step">
+                <span class="s_dot s_deactive"></span>
+                <span class="s_dot s_deactive"></span>
+                <span class="s_dot s_active"></span>
+            </div>
+
+            <p class="j_title">스쿠버 경험</p>
+            <p class="explain t_center">교육 시 안전하고, 원활한 운영을 위해<br>필요한 정보입니다.</p>
+        </div>
+
+        <form id="main" action="" method="">
+            <div class="input_box">
+                <p class="q_text">1. 스쿠버 다이빙을 몇 번 해보셨나요?</p>
+
+                <div class="input_radio">
+                    <input type="radio" id="scuba_r1" name="radio" checked="checked" />
+                    <label for="scuba_r1">
+                        <span>0회</span>
+                    </label>
+                </div>
+
+                <div class="input_radio">
+                    <div class="ir_wrap f_left" style="float: none; display: inline-block;">
+                        <input type="radio" id="scuba_r2" name="radio" />
+                        <label for="scuba_r2">
+                            <span>1회 이상</span>
+                        </label>
+                    </div>
+
+                    <div id="input_count_wrap" class="box_short input_num f_left m_btm" style="float: none; display: inline-block;">
+                        <input id="input_count" type="number" pattern="\d*" placeholder="10" />
+                        <span class="unit" name="number">회</span>
+                    </div>
+                    <p class="explain t_err t_left" id="input_count_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+            </div>
+
+            <div class="input_box" id="experienced_data">
+                <p class="q_text">2. 가장 최근 다이빙 날짜를 말씀해주세요.</p>
+                <div class="input_box m_btm">
+                    <select id="input_year" class="i_year f_left">
+                        <option value="" selected disabled="disabled">년도</option>
+                        <option value="2010">2010년</option>
+                        <option value="2011">2011년</option>
+                        <option value="2012">2012년</option>
+                        <option value="2013">2013년</option>
+                        <option value="2014">2014년</option>
+                        <option value="2015">2015년</option>
+                        <option value="2016">2016년</option>
+                        <option value="2017">2017년</option>
+                        <option value="2018">2018년</option>
+                    </select>
+
+                    <select id="input_month" class="i_month f_left">
+                        <option value="" selected disabled="disabled">월</option>
+                        <option value="1">1월</option>
+                        <option value="2">2월</option>
+                        <option value="3">3월</option>
+                        <option value="4">4월</option>
+                        <option value="5">5월</option>
+                        <option value="6">6월</option>
+                        <option value="7">7월</option>
+                        <option value="8">8월</option>
+                        <option value="9">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
+                    </select>
+                    <p class="explain t_err t_left" id="input_year_month_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn_full" id="nextBtn">다음</button>
+        </form>
+
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('nextBtn').onclick = function() {
+                var paramCount = 0;
+                if( document.getElementById('scuba_r2').checked == true ) {
+                    // 이름 빈칸 체크
+                    if( document.getElementById('input_count').value == "" ) {
+                        document.getElementById('input_count_wrap').classList.remove("m_btm");
+                        document.getElementById('input_count_empty_error').style.display = "block";
+                        return;
+                    }
+                    else {
+                        paramCount = parseInt(document.getElementById('input_count').value);
+                        document.getElementById('input_count_wrap').classList.add("m_btm");
+                        document.getElementById('input_count_empty_error').style.display = "none";
+                    }
+
+                    // 다이빙 날짜 빈칸 체크
+                    if( document.getElementById('input_year').value == "" || document.getElementById('input_month').value == "" ) {
+                        document.getElementById('input_year_month_empty_error').style.display = "block";
+                        return;
+                    }
+                    else {
+                        document.getElementById('input_year_month_empty_error').style.display = "none";
+                    }
+                }
+
+                // 다음 이동
+                console.log("success");
+                console.log({
+                    userExpCount    : paramCount.toString(),
+                    userExpYear     : document.getElementById('input_year').value,
+                    userExpMonth    : document.getElementById('input_month').value
+                });
+
+                httpSend.send("/join/scubalink", {
+                    expCount    : paramCount.toString(),
+                    expYear     : document.getElementById('input_year').value,
+                    expMonth    : document.getElementById('input_month').value,
+                    type        : 2
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    location.href = "/";
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 회원가입</title>
+
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css" />
+        <style>
+            #input_tel {
+                width: 246px;
+                border: solid 1px #979797;
+            }
+        </style>
+    </head>
+
+    <body id="join" class= "instructor">
+        <div id="header">
+            <button id="btn_back" type="button" class="btn_ic" onclick="nextPrev(-1);">
+                <i class="btn_prev"> </i>
+            </button>
+
+            <p class="j_title">기본정보</p>
+            <p class="explain t_center">교육생들과 연락 및 일정 등록 시<br>필요한 정보입니다.</p>
+        </div>
+
+        <form id="main" action="" method="">
+            <div class="input_box">
+                <input id="input_name" type="text" placeholder="이름" />
+                <p class="explain t_err t_left" id="input_name_empty_error">빈 칸을 입력하세요.</p>
+            </div>
+
+            <div class="input_box">
+                <input id="input_tel" type="number" pattern="\d*" placeholder="연락처" />
+                <p class="explain t_left">'-'를 제외하고 숫자만 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_tel_empty_error">빈 칸을 입력하세요.</p>
+            </div>
+
+            <div class="input_box">
+                <input id="input_email" type="email" class="" placeholder="이메일" />
+                <p class="explain t_err t_left" id="input_email_empty_error">빈 칸을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_email_check_error">이메일 형식에 맞춰주세요.</p>
+            </div>
+
+            <button type="button" class="btn btn_full" id="nextBtn">다음</button>
+        </form>
+
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            function checkEmail(email) {
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            }
+
+            document.getElementById('nextBtn').onclick = function() {
+                // 이름 빈칸 체크
+                if( document.getElementById('input_name').value == "" ) {
+                    document.getElementById('input_name_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_name_empty_error').style.display = "none";
+                }
+
+                // 핸드폰번호 빈칸 체크
+                if( document.getElementById('input_tel').value == "" ) {
+                    document.getElementById('input_tel_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_tel_empty_error').style.display = "none";
+                }
+
+                // 이메일 빈칸 체크
+                if( document.getElementById('input_email').value == "" ) {
+                    document.getElementById('input_email_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_empty_error').style.display = "none";
+                }
+
+                // 이메일 유효성 체크
+                if( !checkEmail(document.getElementById('input_email').value) ) {
+                    document.getElementById('input_email_check_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_check_error').style.display = "none";
+                }
+
+                // 회원가입 API 후 index 이동
+                console.log("success");
+
+                httpSend.send("/join/scubalink", {
+                    name      : document.getElementById('input_name').value,
+                    tel       : document.getElementById('input_tel').value,
+                    email     : document.getElementById('input_email').value,
+                    type      : 1
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    location.href = "/";
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

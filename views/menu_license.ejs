@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 내 자격증</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_add { top: 0; padding-top: 0; line-height: 50px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+            .my_certif_course_explain { padding-bottom: 0; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="certif">
+            <span id="header_title" class="logo_mini">내 자격증</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="btn_add" class="header_save">추가</span>
+        </div>
+
+        <div id="cert_list_wrap">
+<% if( certList.length == 0 ) { %>
+            <p style='font-size: 14px; color: #333333; line-height: 20px; margin-left: 16px; margin-top: 16px;'>자격증이 없습니다.</p>
+            <p style='font-size: 14px; color: #333333; line-height: 20px; margin-left: 16px;'>우측 상단에서 추가해주세요.</p>
+<% } else { %>
+    <% for(var i=0; i<certList.length; i++) { %>
+            <div class="my_certif">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p class="my_certif_when"><%= certList[i].issuedate.substr(0,4) %>.<%= certList[i].issuedate.substr(4,2) %>.<%= certList[i].issuedate.substr(6,2) %></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="my_certif_img">
+                                <img src="<% if( !locals.certList[i].image || certList[i].image == undefined || certList[i].image == '' ) { %>/img/blank_certif.png<% } else { %><%= certList[i].image %><% } %>" alt="" />
+                            </td>
+                            <td>
+                                <div>
+                                    <p class="my_certif_course"><%= certList[i].course %></p>
+                                    <p class="my_certif_course"><%= certList[i].issuegroup %></p>
+                                    <p class="my_certif_course_explain"><% if( !locals.certList[i].special || certList[i].special == undefined || certList[i].special == '' ) { %>-<% } else { %><%= certList[i].special %><% } %></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    <% } %>
+<% } %>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_add').onclick = function() {
+                location.href = "/license_add";
+            };
+
+            window.onpageshow = function (event) {
+                httpSend.send("/certification/select", {
+
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    var html = "";
+                    for( var i=0; i<result.certList.length; i++ ) {
+                        html += " <div class='my_certif' onclick='location.href=\"/license_detail/"+result.certList[i]._id+"\"' >";
+                        html += "     <table>";
+                        html += "         <tbody>";
+                        html += "             <tr>";
+                        html += "                 <td>";
+                        html += "                     <p class='my_certif_when'>"+result.certList[i].issuedate.substr(0,4)+"."+result.certList[i].issuedate.substr(4,2)+"."+result.certList[i].issuedate.substr(6,2)+"</p>";
+                        html += "                 </td>";
+                        html += "             </tr>";
+                        html += "             <tr>";
+                        html += "                 <td class='my_certif_img'>";
+                        if( result.certList[i].image == undefined || result.certList[i].image == "" )
+                            html += "                 <img src='/img/blank_certif.png' alt='' />";
+                        else
+                            html += "                 <img src='"+result.certList[i].image+"' alt='' />";
+                        html += "                 </td>";
+                        html += "                 <td>";
+                        html += "                     <div>";
+                        html += "                         <p class='my_certif_course'>"+result.certList[i].course+"</p>";
+                        html += "                         <p class='my_certif_course'>"+result.certList[i].issuegroup+"</p>";
+                        if( result.certList[i].special == undefined || result.certList[i].special == "" )
+                            html += "                     <p class='my_certif_course_explain'>-</p>";
+                        else
+                            html += "                     <p class='my_certif_course_explain'>"+result.certList[i].special+"</p>";
+                        html += "                     </div>";
+                        html += "                 </td>";
+                        html += "             </tr>";
+                        html += "         </tbody>";
+                        html += "     </table>";
+                        html += " </div>";
+                    }
+
+                    if( result.certList.length == 0 ) {
+                        html += "<p style='font-size: 14px; color: #333333; line-height: 20px; margin-left: 16px; margin-top: 16px;'>자격증이 없습니다.</p>";
+                        html += "<p style='font-size: 14px; color: #333333; line-height: 20px; margin-left: 16px;'>우측 상단에서 추가해주세요.</p>";
+                    }
+
+                    document.getElementById('cert_list_wrap').innerHTML = html;
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

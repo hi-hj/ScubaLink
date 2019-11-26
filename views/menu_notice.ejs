@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 공지사항</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+            .notice div { border-bottom: none; }
+            .notice { border-bottom: solid 1px #eeeeee; }
+        </style>
+    </head>
+
+
+    <body>
+        <div class="header">
+            <span id="header_title" class="logo">공지사항</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+        </div>
+
+        <div id="notice_list_wrap">
+<% for(var i=0; i<noticeList.length; i++) { %>
+            <div class="notice" onclick="location.href='notice/<%= noticeList[i]._id %>';">
+                <div>
+                    <p><%= noticeList[i].date.substr(0,4) %>. <%= noticeList[i].date.substr(4,2) %>. <%= noticeList[i].date.substr(6,2) %></p>
+                    <h5><%= noticeList[i].title %></h5>
+                    <img src="/img/right-arrow.svg" alt="" />
+                </div>
+            </div>
+<% } %>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript">
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+        </script>
+    </body>
+</html>

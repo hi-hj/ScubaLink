@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 투어/교육 수정</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+
+            #tour_edu_plus p.t_left { margin-left: 0; margin-top: 0; color: #ffff55; }
+            .my_certif_image div #img-upload.on { top: -110px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="certif">
+            <span id="header_title" class="logo_mini">투어/교육 수정</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+        </div>
+
+        <div id="tour_edu_plus">
+            <div class="tour_input">
+                <p>투어/교육 이름 <span>*</span></p>
+                <input id="input_tour_name" type="text" class="form-control" placeholder="동해 오픈워터 해양실습" value="<%= name %>" />
+                <p class="explain t_err t_left" id="input_name_empty_error">교육 이름을 입력하세요.</p>
+            </div>
+
+            <div class="tour_input">
+                <p>기간 <span>*</span></p>
+                <input id="input_tour_start" type="date" value="<%= startdate.substr(0,4) %>-<%= startdate.substr(4,2) %>-<%= startdate.substr(6,2) %>" />
+                <span>~</span>
+                <input id="input_tour_end" type="date" value="<%= enddate.substr(0,4) %>-<%= enddate.substr(4,2) %>-<%= enddate.substr(6,2) %>" />
+                <p class="explain t_err t_left" id="input_date_empty_error">교육 기간을 선택하세요.</p>
+                <p class="explain t_err t_left" id="input_date_limit_error">교육 시작일자가 종료일자를 넘을 수 없습니다.</p>
+            </div>
+
+            <div class="tour_input">
+                <p>장소 <span>*</span></p>
+                <input id="input_tour_place" type="text" class="form-control" placeholder=" 예) 해피 다이빙 리조트" value="<%= place %>" />
+                <p class="explain t_err t_left" id="input_place_empty_error">교육 장소를 입력하세요.</p>
+            </div>
+
+            <div class="tour_input">
+                <p>참여 정원 수(본인 포함) <span>*</span></p>
+                <input id="input_tour_member_count" type="number" pattern="\d*" placeholder="0" value="<%= member %>" />
+                <span>명</span>
+                <p class="explain t_err t_left" id="input_member_count_empty_error">참여 인원을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_member_count_zero_error">참여인원은 1명 이상이어야 합니다.</p>
+            </div>
+
+            <div class="tour_input">
+                <p>간단한 설명(최대 140자)</p>
+                <textarea id="input_tour_description" name="test" class="form-control" placeholder="안전하고 즐거운 해양실습"><%= description %></textarea>
+            </div>
+
+            <div class="tour_input">
+                <p>대표사진</p>
+                <div class="my_certif_image btn-file">
+                    <i class="glyphicon glyphicon-picture"></i>
+                    <p>눌러서 이미지를 추가하세요</p>
+                    <input type="file" id="imgInp" name='tourImage' />
+                    <div><img id='img-upload' alt='' src="<% if(!locals.image || image == undefined || image == "") { %>/img/blank_tour.png<% } else {%><%= image %><% } %>" class="on" /></div>
+                </div>
+            </div>
+
+            <input id="btn_regist" type="button" value="완료" class="btn" style="margin-bottom: 60px;">
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            var tourId = '<%= _id %>';
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_regist').onclick = function() {
+                // 교육이름 빈칸 체크
+                if( document.getElementById('input_tour_name').value == "" ) {
+                    document.getElementById('input_name_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_name_empty_error').style.display = "none";
+                }
+
+                // 교육기간 빈칸 체크
+                if( document.getElementById('input_tour_start').value == "" || document.getElementById('input_tour_end').value == "" ) {
+                    document.getElementById('input_date_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_date_empty_error').style.display = "none";
+                }
+
+                // 교육기간 오류 체크
+                var startDate = document.getElementById('input_tour_start').value.replace(/-/gi, "").replace(/\./gi, "");
+                var endDate = document.getElementById('input_tour_end').value.replace(/-/gi, "").replace(/\./gi, "");
+                if( parseInt(endDate) < parseInt(startDate) ) {
+                    document.getElementById('input_date_limit_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_date_limit_error').style.display = "none";
+                }
+
+                // 교육장소 빈칸 체크
+                if( document.getElementById('input_tour_place').value == "" ) {
+                    document.getElementById('input_place_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_place_empty_error').style.display = "none";
+                }
+
+                // 교육 참여 인원 빈칸 체크
+                if( document.getElementById('input_tour_member_count').value == "" ) {
+                    document.getElementById('input_member_count_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_member_count_empty_error').style.display = "none";
+                }
+
+                // 교육 참여 인원 0 체크
+                if( document.getElementById('input_tour_member_count').value == 0 ) {
+                    document.getElementById('input_member_count_zero_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_member_count_zero_error').style.display = "none";
+                }
+
+                var editParameters = {};
+                editParameters.name = document.getElementById('input_tour_name').value;
+                editParameters.startdate = document.getElementById('input_tour_start').value.replace(/-/gi, "").replace(/\./gi, "");
+                editParameters.enddate = document.getElementById('input_tour_end').value.replace(/-/gi, "").replace(/\./gi, "");
+                editParameters.place = document.getElementById('input_tour_place').value;
+                editParameters.member = document.getElementById('input_tour_member_count').value;
+                editParameters.description = document.getElementById('input_tour_description').value;
+                editParameters.tourId = tourId;
+
+                if( document.getElementById('imgInp').files[0] != undefined )
+                    editParameters.tourImage = document.getElementById('imgInp').files[0];
+
+                httpSend.upload("/tour/update", editParameters, function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    if( errorCode == "T002" )
+                        alert(errorMessage);
+                    else
+                        console.log(errorMessage);
+                });
+            };
+        </script>
+    </body>
+</html>
