@@ -1,11 +1,10 @@
-
 var ObjectID    = require('mongodb').ObjectID;
 
 // type: 0 (준회원)
 // type: 1 (강사)
 // type: 2 (교육생)
 exports.findAccount = function(db, params, callbackSuccess, callbackFail) {
-    db.collection('account').findOne({ id: (params.id+"") }, function(err, doc) {
+    db.collection('account').findOne({ id: params.id + '' }, function(err, doc) {
         if (err) throw err;
 
         if(doc == null) {

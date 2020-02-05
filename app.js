@@ -43,13 +43,19 @@ var dbTour            = require('./db/tour');
 var dbSchedule        = require('./db/schedule');
 var dbComment         = require('./db/comment');
 
-MongoClient.connect(url, function(err, mongodb) {
-    db = mongodb;
+MongoClient.connect('mongodb://localhost:27017', {
+   useUnifiedTopology: true
+}, function (err, client) {
+    assert.equal(null, err);
+
+    db = client.db('scubalink');
+
+    console.log('complete');
 });
 
 // view engine setup
 app.set('view engine', 'ejs');
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 3000);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
