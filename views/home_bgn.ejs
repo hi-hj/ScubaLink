@@ -13,7 +13,6 @@
 
         <style>
             .tour { background: white; }
-            .tour_head { height: 48px; }
             #CONTENT_ON { min-height: -webkit-fill-available; background: #f4f4f4; }
         </style>
     </head>
@@ -71,32 +70,20 @@
 <% } else { %>
         <div id="CONTENT_OFF" class="hidden">
 <% } %>
-            <div>
-                오른쪽 상단 돋보기 아이콘을 눌러
-                <br>강사님을 찾아보세요
+            <div style='position: fixed; width: 100%; height: 100%; top: 0; left: 0; padding-top: 0; padding-bottom: 0; background-color: #f4f4f4; z-index: -1;'>
+                <div style='margin-top: 100px; width: 100%; padding-top: 50px; padding-bottom: 50px; line-height: 24px; display: block; text-align: center; background-color: white; color: #333333;'>오른쪽 상단 돋보기 아이콘을 눌러<br>강사님을 찾아보세요</div>
             </div>
-            <!--아래 회색 배경 -->
-            <div></div>
         </div>
 
 <% if( tourList.length == 0 ) { %>
         <div id="CONTENT_ON" class="hidden">
 <% } else { %>
         <div id="CONTENT_ON" class="">
+<% } %>
             <div id="home_student_content_01" class="">
 
 <% for(var i=0; i<tourList.length; i++) { %>
                   <div class="tour">
-                      <div class="tour_head" onclick="location.href='/profile/<%= tourList[i].ins_id %>';">
-                          <div style='width: 1px; height: 48px; display: inline-block;'></div>
-                          <span><img src='<% if( !locals.tourList[i].ins_image || tourList[i].ins_image == undefined || tourList[i].ins_image == '' ) { %>/img/default_user.png<% } else { %><%= tourList[i].ins_image %><% } %>' alt='' class='img-circle' /></span>
-                          <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
-                          <span>
-                              <h5><%= tourList[i].ins_name %></h5>
-                              <p class="explain_text"><% if( !locals.tourList[i].ins_group || tourList[i].ins_group == undefined || tourList[i].ins_group == '' ) { %>소속 없음<% } else { %><%= tourList[i].ins_group %><% } %></p>
-                          </span>
-                      </div>
-
                       <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
 
                       <div class="tour_bar <% if( tourList[i].participant_count >= tourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= tourList[i]._id %>';">
@@ -107,11 +94,15 @@
 
                       <div class="tour_contents">
                           <div class="tour_contents_when">
-                              <h4><%= tourList[i].startdate.substr(4,2) %>.<%= tourList[i].startdate.substr(6,2) %> ~ <%= tourList[i].enddate.substr(4,2) %>.<%= tourList[i].enddate.substr(6,2) %> / <%= tourList[i].name %></h4>
+                              <h4><%= tourList[i].name %></h4>
                           </div>
                           <div class="tour_contents_where">
-                              <span><img src="img/ic-map-marker.svg" alt="" /></span>
-                              <span><%= tourList[i].place %></span>
+                              <span>
+                                  <text>기간</text><%= tourList[i].startdate.substr(0,4) %>.<%= tourList[i].startdate.substr(4,2) %>.<%= tourList[i].startdate.substr(6,2) %> ~ <%= tourList[i].enddate.substr(0,4) %>.<%= tourList[i].enddate.substr(4,2) %>.<%= tourList[i].enddate.substr(6,2) %>
+                              </span>
+                              <span>
+                                  <text>장소</text><%= tourList[i].place %>
+                              </span>
                           </div>
                           <div class="tour_contents_comment"><%= tourList[i].description %></div>
                           <div class="tour_contents_etc">
@@ -126,16 +117,6 @@
             <div id="home_student_content_02" class="hidden">
 <% for(var i=0; i<scheduleTourList.length; i++) { %>
                   <div class="tour">
-                      <div class="tour_head" onclick="location.href='/profile/<%= scheduleTourList[i].ins_id %>';">
-                          <div style='width: 1px; height: 48px; display: inline-block;'></div>
-                          <span><img src='<% if( !locals.scheduleTourList[i].ins_image || scheduleTourList[i].ins_image == undefined || scheduleTourList[i].ins_image == '' ) { %>/img/default_user.png<% } else { %><%= scheduleTourList[i].ins_image %><% } %>' alt='' class='img-circle' /></span>
-                          <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
-                          <span>
-                              <h5><%= scheduleTourList[i].ins_name %></h5>
-                              <p class="explain_text"><% if( !locals.scheduleTourList[i].ins_group || scheduleTourList[i].ins_group == undefined || scheduleTourList[i].ins_group == '' ) { %>소속 없음<% } else { %><%= scheduleTourList[i].ins_group %><% } %></p>
-                          </span>
-                      </div>
-
                       <div class="tour_image" onclick="location.href='/tour/<%= scheduleTourList[i]._id %>';"><img src="<% if( !locals.scheduleTourList[i].image || scheduleTourList[i].image == undefined || scheduleTourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= scheduleTourList[i].image %><% } %>" alt="" /></div>
 
                       <div class="tour_bar <% if( scheduleTourList[i].participant_count >= scheduleTourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= scheduleTourList[i]._id %>';">
@@ -146,11 +127,15 @@
 
                       <div class="tour_contents">
                           <div class="tour_contents_when">
-                              <h4><%= scheduleTourList[i].startdate.substr(4,2) %>.<%= scheduleTourList[i].startdate.substr(6,2) %> ~ <%= scheduleTourList[i].enddate.substr(4,2) %>.<%= scheduleTourList[i].enddate.substr(6,2) %> / <%= scheduleTourList[i].name %></h4>
+                              <h4><%= scheduleTourList[i].name %></h4>
                           </div>
                           <div class="tour_contents_where">
-                              <span><img src="img/ic-map-marker.svg" alt="" /></span>
-                              <span><%= scheduleTourList[i].place %></span>
+                              <span>
+                                  <text>기간</text><%= scheduleTourList[i].startdate.substr(0,4) %>.<%= scheduleTourList[i].startdate.substr(4,2) %>.<%= scheduleTourList[i].startdate.substr(6,2) %> ~ <%= scheduleTourList[i].enddate.substr(0,4) %>.<%= scheduleTourList[i].enddate.substr(4,2) %>.<%= scheduleTourList[i].enddate.substr(6,2) %>
+                              </span>
+                              <span>
+                                  <text>장소</text><%= scheduleTourList[i].place %>
+                              </span>
                           </div>
                           <div class="tour_contents_comment"><%= scheduleTourList[i].description %></div>
                           <div class="tour_contents_etc">
@@ -160,8 +145,12 @@
                       <div class="tour_division"></div>
                   </div>
 <% } %>
-            </div>
+<% if( scheduleTourList.length == 0 ) { %>
+                <div style='position: fixed; width: 100%; height: 100%; top: 0; left: 0; padding-top: 0; padding-bottom: 0; background-color: #f4f4f4; z-index: -1;'>
+                    <div style='margin-top: 100px; width: 100%; padding-top: 50px; padding-bottom: 50px; line-height: 24px; display: block; text-align: center; background-color: white; color: #333333;'>투어가 없습니다</div>
+                </div>
 <% } %>
+            </div>
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -169,8 +158,6 @@
         <script type="text/javascript" src="js/Scubalink_js.js"></script>
         <script type="text/javascript" src="js/httpUtil.js"></script>
         <script>
-            var week = new Array('일', '월', '화', '수', '목', '금', '토');
-
             document.getElementById('btn_logout').onclick = function() {
                 httpSend.send("/logout", { }, "POST", function(result) {
                     location.href = "/";
@@ -186,7 +173,7 @@
             };
 
             document.getElementById('show_title').onclick = function() {
-                if( document.getElementById('show_title').checked == false ) {
+                if( !document.getElementById('show_title').checked ) {
                     document.getElementById('home_student_content_01').classList.add("hidden");
                     document.getElementById('home_student_content_02').classList.remove("hidden");
                 }
@@ -194,10 +181,10 @@
                     document.getElementById('home_student_content_01').classList.remove("hidden");
                     document.getElementById('home_student_content_02').classList.add("hidden");
                 }
-            }
+            };
 
             window.onpageshow = function (event) {
-                if( document.getElementById('show_title').checked == false ) {
+                if( !document.getElementById('show_title').checked) {
                     document.getElementById('home_student_content_01').classList.add("hidden");
                     document.getElementById('home_student_content_02').classList.remove("hidden");
                 }
@@ -236,25 +223,6 @@
                         var html = "";
                         for( var i=0; i<result.tourList.length; i++ ) {
                             html += " <div class='tour'>";
-                            html += "     <div class='tour_head' onclick='location.href=\"/profile/"+result.tourList[i].ins_id+"\";'>";
-                            html += "         <div style='width: 1px; height: 48px; display: inline-block;'></div>"
-
-                            if( result.tourList[i].ins_image == undefined || result.tourList[i].ins_image == "" )
-                                html += "     <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
-                            else
-                                html += "     <span><img src='"+result.tourList[i].ins_image+"' alt='' class='img-circle' /></span>";
-
-                            html += "         <span class='INS_badge'><img src='img/ic.png' alt='' /></span>";
-                            html += "         <span>";
-                            html += "             <h5>"+result.tourList[i].ins_name+"</h5>";
-
-                            if( result.tourList[i].ins_group == undefined || result.tourList[i].ins_group == "" )
-                                html += "         <p class='explain_text'>소속 없음</p>";
-                            else
-                                html += "         <p class='explain_text'>"+result.tourList[i].ins_group+"</p>";
-
-                            html += "         </span>";
-                            html += "     </div>";
 
                             if( result.tourList[i].image == undefined || result.tourList[i].image == "" )
                                 html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
@@ -268,15 +236,11 @@
                             html+= "      </div>";
                             html+= "      <div class='tour_contents'>";
                             html+= "          <div class='tour_contents_when'>";
-
-                            var tempDate1 = new Date(result.tourList[i].startdate.substr(0,4)+"-"+result.tourList[i].startdate.substr(4,2)+"-"+result.tourList[i].startdate.substr(6,2)+"T00:00:00");
-                            var tempDate2 = new Date(result.tourList[i].enddate.substr(0,4)+"-"+result.tourList[i].enddate.substr(4,2)+"-"+result.tourList[i].enddate.substr(6,2)+"T00:00:00");
-                            html+= "              <h4>"+result.tourList[i].startdate.substr(4,2)+"."+result.tourList[i].startdate.substr(6,2)+week[tempDate1.getDay()]+" ~ "+result.tourList[i].enddate.substr(4,2)+"."+result.tourList[i].enddate.substr(6,2)+week[tempDate2.getDay()]+" / "+result.tourList[i].name+"</h4>";
-
+                            html+= "              <h4>"+result.tourList[i].name+"</h4>";
                             html+= "          </div>";
                             html+= "          <div class='tour_contents_where'>";
-                            html+= "              <span><img src='img/ic-map-marker.svg' alt='' /></span>";
-                            html+= "              <span>"+result.tourList[i].place+"</span>";
+                            html+= "              <span><text>기간</text>"+result.tourList[i].startdate.substr(0,4)+"."+result.tourList[i].startdate.substr(4,2)+"."+result.tourList[i].startdate.substr(6,2)+" ~ "+result.tourList[i].enddate.substr(0,4)+"."+result.tourList[i].enddate.substr(4,2)+"."+result.tourList[i].enddate.substr(6,2)+"</span>";
+                            html+= "              <span><text>장소</text>"+result.tourList[i].place+"</span>";
                             html+= "          </div>";
                             html+= "          <div class='tour_contents_comment'>"+result.tourList[i].description+"</div>";
                             html+= "          <div class='tour_contents_etc'>";
@@ -291,25 +255,6 @@
                         html = "";
                         for( var i=0; i<result.scheduleTourList.length; i++ ) {
                             html += " <div class='tour'>";
-                            html += "     <div class='tour_head' onclick='location.href=\"/profile/"+result.scheduleTourList[i].ins_id+"\";'>";
-                            html += "         <div style='width: 1px; height: 48px; display: inline-block;'></div>"
-
-                            if( result.scheduleTourList[i].ins_image == undefined || result.scheduleTourList[i].ins_image == "" )
-                                html += "     <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
-                            else
-                                html += "     <span><img src='"+result.scheduleTourList[i].ins_image+"' alt='' class='img-circle' /></span>";
-
-                            html += "         <span class='INS_badge'><img src='img/ic.png' alt='' /></span>";
-                            html += "         <span>";
-                            html += "             <h5>"+result.scheduleTourList[i].ins_name+"</h5>";
-
-                            if( result.scheduleTourList[i].ins_group == undefined || result.scheduleTourList[i].ins_group == "" )
-                                html += "         <p class='explain_text'>소속 없음</p>";
-                            else
-                                html += "         <p class='explain_text'>"+result.scheduleTourList[i].ins_group+"</p>";
-
-                            html += "         </span>";
-                            html += "     </div>";
 
                             if( result.scheduleTourList[i].image == undefined || result.scheduleTourList[i].image == "" )
                                 html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.scheduleTourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
@@ -323,15 +268,11 @@
                             html+= "      </div>";
                             html+= "      <div class='tour_contents'>";
                             html+= "          <div class='tour_contents_when'>";
-
-                            var tempDate1 = new Date(result.scheduleTourList[i].startdate.substr(0,4)+"-"+result.scheduleTourList[i].startdate.substr(4,2)+"-"+result.scheduleTourList[i].startdate.substr(6,2)+"T00:00:00");
-                            var tempDate2 = new Date(result.scheduleTourList[i].enddate.substr(0,4)+"-"+result.scheduleTourList[i].enddate.substr(4,2)+"-"+result.scheduleTourList[i].enddate.substr(6,2)+"T00:00:00");
-                            html+= "              <h4>"+result.scheduleTourList[i].startdate.substr(4,2)+"."+result.scheduleTourList[i].startdate.substr(6,2)+week[tempDate1.getDay()]+" ~ "+result.scheduleTourList[i].enddate.substr(4,2)+"."+result.scheduleTourList[i].enddate.substr(6,2)+week[tempDate2.getDay()]+" / "+result.scheduleTourList[i].name+"</h4>";
-
+                            html+= "              <h4>"+result.scheduleTourList[i].name+"</h4>";
                             html+= "          </div>";
                             html+= "          <div class='tour_contents_where'>";
-                            html+= "              <span><img src='img/ic-map-marker.svg' alt='' /></span>";
-                            html+= "              <span>"+result.scheduleTourList[i].place+"</span>";
+                            html+= "              <span><text>기간</text>"+result.scheduleTourList[i].startdate.substr(0,4)+"."+result.scheduleTourList[i].startdate.substr(4,2)+"."+result.scheduleTourList[i].startdate.substr(6,2)+" ~ "+result.scheduleTourList[i].enddate.substr(0,4)+"."+result.scheduleTourList[i].enddate.substr(4,2)+"."+result.scheduleTourList[i].enddate.substr(6,2)+"</span>";
+                            html+= "              <span><text>장소</text>"+result.tourList[i].place+"</span>";
                             html+= "          </div>";
                             html+= "          <div class='tour_contents_comment'>"+result.scheduleTourList[i].description+"</div>";
                             html+= "          <div class='tour_contents_etc'>";
@@ -340,6 +281,11 @@
                             html+= "      </div>";
                             html+= "      <div class='tour_division'></div>";
                             html+= "  </div>";
+                        }
+                        if (result.scheduleTourList.length === 0) {
+                            html += "   <div style='position: fixed; width: 100%; height: 100%; top: 0; left: 0; padding-top: 0; padding-bottom: 0; background-color: #f4f4f4; z-index: -1;'>";
+                            html += "       <div style='margin-top: 100px; width: 100%; padding-top: 50px; padding-bottom: 50px; line-height: 24px; display: block; text-align: center; background-color: white; color: #333333;'>투어가 없습니다</div>";
+                            html += "   </div>";
                         }
                         document.getElementById('home_student_content_02').innerHTML = html;
 

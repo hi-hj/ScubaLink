@@ -788,7 +788,9 @@ app.post('/tour/add', upload.single('tourImage'), function(req, res) {
 });
 
 app.post('/tour/select', function(req, res){
-    req.body.insId = req.session.snsId;
+    if (req.body.insId === undefined) {
+        req.body.insId = req.session.snsId;
+    }
 
     dbTour.findTours(db, req.body, function(result) {
         res.writeHead(200);

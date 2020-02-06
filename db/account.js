@@ -102,24 +102,24 @@ exports.findAccountAllInsInfo = function(db, params, callbackSuccess, callbackFa
                 followCount : { $size: "$follow" },
                 isFollow    : { $indexOfArray: [ "$follow.bgn", params.userId ] },
             }
-        }], function(err, doc) {
-            if (err) throw err;
+        }]
+    ).toArray(function(err, doc) {
+        if (err) throw err;
 
-            if(doc == null || doc.length == 0) {
-                callbackFail({
-                    code   : "C001",
-                    message: "Invalid Access"
-                });
-                return;
-            }
-
-            callbackSuccess({
-                code    : "0000",
-                message : "Success",
-                result  : doc[0]
+        if(doc == null || doc.length == 0) {
+            callbackFail({
+                code   : "C001",
+                message: "Invalid Access"
             });
+            return;
         }
-    );
+
+        callbackSuccess({
+            code    : "0000",
+            message : "Success",
+            result  : doc[0]
+        });
+    });
 };
 
 exports.insertAccount = function(db, params, callbackSuccess) {
