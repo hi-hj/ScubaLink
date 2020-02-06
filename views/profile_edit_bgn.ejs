@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 내 프로필</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_save { top: 0; padding-top: 0; line-height: 50px; }
+
+            #direct_input_0 input { margin-left: 74px; position: relative; left: 0px; width: calc(70% - 50px); }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <span class="logo">내 프로필</span>
+            <div id="btn_back"><img src="img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="btn_save" class="header_save">저장</span>
+        </div>
+
+        <div class="my_profile" id="myprofile_edit">
+            <div class="my_profile_image">
+                <img src="<% if(!locals.image || image == undefined || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="" class="img-circle" id="img-upload" />
+                <div class="btn-file">
+                    <button type="button" class="img-circle" id="camera_img_back_small">
+                        <input type="file" name='userImage' id="imgInp" />
+                        <img id="camera_img" src="img/photo-camera.svg" alt="" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">기본정보</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이름</span>
+                    <input id="input_edit_name" type="text" placeholder="홍길동" value="<%= name %>" />
+                    <p class="explain t_err t_left" id="input_name_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span name="birth" class="basic_information_guide">태어난해</span>
+                    <select id="input_edit_birth" name="birth" required>
+                        <option value="" disabled="disabled" <% if(!locals.birth || birth == "") { %>selected<% } %>>태어난 해</option>
+                        <option value="1970" <% if(locals.birth && birth == "1970") { %>selected<% } %>>1970년</option>
+                        <option value="1971" <% if(locals.birth && birth == "1971") { %>selected<% } %>>1971년</option>
+                        <option value="1972" <% if(locals.birth && birth == "1972") { %>selected<% } %>>1972년</option>
+                        <option value="1973" <% if(locals.birth && birth == "1973") { %>selected<% } %>>1973년</option>
+                        <option value="1974" <% if(locals.birth && birth == "1974") { %>selected<% } %>>1974년</option>
+                        <option value="1975" <% if(locals.birth && birth == "1975") { %>selected<% } %>>1975년</option>
+                        <option value="1976" <% if(locals.birth && birth == "1976") { %>selected<% } %>>1976년</option>
+                        <option value="1977" <% if(locals.birth && birth == "1977") { %>selected<% } %>>1977년</option>
+                        <option value="1978" <% if(locals.birth && birth == "1978") { %>selected<% } %>>1978년</option>
+                        <option value="1979" <% if(locals.birth && birth == "1979") { %>selected<% } %>>1979년</option>
+                        <option value="1980" <% if(locals.birth && birth == "1980") { %>selected<% } %>>1980년</option>
+                        <option value="1981" <% if(locals.birth && birth == "1981") { %>selected<% } %>>1981년</option>
+                        <option value="1982" <% if(locals.birth && birth == "1982") { %>selected<% } %>>1982년</option>
+                        <option value="1983" <% if(locals.birth && birth == "1983") { %>selected<% } %>>1983년</option>
+                        <option value="1984" <% if(locals.birth && birth == "1984") { %>selected<% } %>>1984년</option>
+                        <option value="1985" <% if(locals.birth && birth == "1985") { %>selected<% } %>>1985년</option>
+                        <option value="1986" <% if(locals.birth && birth == "1986") { %>selected<% } %>>1986년</option>
+                        <option value="1987" <% if(locals.birth && birth == "1987") { %>selected<% } %>>1987년</option>
+                        <option value="1988" <% if(locals.birth && birth == "1988") { %>selected<% } %>>1988년</option>
+                        <option value="1989" <% if(locals.birth && birth == "1989") { %>selected<% } %>>1989년</option>
+                        <option value="1990" <% if(locals.birth && birth == "1990") { %>selected<% } %>>1990년</option>
+                        <option value="1991" <% if(locals.birth && birth == "1991") { %>selected<% } %>>1991년</option>
+                        <option value="1992" <% if(locals.birth && birth == "1992") { %>selected<% } %>>1992년</option>
+                        <option value="1993" <% if(locals.birth && birth == "1993") { %>selected<% } %>>1993년</option>
+                        <option value="1994" <% if(locals.birth && birth == "1994") { %>selected<% } %>>1994년</option>
+                        <option value="1995" <% if(locals.birth && birth == "1995") { %>selected<% } %>>1995년</option>
+                        <option value="1996" <% if(locals.birth && birth == "1996") { %>selected<% } %>>1996년</option>
+                        <option value="1997" <% if(locals.birth && birth == "1997") { %>selected<% } %>>1997년</option>
+                        <option value="1998" <% if(locals.birth && birth == "1998") { %>selected<% } %>>1998년</option>
+                        <option value="1999" <% if(locals.birth && birth == "1999") { %>selected<% } %>>1999년</option>
+                        <option value="2000" <% if(locals.birth && birth == "2000") { %>selected<% } %>>2000년</option>
+                        <option value="2001" <% if(locals.birth && birth == "2001") { %>selected<% } %>>2001년</option>
+                        <option value="2002" <% if(locals.birth && birth == "2002") { %>selected<% } %>>2002년</option>
+                        <option value="2003" <% if(locals.birth && birth == "2003") { %>selected<% } %>>2003년</option>
+                        <option value="2004" <% if(locals.birth && birth == "2004") { %>selected<% } %>>2004년</option>
+                        <option value="2005" <% if(locals.birth && birth == "2005") { %>selected<% } %>>2005년</option>
+                        <option value="2006" <% if(locals.birth && birth == "2006") { %>selected<% } %>>2006년</option>
+                        <option value="2007" <% if(locals.birth && birth == "2007") { %>selected<% } %>>2007년</option>
+                        <option value="2008" <% if(locals.birth && birth == "2008") { %>selected<% } %>>2008년</option>
+                        <option value="2009" <% if(locals.birth && birth == "2009") { %>selected<% } %>>2009년</option>
+                    </select>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">연락처</span>
+                    <input id="input_edit_tel" type="tel" class="" placeholder="연락처" value="<%= tel %>" />
+                    <p class="explain_text t_left">'-'를 제외하고 숫자만 입력하세요.</p>
+                    <p class="explain t_err t_left" id="input_tel_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이메일</span>
+                    <input id="input_edit_email" type="email" class="" placeholder="이메일" value="<%= email %>" />
+                    <p class="explain t_err t_left" id="input_email_empty_error">빈 칸을 입력하세요.</p>
+                    <p class="explain t_err t_left" id="input_email_check_error">이메일 형식에 맞춰주세요.</p>
+                </div>
+            </div>
+<% if(type == 1) { %>
+            <div class="gray_rectangle tour_division"></div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">강사정보</p>
+                </div>
+
+<!--
+                <div class="basic_information">
+                    <span class="basic_information_guide">소속단체</span>
+                    <input id="input_edit_group" type="text" placeholder="SDI/TDI" value="<% if(locals.group) { %><%= group %><% } else {%><% } %>" />
+                </div>
+-->
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">소속단체</span>
+                    <select id="input_cert_group" name="birth" required onchange="showfield1(this.options[this.selectedIndex].value)">
+                        <option value="SDI TDI" <% if(group == "SDI TDI") { %>selected<% } %>>SDI TDI</option>
+                        <option value="PADI" <% if(group == "PADI") { %>selected<% } %>>PADI</option>
+                        <option value="SSI" <% if(group == "SSI") { %>selected<% } %>>SSI</option>
+                        <option value="NAUI" <% if(group == "NAUI") { %>selected<% } %>>NAUI</option>
+                        <option value="CMAS" <% if(group == "CMAS") { %>selected<% } %>>CMAS</option>
+                        <option value="BSAC" <% if(group == "BSAC") { %>selected<% } %>>BSAC</option>
+                        <option value="IANTD" <% if(group == "IANTD") { %>selected<% } %>>IANTD</option>
+                        <option value="KUDA" <% if(group == "KUDA") { %>selected<% } %>>KUDA</option>
+                        <option value="Other" <% if(group != "SDI TDI" && group != "PADI" && group != "SSI" && group != "NAUI" && group != "CMAS" && group != "BSAC" && group != "IANTD" && group != "KUDA") { %>selected<% } %>>직접입력</option>
+                    </select>
+                    <div id="direct_input_0" class="input_cert_group_custom">
+                        <% if(group != "SDI TDI" && group != "PADI" && group != "SSI" && group != "NAUI" && group != "CMAS" && group != "BSAC" && group != "IANTD" && group != "KUDA") { %>
+                            <input type="text" name="other" placeholder="직접입력" value="<%= group %>"/>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide" style="position: relative; bottom: 53px;">강사소개</span>
+                    <textarea id="input_edit_description" name="description" rows="4" cols="26" placeholder=""><% if(locals.description) { %><%= description %><% } else {%><% } %></textarea>
+                    <p class="explain t_err t_left" id="input_description_limit_error">400자를 넘을 수 없습니다.</p>
+                </div>
+            </div>
+<% } %>
+            <div class="gray_rectangle tour_division"></div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">신체정보</p>
+                    <p class="explain_text explain_text_bottom">수영장 교육, 장비 대여 시 필요한 정보입니다.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span name="sex" class="basic_information_guide">성별</span>
+                    <select id="input_edit_gender" name="birth" required>
+                        <option value="" disabled="disabled" <% if(!locals.gender || gender == "") { %>selected<% } %>>선택하세요</option>
+                        <option value="1" <% if(locals.gender && gender == "1") { %>selected<% } %>>남자</option>
+                        <option value="2" <% if(locals.gender && gender == "2") { %>selected<% } %>>여자</option>
+                    </select>
+                </div>
+<% if(type == 2) { %>
+                <div class="basic_information">
+                    <span class="basic_information_guide">키</span>
+                    <input id="input_edit_height" type="number" placeholder="170" class="signup_input" value="<%= height %>" />
+                    <span class="signup_input_span_text">cm</span>
+                    <p class="explain_text t_left">5cm 단위 근사치로 입력해주세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">몸무게</span>
+                    <input id="input_edit_weight" type="number" placeholder="70" class="signup_input" value="<%= weight %>" />
+                    <span class="signup_input_span_text">kg</span>
+                    <p class="explain_text t_left">5kg 단위 근사치로 입력해주세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">발사이즈</span>
+                    <input id="input_edit_foot" type="number" name="foot_size" placeholder="270" class="signup_input" value="<%= foot %>" />
+                    <span class="signup_input_span_text">mm</span>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide" id="disease">특이병력</span>
+                    <textarea id="input_edit_disease" name="disease" rows="4" cols="26"  placeholder="비염"><%= disease %></textarea>
+                </div>
+<% } %>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            var type = '<%= type %>';
+
+            function checkEmail(email) {
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_save').onclick = function() {
+                // 이름 빈칸 체크
+                if( document.getElementById('input_edit_name').value == "" ) {
+                    document.getElementById('input_name_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_name_empty_error').style.display = "none";
+                }
+
+                // 핸드폰번호 빈칸 체크
+                if( document.getElementById('input_edit_tel').value == "" ) {
+                    document.getElementById('input_tel_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_tel_empty_error').style.display = "none";
+                }
+
+                // 이메일주소 빈칸 체크
+                if( document.getElementById('input_edit_email').value == "" ) {
+                    document.getElementById('input_email_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_empty_error').style.display = "none";
+                }
+
+                // 이메일 유효성 체크
+                if( !checkEmail(document.getElementById('input_edit_email').value) ) {
+                    document.getElementById('input_email_check_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_check_error').style.display = "none";
+                }
+
+                // 강사 소개 400자 제한
+                if( document.getElementById('input_edit_description') != null ) {
+                    if( document.getElementById('input_edit_description').value.length > 400 ) {
+                        document.getElementById('input_description_limit_error').style.display = "block";
+                        return;
+                    }
+                    else {
+                        document.getElementById('input_description_limit_error').style.display = "none";
+                    }
+                }
+
+
+                var editParamaters = {};
+                editParamaters.name = document.getElementById('input_edit_name').value;
+                editParamaters.birth = document.getElementById('input_edit_birth').value;
+                editParamaters.tel = document.getElementById('input_edit_tel').value;
+                editParamaters.email = document.getElementById('input_edit_email').value;
+                editParamaters.gender = document.getElementById('input_edit_gender').value;
+
+                if( type == "1" ) {
+                    editParamaters.description = document.getElementById('input_edit_description').value;
+
+                    if( document.getElementById('input_cert_group').value == "Other" ) {
+                        editParamaters.group = document.getElementsByClassName('input_cert_group_custom')[0].getElementsByTagName('input')[0].value;
+                    }
+                    else {
+                        editParamaters.group = document.getElementById('input_cert_group').value;
+                    }
+                }
+                else if( type == "2" ) {
+                    editParamaters.height = document.getElementById('input_edit_height').value;
+                    editParamaters.weight = document.getElementById('input_edit_weight').value;
+                    editParamaters.foot = document.getElementById('input_edit_foot').value;
+                    editParamaters.disease = document.getElementById('input_edit_disease').value;
+                }
+
+                if( document.getElementById('imgInp').files[0] != undefined )
+                    editParamaters.userImage = document.getElementById('imgInp').files[0];
+
+                httpSend.upload("/profile/update", editParamaters, function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+        </script>
+    </body>
+</html>

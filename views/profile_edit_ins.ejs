@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 내 프로필</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS.css" />
+        <link rel="stylesheet" type="text/css" href="css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_save { top: 0; padding-top: 0; line-height: 50px; }
+
+            #direct_input_0 input { margin-left: 74px; position: relative; left: 0px; width: calc(70% - 50px); }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <span class="logo">내 프로필</span>
+            <div id="btn_back"><img src="img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="btn_save" class="header_save">저장</span>
+        </div>
+
+        <div class="my_profile" id="myprofile_edit">
+            <div class="my_profile_image">
+                <img src="<% if(!locals.image || image == undefined || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="" class="img-circle" id="img-upload" />
+                <div class="btn-file">
+                    <button type="button" class="img-circle" id="camera_img_back_small">
+                        <input type="file" name='userImage' id="imgInp" />
+                        <img id="camera_img" src="img/photo-camera.svg" alt="" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="my_profile_information">
+                <div class="basic_information my_profile_tab">
+                    <p class="set_text">기본정보</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이름</span>
+                    <input id="input_edit_name" type="text" placeholder="홍길동" value="<%= name %>" />
+                    <p class="explain t_err t_left" id="input_name_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">연락처</span>
+                    <input id="input_edit_tel" type="tel" class="" placeholder="연락처" value="<%= tel %>" />
+                    <p class="explain_text t_left">'-'를 제외하고 숫자만 입력하세요.</p>
+                    <p class="explain t_err t_left" id="input_tel_empty_error">빈 칸을 입력하세요.</p>
+                </div>
+
+                <div class="basic_information">
+                    <span class="basic_information_guide">이메일</span>
+                    <input id="input_edit_email" type="email" class="" placeholder="이메일" value="<%= email %>" />
+                    <p class="explain t_err t_left" id="input_email_empty_error">빈 칸을 입력하세요.</p>
+                    <p class="explain t_err t_left" id="input_email_check_error">이메일 형식에 맞춰주세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="js/httpUtil.js"></script>
+        <script>
+            var type = '<%= type %>';
+
+            function checkEmail(email) {
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_save').onclick = function() {
+                // 이름 빈칸 체크
+                if( document.getElementById('input_edit_name').value == "" ) {
+                    document.getElementById('input_name_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_name_empty_error').style.display = "none";
+                }
+
+                // 핸드폰번호 빈칸 체크
+                if( document.getElementById('input_edit_tel').value == "" ) {
+                    document.getElementById('input_tel_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_tel_empty_error').style.display = "none";
+                }
+
+                // 이메일주소 빈칸 체크
+                if( document.getElementById('input_edit_email').value == "" ) {
+                    document.getElementById('input_email_empty_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_empty_error').style.display = "none";
+                }
+
+                // 이메일 유효성 체크
+                if( !checkEmail(document.getElementById('input_edit_email').value) ) {
+                    document.getElementById('input_email_check_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_email_check_error').style.display = "none";
+                }
+
+                var editParamaters = {};
+                editParamaters.name = document.getElementById('input_edit_name').value;
+                editParamaters.tel = document.getElementById('input_edit_tel').value;
+                editParamaters.email = document.getElementById('input_edit_email').value;
+
+                if( document.getElementById('imgInp').files[0] != undefined )
+                    editParamaters.userImage = document.getElementById('imgInp').files[0];
+
+                httpSend.upload("/profile/update", editParamaters, function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+        </script>
+    </body>
+</html>

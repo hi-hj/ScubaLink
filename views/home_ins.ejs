@@ -12,8 +12,8 @@
 
         <style>
             .tour { background: white; }
-            .tour_head { height: 48px; }
             #CONTENT_ON { min-height: -webkit-fill-available; background: #eeeeee; }
+            .side-nav ul li:hover{ background: white; }
         </style>
     </head>
 
@@ -26,7 +26,7 @@
 
         <div class="header header_ins">
             <!--현재 페이지-->
-            <span class="logo"><%= name %></span>
+            <span class="logo" id="header_profile_name"><%= name %></span>
             <!--메뉴 버튼-->
             <div class="burger_container">
                 <img class="burger_img menu" src="img/ic-menu.svg">
@@ -34,41 +34,40 @@
             <!-- 검색 버튼-->
             <span id="btn_search" class="search" style="right:16px"><img src="img/search.svg"></span>
 
-            <div id="header_ins_img"><img src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="..." class="img-circle"></div>
+            <div id="header_ins_img"><img id="header_profile_image" src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="..." class="img-circle"></div>
             <div id="header_ins_info">
-                <text>투어/교육 <%= tourList.length %>회</text>
+                <text>투어/교육 <span id="tour_count"><%= tourList.length %></span>회</text>
                 <text>|</text>
                 <text>교육생 <%= follower_count %>명</text>
             </div>
             <div id="header_ins_btn">
                 <button>강사 소개</button>
-                <button>교육생 소개</button>
+                <button>교육생</button>
             </div>
         </div>
 
         <div id="overlay"></div>
 
         <div class="side-nav">
-            <div class="side-nav-head"></div>
             <ul>
-                <li class="name" onclick="location.href='/profile_ins';">
+                <li class="name">
                     <span><img id="profile_image" src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="" class="img-circle"></span>
                     <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
                     <span>
                         <h5 id="profile_name"><%= name %></h5>
-                        <p id="profile_group" class="explain_text" style="text-align: left;"><% if(locals.group && group != "") { %><%= group %><% } else { %>소속단체 없음<% } %></p>
+                        <p class="explain_text" style="text-align: left;">강사</p>
                     </span>
-                    <img class="arrow_right" src='/img/ic-arrow-ltr.svg' alt="" />
                 </li>
                 <li class="none"></li>
-                <li onclick="location.href='/mybgn';">내 교육생</li>
-                <li onclick="location.href='/license';">내 자격증</li>
+<!--                <li onclick="location.href='/mybgn';">내 교육생</li>-->
+<!--                <li onclick="location.href='/license';">내 자격증</li>-->
+                <li onclick="location.href='/profile_ins';">내 정보</li>
                 <li>알림 설정</li>
                 <!-- <li class="none"></li> -->
                 <li onclick="location.href='/notice';">공지사항</li>
                 <li onclick="location.href='/policy';">약관 및 정책</li>
-                <li onclick="sendEmail();">이메일 보내기</li>
-                <li onclick="sendSMS();">문자 보내기</li>
+<!--                <li onclick="sendEmail();">이메일 보내기</li>-->
+<!--                <li onclick="sendSMS();">문자 보내기</li>-->
                 <!-- <li class="none"></li> -->
                 <li id="btn_logout">로그아웃</li>
             </ul>
@@ -97,8 +96,8 @@
 <% } %>
             <div style="margin-top:-12px">
                 강사님 안녕하세요.
-                <br>위 버튼을 눌러
-                <br>새로운 투어/교육 일정을 시작해보세요
+                <br>아래 '일정 만들기' 버튼을 눌러
+                <br>새로운 일정을 시작해보세요
             </div>
             <!--아래 회색 배경 -->
             <div></div>
@@ -111,16 +110,6 @@
 
     <% for(var i=0; i<tourList.length; i++) { %>
             <div class="tour">
-                <div class="tour_head" onclick="location.href='/profile/<%= tourList[i].ins_id %>';">
-                    <div style='width: 1px; height: 48px; display: inline-block;'></div>
-                    <span><img src='<% if( !locals.tourList[i].ins_image || tourList[i].ins_image == undefined || tourList[i].ins_image == '' ) { %>/img/default_user.png<% } else { %><%= tourList[i].ins_image %><% } %>' alt='' class='img-circle' /></span>
-                    <span class="INS_badge"><img src='img/ic.png' alt="" /></span>
-                    <span>
-                        <h5><%= tourList[i].ins_name %></h5>
-                        <p class="explain_text"><% if( !locals.tourList[i].ins_group || tourList[i].ins_group == undefined || tourList[i].ins_group == '' ) { %>소속 없음<% } else { %><%= tourList[i].ins_group %><% } %></p>
-                    </span>
-                </div>
-
                 <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
 
                 <div class="tour_bar <% if( tourList[i].participant_count >= tourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= tourList[i]._id %>';">
@@ -131,18 +120,27 @@
 
                 <div class="tour_contents">
                     <div class="tour_contents_when">
-                        <h4><%= tourList[i].startdate.substr(4,2) %>.<%= tourList[i].startdate.substr(6,2) %> ~ <%= tourList[i].enddate.substr(4,2) %>.<%= tourList[i].enddate.substr(6,2) %> / <%= tourList[i].name %></h4>
+                        <h4><%= tourList[i].name %></h4>
                     </div>
                     <div class="tour_contents_where">
-                        <span><img src="img/ic-map-marker.svg" alt="" /></span>
-                        <span><%= tourList[i].place %></span>
+                        <span>
+                            <text>기간</text><%= tourList[i].startdate.substr(0,4) %>.<%= tourList[i].startdate.substr(4,2) %>.<%= tourList[i].startdate.substr(6,2) %> ~ <%= tourList[i].enddate.substr(0,4) %>.<%= tourList[i].enddate.substr(4,2) %>.<%= tourList[i].enddate.substr(6,2) %>
+                        </span>
+                        <span>
+                            <text>장소</text><%= tourList[i].place %>
+                        </span>
                     </div>
                     <div class="tour_contents_comment"><%= tourList[i].description %></div>
                     <div class="tour_contents_etc">
                         <span>댓글 <%= tourList[i].comment_count %></span>
                     </div>
                 </div>
+
+                <% if (i == tourList.length - 1) { %>
+                <div class="tour_division_last"></div>
+                <% } else { %>
                 <div class="tour_division"></div>
+                <% } %>
             </div>
     <% } %>
 
@@ -180,14 +178,15 @@
                 }, "POST", function(result) {
                     console.log(result);
 
-                    if( result.name != undefined && result.name != "" )
+                    if( result.name != undefined && result.name != "" ) {
+                        document.getElementById('header_profile_name').innerHTML = result.name;
                         document.getElementById('profile_name').innerHTML = result.name;
+                    }
 
-                    if( result.group != undefined && result.group != "" )
-                        document.getElementById('profile_group').innerHTML = result.group;
-
-                    if( result.image != undefined && result.image != "" )
+                    if( result.image != undefined && result.image != "" ) {
                         document.getElementById('profile_image').src = result.image;
+                        document.getElementById('header_profile_image').src = result.image;
+                    }
                 }, function(errorCode, errorMessage) {
                     console.log(errorMessage);
                 });
@@ -200,26 +199,6 @@
                     var html = "";
                     for( var i=0; i<result.tourList.length; i++ ) {
                         html += " <div class='tour'>";
-                        html += "     <div class='tour_head' onclick='location.href=\"/profile/"+result.tourList[i].ins_id+"\";'>";
-                        html += "         <div style='width: 1px; height: 48px; display: inline-block;'></div>"
-
-                        if( result.tourList[i].ins_image == undefined || result.tourList[i].ins_image == "" )
-                            html += "     <span><img src='/img/default_user.png' alt='' class='img-circle' /></span>";
-                        else
-                            html += "     <span><img src='"+result.tourList[i].ins_image+"' alt='' class='img-circle' /></span>";
-
-                        html += "         <span class='INS_badge'><img src='img/ic.png' alt='' /></span>";
-                        html += "         <span>";
-                        html += "             <h5>"+result.tourList[i].ins_name+"</h5>";
-
-                        if( result.tourList[i].ins_group == undefined || result.tourList[i].ins_group == "" )
-                            html += "         <p class='explain_text'>소속 없음</p>";
-                        else
-                            html += "         <p class='explain_text'>"+result.tourList[i].ins_group+"</p>";
-
-                        html += "         </span>";
-                        html += "     </div>";
-
                         if( result.tourList[i].image == undefined || result.tourList[i].image == "" )
                             html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
                         else
@@ -232,25 +211,26 @@
                         html+= "      </div>";
                         html+= "      <div class='tour_contents'>";
                         html+= "          <div class='tour_contents_when'>";
-
-                        var tempDate1 = new Date(result.tourList[i].startdate.substr(0,4)+"-"+result.tourList[i].startdate.substr(4,2)+"-"+result.tourList[i].startdate.substr(6,2)+"T00:00:00");
-                        var tempDate2 = new Date(result.tourList[i].enddate.substr(0,4)+"-"+result.tourList[i].enddate.substr(4,2)+"-"+result.tourList[i].enddate.substr(6,2)+"T00:00:00");
-                        html+= "              <h4>"+result.tourList[i].startdate.substr(4,2)+"."+result.tourList[i].startdate.substr(6,2)+week[tempDate1.getDay()]+" ~ "+result.tourList[i].enddate.substr(4,2)+"."+result.tourList[i].enddate.substr(6,2)+week[tempDate2.getDay()]+" / "+result.tourList[i].name+"</h4>";
-
+                        html+= "              <h4>"+result.tourList[i].name+"</h4>";
                         html+= "          </div>";
                         html+= "          <div class='tour_contents_where'>";
-                        html+= "              <span><img src='img/ic-map-marker.svg' alt='' /></span>";
-                        html+= "              <span>"+result.tourList[i].place+"</span>";
+                        html+= "              <span><text>기간</text>"+result.tourList[i].startdate.substr(0,4)+"."+result.tourList[i].startdate.substr(4,2)+"."+result.tourList[i].startdate.substr(6,2)+" ~ "+result.tourList[i].enddate.substr(0,4)+"."+result.tourList[i].enddate.substr(4,2)+"."+result.tourList[i].enddate.substr(6,2)+"</span>";
+                        html+= "              <span><text>장소</text>"+result.tourList[i].place+"</span>";
                         html+= "          </div>";
                         html+= "          <div class='tour_contents_comment'>"+result.tourList[i].description+"</div>";
                         html+= "          <div class='tour_contents_etc'>";
                         html+= "              <span>댓글 "+result.tourList[i].comment_count+"</span>";
                         html+= "          </div>";
                         html+= "      </div>";
-                        html+= "      <div class='tour_division'></div>";
+
+                        if (i === result.tourList.length-1)
+                            html+= "      <div class='tour_division_last'></div>";
+                        else
+                            html+= "      <div class='tour_division'></div>";
                         html+= "  </div>";
                     }
 
+                    document.getElementById('tour_count').innerHTML = result.tourList.length;
 
                     if( result.tourList.length == 0 ) {
                         document.getElementById('CONTENT_ON').classList.add("hidden");

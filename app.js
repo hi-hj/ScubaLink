@@ -250,7 +250,11 @@ app.get('/profile_edit', function(req, res) {
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
         req.body.id = req.session.snsId;
         dbAccount.findAccountAllInfo(db, req.body, function(result) {
-            res.render('profile_edit', result.result);
+            if( req.session.type == 1 ) {
+                res.render('profile_edit_ins', result.result);
+            } else {
+                res.render('profile_edit_bgn', result.result);
+            }
         }, function(result) {
             res.redirect('/');
         });
@@ -928,15 +932,15 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
+// app.use(function(err, req, res, next) {
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
 
 var server = app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + server.address().port);
