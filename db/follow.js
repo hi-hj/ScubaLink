@@ -101,3 +101,14 @@ exports.findFollowers = function(db, params, callbackSuccess, callbackFail) {
         });
     });
 };
+
+exports.findFollowersCount = function(db, params, callbackSuccess, callbackFail) {
+    db.collection('follow').find({
+        ins: params.id
+    }).count(function(err, follwersCount) {
+        if (err) throw err;
+
+        console.log(follwersCount);
+        callbackSuccess(follwersCount);
+    });
+};

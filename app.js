@@ -96,14 +96,19 @@ app.get('/', function(req, res) {
         if( req.session.type == 1 ) {
             req.body.insId = req.session.snsId;
 
-            dbTour.findTours(db, req.body, function(result) {
-                result.result.type    = req.session.type;
-                result.result.name    = req.session.name;
-                result.result.group   = req.session.group;
-                result.result.image   = req.session.image;
+            dbFollow.findFollowersCount(db, req.body, function(follwersCount) {
+                dbTour.findTours(db, req.body, function(result) {
+                    result.result.type    = req.session.type;
+                    result.result.name    = req.session.name;
+                    result.result.group   = req.session.group;
+                    result.result.image   = req.session.image;
+                    result.result.follower_count = follwersCount;
 
-                res.render('home_ins', result.result);
+                    res.render('home_ins', result.result);
+                });
             });
+
+
         }
         else if( req.session.type == 2 ) {
             req.body.bgnId = req.session.snsId;
