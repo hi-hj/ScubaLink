@@ -18,11 +18,32 @@
     </head>
 
     <body>
-        <div class="header">
-            <span class="logo">투어/교육</span>
-            <div class="burger_container"><img class="burger_img menu" src="img/ic-menu.svg" alt="" /></div>
-            <span id="btn_search" class="search"><img src="img/search.svg" alt="" /></span>
-            <span id="btn_tour_add" class="plus"><img src="img/ic-add.svg" alt="" /></span>
+<!--        <div class="header">-->
+<!--            <span class="logo">투어/교육</span>-->
+<!--            <div class="burger_container"><img class="burger_img menu" src="img/ic-menu.svg" alt="" /></div>-->
+<!--            <span id="btn_search" class="search" style="right: 16px;"><img src="img/search.svg" alt="" /></span>-->
+<!--        </div>-->
+
+        <div class="header header_ins">
+            <!--현재 페이지-->
+            <span class="logo"><%= name %></span>
+            <!--메뉴 버튼-->
+            <div class="burger_container">
+                <img class="burger_img menu" src="img/ic-menu.svg">
+            </div>
+            <!-- 검색 버튼-->
+            <span id="btn_search" class="search" style="right:16px"><img src="img/search.svg"></span>
+
+            <div id="header_ins_img"><img src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="..." class="img-circle"></div>
+            <div id="header_ins_info">
+                <text>투어/교육 <%= tourList.length %>회</text>
+                <text>|</text>
+                <text>교육생 45명</text>
+            </div>
+            <div id="header_ins_btn">
+                <button>강사 소개</button>
+                <button>교육생 소개</button>
+            </div>
         </div>
 
         <div id="overlay"></div>
@@ -53,14 +74,21 @@
             </ul>
         </div>
 
-        <div class="gray_rectangle">
-            <div>
-                <button id="btn_tour_add_02" type="button" class="btn btn-block tour_plus">
-                    <span><img src="img/ic-add-blue.svg" alt="" /></span>
-                    <span id="text_tour_education">투어/교육 추가</span>
-                </button>
-            </div>
+        <!--투어/교육 추가 버튼-->
+        <div id="home_tour_plus">
+            <button id="btn_tour_add" type="button" class="btn btn-block tour_plus">
+                <span id="text_tour_education">일정 만들기</span>
+            </button>
         </div>
+
+<!--        <div class="gray_rectangle">-->
+<!--            <div>-->
+<!--                <button id="btn_tour_add_02" type="button" class="btn btn-block tour_plus">-->
+<!--                    <span><img src="img/ic-add-blue.svg" alt="" /></span>-->
+<!--                    <span id="text_tour_education">투어/교육 추가</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
 
 <% if( tourList.length == 0 ) { %>
         <div id="CONTENT_OFF" class="">
@@ -139,10 +167,6 @@
             };
 
             document.getElementById('btn_tour_add').onclick = function() {
-                location.href = "/tour_add";
-            };
-
-            document.getElementById('btn_tour_add_02').onclick = function() {
                 location.href = "/tour_add";
             };
 
