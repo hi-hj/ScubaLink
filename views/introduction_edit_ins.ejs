@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 내 프로필</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="myprofile">
+            <span class="logo">강사 소개</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+            <span id="btn_edit" class="header_save">완료</span>
+        </div>
+
+        <div id="INS_intro">
+            <div>
+                <div class="INS_intro_title">강사 소개</div>
+                <textarea id="input_ins_intro"><%= insIntro %></textarea>
+                <span>최대 1,000자</span>
+            </div>
+
+            <div>
+                <div class="INS_intro_title">수강 대상</div>
+                <textarea id="input_target"><%= target %></textarea>
+                <span>최대 1,000자</span>
+            </div>
+
+            <div>
+                <div class="INS_intro_title">교육 소개</div>
+                <textarea id="input_edu_intro"><%= eduIntro %></textarea>
+                <span>최대 1,000자</span>
+            </div>
+
+
+            <div>
+                <div class="INS_intro_title">투어 소개</div>
+                <textarea id="input_tour_intro"><%= tourIntro %></textarea>
+                <span>최대 1,000자</span>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_edit').onclick = function() {
+                httpSend.send("/introduction/update", {
+                    insIntro    : document.getElementById('input_ins_intro').value,
+                    target      : document.getElementById('input_target').value,
+                    eduIntro    : document.getElementById('input_edu_intro').value,
+                    tourIntro   : document.getElementById('input_tour_intro').value
+                }, "POST", function(result) {
+                    history.back();
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+        </script>
+    </body>
+</html>

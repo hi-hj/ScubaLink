@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>스쿠버 링크 : 내 프로필</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="myprofile">
+            <span class="logo">강사 소개</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+            <% if (id == no) { %><span id="btn_edit" class="header_save">수정</span><% } %>
+        </div>
+
+        <div id="INS_intro">
+            <div>
+                <div class="INS_intro_title">강사 소개</div>
+                <% if (insIntro == null || insIntro == '') {%>
+                    <span id="text_ins_intro_empty">작성 중입니다.</span>
+                    <text class="hidden" id="text_ins_intro"></text>
+                <% } else { %>
+                    <span class="hidden" id="text_ins_intro_empty">작성 중입니다.</span>
+                    <text id="text_ins_intro"><%= insIntro %></text>
+                <% } %>
+            </div>
+
+            <div>
+                <div class="INS_intro_title">수강 대상</div>
+                <% if (target == null || target == '') {%>
+                    <span id="text_target_empty">작성 중입니다.</span>
+                    <text class="hidden" id="text_target"></text>
+                <% } else { %>
+                    <span class="hidden" id="text_target_empty">작성 중입니다.</span>
+                    <text id="text_target"><%= target %></text>
+                <% } %>
+            </div>
+
+            <div>
+                <div class="INS_intro_title">교육 소개</div>
+                <% if (eduIntro == null || eduIntro == '') {%>
+                    <span id="text_edu_intro_empty">작성 중입니다.</span>
+                    <text class="hidden" id="text_edu_intro"></text>
+                <% } else { %>
+                    <span class="hidden" id="text_edu_intro_empty">작성 중입니다.</span>
+                    <text id="text_edu_intro"><%= eduIntro %></text>
+                <% } %>
+            </div>
+
+            <div>
+                <div class="INS_intro_title">투어 소개</div>
+                <% if (tourIntro == null || tourIntro == '') {%>
+                    <span id="text_tour_intro_empty">작성 중입니다.</span>
+                    <text class="hidden" id="text_tour_intro"></text>
+                <% } else { %>
+                    <span class="hidden" id="text_tour_intro_empty">작성 중입니다.</span>
+                    <text id="text_tour_intro"><%= tourIntro %></text>
+                <% } %>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script>
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            if (document.getElementById('btn_edit') !== null) {
+                document.getElementById('btn_edit').onclick = function () {
+                    location.href = "/introduction/edit";
+                };
+            }
+
+            window.onpageshow = function (event) {
+                httpSend.send("/introduction/find", {
+                    id: '<%= no %>'
+                }, "POST", function(result) {
+                    if (result.insIntro === null || result.insIntro === undefined || result.insIntro === '') {
+                        document.getElementById('text_ins_intro').classList.add('hidden');
+                        document.getElementById('text_ins_intro_empty').classList.remove('hidden');
+                    } else {
+                        document.getElementById('text_ins_intro').innerHTML = result.insIntro;
+                        document.getElementById('text_ins_intro_empty').classList.add('hidden');
+                        document.getElementById('text_ins_intro').classList.remove('hidden');
+                    }
+
+                    if (result.target === null || result.target === undefined || result.target === '') {
+                        document.getElementById('text_target').classList.add('hidden');
+                        document.getElementById('text_target_empty').classList.remove('hidden');
+                    } else {
+                        document.getElementById('text_target').innerHTML = result.target;
+                        document.getElementById('text_target_empty').classList.add('hidden');
+                        document.getElementById('text_target').classList.remove('hidden');
+                    }
+
+                    if (result.eduIntro === null || result.eduIntro === undefined || result.eduIntro === '') {
+                        document.getElementById('text_edu_intro').classList.add('hidden');
+                        document.getElementById('text_edu_intro_empty').classList.remove('hidden');
+                    } else {
+                        document.getElementById('text_edu_intro').innerHTML = result.eduIntro;
+                        document.getElementById('text_edu_intro_empty').classList.add('hidden');
+                        document.getElementById('text_edu_intro').classList.remove('hidden');
+                    }
+
+                    if (result.tourIntro === null || result.tourIntro === undefined || result.tourIntro === '') {
+                        document.getElementById('text_tour_intro').classList.add('hidden');
+                        document.getElementById('text_tour_intro_empty').classList.remove('hidden');
+                    } else {
+                        document.getElementById('text_tour_intro').innerHTML = result.tourIntro;
+                        document.getElementById('text_tour_intro_empty').classList.add('hidden');
+                        document.getElementById('text_tour_intro').classList.remove('hidden');
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            }
+        </script>
+    </body>
+</html>

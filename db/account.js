@@ -304,3 +304,61 @@ exports.removeSearchHistory = function(db, params, callbackSuccess) {
         });
     });
 };
+
+exports.findAccountIntroduction = function(db, params, callbackSuccess, callbackFail) {
+    console.log(params);
+    db.collection('account').findOne({ id: params.id + '' }, function(err, doc) {
+        if (err) throw err;
+
+        if(doc == null) {
+            console.log("계정이 존재하지 않습니다 - A001 (" + params.id + ")");
+
+            callbackFail({
+                code   : "A001",
+                message: "계정이 존재하지 않습니다"
+            });
+        }
+        else {
+            callbackSuccess({
+                code    : "0000",
+                message : "Success",
+                result  : {
+                    id          : doc.id,
+                    insIntro    : doc.insIntro,
+                    eduIntro    : doc.eduIntro,
+                    tourIntro   : doc.tourIntro,
+                    target      : doc.target
+                }
+            });
+        }
+    });
+};
+
+exports.updateAccountIntroduction = function(db, params, callbackSuccess) {
+    var updateData = {};
+
+    if( params.insIntro !== undefined )
+        updateData.insIntro = params.insIntro;
+    if( params.eduIntro !== undefined )
+        updateData.eduIntro = params.eduIntro;
+    if( params.tourIntro !== undefined )
+        updateData.tourIntro = params.tourIntro;
+    if( params.target !== undefined )
+        updateData.target = params.target;
+
+    db.collection('account').updateOne({
+        id    : params.id
+    }, {
+        $set: updateData
+    }, function(err, doc) {
+        if (err) throw err;
+
+        callbackSuccess({
+            code    : "0000",
+            message : "Success",
+            result  : {
+
+            }
+        });
+    });
+};

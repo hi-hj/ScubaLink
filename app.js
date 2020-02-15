@@ -98,17 +98,16 @@ app.get('/', function(req, res) {
 
             dbFollow.findFollowersCount(db, req.body, function(follwersCount) {
                 dbTour.findTours(db, req.body, function(result) {
-                    result.result.type    = req.session.type;
-                    result.result.name    = req.session.name;
-                    result.result.group   = req.session.group;
-                    result.result.image   = req.session.image;
+                    result.result.id        = req.session.snsId;
+                    result.result.type      = req.session.type;
+                    result.result.name      = req.session.name;
+                    result.result.group     = req.session.group;
+                    result.result.image     = req.session.image;
                     result.result.follower_count = follwersCount;
 
                     res.render('home_ins', result.result);
                 });
             });
-
-
         }
         else if( req.session.type == 2 ) {
             req.body.bgnId = req.session.snsId;
@@ -292,6 +291,39 @@ app.get('/profile/:no', function(req, res){
                 result.result.userType = req.session.type;
                 res.render('home_profile', result.result);
             });
+        }, function(result) {
+            res.redirect('/');
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+
+app.get('/introduction/edit', function(req, res){
+    if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
+        req.body.id     = req.session.snsId;
+
+        dbAccount.findAccountIntroduction(db, req.body, function(result) {
+            res.render('introduction_edit_ins', result.result);
+        }, function(result) {
+            console.log(result);
+            res.redirect('/');
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+
+app.get('/introduction/:no', function(req, res){
+    if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
+        req.body.id     = req.params.no;
+
+        dbAccount.findAccountIntroduction(db, req.body, function(result) {
+            result.result.no = req.params.no;
+            result.result.id = req.session.snsId;
+            res.render('introduction_ins', result.result);
         }, function(result) {
             res.redirect('/');
         });
@@ -918,6 +950,22 @@ app.post('/comment/add', function(req, res) {
 
 app.post('/comment/find', function(req, res) {
     dbComment.findComment(db, req.body, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    });
+});
+
+app.post('/introduction/find', function(req, res){
+    dbAccount.findAccountIntroduction(db, req.body, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    });
+});
+
+app.post('/introduction/update', function(req, res){
+    req.body.id = req.session.snsId;
+
+    dbAccount.updateAccountIntroduction(db, req.body, function(result) {
         res.writeHead(200);
         res.end(JSON.stringify(result));
     });
