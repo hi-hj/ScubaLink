@@ -14,6 +14,7 @@
             #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
             #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
             #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
+            .tour_division { margin-top: 16px; }
         </style>
     </head>
 
@@ -60,7 +61,7 @@
             <div class="my_profile_information">
                 <div class="basic_information my_profile_tab">
                     <p class="set_text">신체정보</p>
-                    <p class="explain_text explain_text_bottom">수영장 교육, 장비 대여 시 필요한 정보입니다.</p>
+<!--                    <p class="explain_text explain_text_bottom">수영장 교육, 장비 대여 시 필요한 정보입니다.</p>-->
                 </div>
 
                 <div class="basic_information">
@@ -84,7 +85,7 @@
                 </div>
 
                 <div class="basic_information">
-                    <span class="basic_information_guide" id="disease" style="position:inherit">특이병력</span>
+                    <span class="basic_information_guide" style="position:inherit">특이병력</span>
                     <span id="info_disease" class="info_text"><% if( !locals.disease || disease == undefined || disease == "") { %>없음<% } else {%><%= disease %><% } %></span>
                 </div>
             </div>

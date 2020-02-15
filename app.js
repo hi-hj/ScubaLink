@@ -92,9 +92,10 @@ var transporter = nodemailer.createTransport({
 /* Page Redirection */
 app.get('/', function(req, res) {
     // 로그인 세션이 유지되어있으며, 강사나 교육생 가입까지 완료될 경우
-    if( req.session && req.session.snsId != undefined && req.session.type != undefined && req.session.type != 0 ) {
-        if( req.session.type == 1 ) {
+    if( req.session && req.session.snsId !== undefined && req.session.type !== undefined && req.session.type !== 0 ) {
+        if( req.session.type === 1 ) {
             req.body.insId = req.session.snsId;
+            req.body.id = req.session.snsId;
 
             dbFollow.findFollowersCount(db, req.body, function(follwersCount) {
                 dbTour.findTours(db, req.body, function(result) {
@@ -109,7 +110,7 @@ app.get('/', function(req, res) {
                 });
             });
         }
-        else if( req.session.type == 2 ) {
+        else if( req.session.type === 2 ) {
             req.body.bgnId = req.session.snsId;
 
             dbTour.findToursByBgn(db, req.body, function(result) {
