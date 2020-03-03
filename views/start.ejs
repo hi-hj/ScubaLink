@@ -80,7 +80,7 @@
                 Kakao.Auth.login({
                     success: function(authResult) {
                         Kakao.API.request({
-                            url: '/v1/user/me',
+                            url: '/v2/user/me',
                             success: function(kakaoResult) {
                                 console.log(kakaoResult);
 
