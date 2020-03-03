@@ -27,26 +27,26 @@
         <div id="INS_intro">
             <div>
                 <div class="INS_intro_title">강사 소개</div>
-                <textarea id="input_ins_intro"><%= insIntro %></textarea>
+                <textarea id="input_ins_intro" onkeyup="checkMaxLength(this);"><%= insIntro %></textarea>
                 <span>최대 1,000자</span>
             </div>
 
             <div>
                 <div class="INS_intro_title">수강 대상</div>
-                <textarea id="input_target"><%= target %></textarea>
+                <textarea id="input_target" onkeyup="checkMaxLength(this);"><%= target %></textarea>
                 <span>최대 1,000자</span>
             </div>
 
             <div>
                 <div class="INS_intro_title">교육 소개</div>
-                <textarea id="input_edu_intro"><%= eduIntro %></textarea>
+                <textarea id="input_edu_intro" onkeyup="checkMaxLength(this);"><%= eduIntro %></textarea>
                 <span>최대 1,000자</span>
             </div>
 
 
             <div>
                 <div class="INS_intro_title">투어 소개</div>
-                <textarea id="input_tour_intro"><%= tourIntro %></textarea>
+                <textarea id="input_tour_intro" onkeyup="checkMaxLength(this);"><%= tourIntro %></textarea>
                 <span>최대 1,000자</span>
             </div>
         </div>
@@ -72,6 +72,12 @@
                     console.log(errorMessage);
                 });
             };
+
+            function checkMaxLength (event) {
+                if (event.value.length > 1000) {
+                    event.value = event.value.substr(0, 1000);
+                }
+            }
         </script>
     </body>
 </html>
