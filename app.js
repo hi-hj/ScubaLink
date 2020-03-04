@@ -515,6 +515,24 @@ app.get('/tour/cost/:no', function(req, res){
     }
 });
 
+app.get('/tour/participant/:no', function(req, res){
+    if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
+        req.body.id     = req.params.no;
+
+        dbTour.findTourParticipant(db, req.body, function(result) {
+            result.result.userId = req.session.snsId;
+            result.result.userType = req.session.type;
+
+            res.render('tour_participant', result.result);
+        }, function(result) {
+            res.redirect('/');
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+
 
 app.post('/join/sns', function(req, res) {
     dbAccount.findAccount(db, req.body, function(result) {
@@ -863,6 +881,18 @@ app.post('/tour/remove', function(req, res){
     });
 });
 
+app.post('/tour/participate/memo', function(req, res){
+    req.body.id = req.session.snsId;
+    req.body.type = 1;
+
+    dbTour.changeTourParticipantMemo(db, req.body, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    }, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    });
+});
 
 app.post('/tour/participate', function(req, res){
     req.body.id = req.session.snsId;

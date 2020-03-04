@@ -19,6 +19,7 @@
 
             #tour_edu_plus p.t_left { margin-left: 0; margin-top: 0; color: #ffff55; }
             .my_certif_image div #img-upload.on { top: -110px; }
+            #input_tour_start, #input_tour_end { background: white; }
         </style>
     </head>
 
@@ -30,41 +31,54 @@
 
         <div id="tour_edu_plus">
             <div class="tour_input">
-                <p>투어/교육 이름 <span>*</span></p>
-                <input id="input_tour_name" type="text" class="form-control" placeholder="동해 오픈워터 해양실습" />
+                <p>투어/교육 이름 (필수)</p>
+                <input id="input_tour_name" type="text" class="form-control" placeholder="예) 동해 오픈워터 해양실습" />
                 <p class="explain t_err t_left" id="input_name_empty_error">교육 이름을 입력하세요.</p>
             </div>
 
-            <div class="tour_input">
-                <p>기간 <span>*</span></p>
-                <input id="input_tour_start" type="date" />
-                <span>~</span>
-                <input id="input_tour_end" type="date" />
+            <div id="tour_date" class="tour_input">
+                <p>기간 (필수)</p>
+                <div>
+                    <text>출발일</text>
+                    <input id="input_tour_start" type="date" />
+                </div>
+                <div>
+                    <text>도착일</text>
+                    <input id="input_tour_end" type="date" />
+                </div>
                 <p class="explain t_err t_left" id="input_date_empty_error">교육 기간을 선택하세요.</p>
                 <p class="explain t_err t_left" id="input_date_limit_error">교육 시작일자가 종료일자를 넘을 수 없습니다.</p>
             </div>
 
             <div class="tour_input">
-                <p>장소 <span>*</span></p>
+                <p>장소 (필수)</p>
                 <input id="input_tour_place" type="text" class="form-control" placeholder=" 예) 해피 다이빙 리조트" />
                 <p class="explain t_err t_left" id="input_place_empty_error">교육 장소를 입력하세요.</p>
             </div>
 
-            <div class="tour_input">
-                <p>참여 정원 수(본인 포함) <span>*</span></p>
-                <input id="input_tour_member_count" type="number" pattern="\d*" placeholder="0" />
-                <span>명</span>
+            <div id="tour_member" class="tour_input">
+                <p>참여자 수</p>
+                <div>
+                    <span class="ex_text">강사</span>
+                    <input type="number"id="input_tour_member_count_ins" placeholder="0" min="1" max="100;" />
+                    <span class="c_text">명</span>
+                </div>
+                <div>
+                    <span class="ex_text">교육생</span>
+                    <input type="number"id="input_tour_member_count_bgn" placeholder="0" min="1" max="100;" />
+                    <span class="c_text">명</span>
+                </div>
                 <p class="explain t_err t_left" id="input_member_count_empty_error">참여 인원을 입력하세요.</p>
                 <p class="explain t_err t_left" id="input_member_count_zero_error">참여인원은 1명 이상이어야 합니다.</p>
             </div>
 
-            <div class="tour_input">
-                <p>간단한 설명(최대 140자)</p>
+            <div class="tour_input" style="margin-top:100px">
+                <p>간단한 설명(최대 140자) (선택)</p>
                 <textarea id="input_tour_description" name="test" class="form-control" placeholder="안전하고 즐거운 해양실습"></textarea>
             </div>
 
             <div class="tour_input">
-                <p>대표사진</p>
+                <p>대표사진 (선택)</p>
                 <div class="my_certif_image btn-file">
                     <i class="glyphicon glyphicon-picture"></i>
                     <p>눌러서 이미지를 추가하세요</p>
@@ -72,9 +86,9 @@
                     <div><img id='img-upload' alt='' /></div>
                 </div>
             </div>
-
-            <input id="btn_regist" type="button" value="완료" class="btn" style="margin-bottom: 60px;">
         </div>
+
+        <input id="tour_add_submit" type="button" value="완료" class="btn">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -85,7 +99,7 @@
                 history.back();
             };
 
-            document.getElementById('btn_regist').onclick = function() {
+            document.getElementById('tour_add_submit').onclick = function() {
                 // 교육이름 빈칸 체크
                 if( document.getElementById('input_tour_name').value == "" ) {
                     document.getElementById('input_name_empty_error').style.display = "block";
@@ -125,7 +139,7 @@
                 }
 
                 // 교육 참여 인원 빈칸 체크
-                if( document.getElementById('input_tour_member_count').value == "" ) {
+                if( document.getElementById('input_tour_member_count_ins').value === '' || document.getElementById('input_tour_member_count_bgn').value === '' ) {
                     document.getElementById('input_member_count_empty_error').style.display = "block";
                     return;
                 }
@@ -134,7 +148,7 @@
                 }
 
                 // 교육 참여 인원 0 체크
-                if( document.getElementById('input_tour_member_count').value == 0 ) {
+                if( document.getElementById('input_tour_member_count_ins').value === 0 || document.getElementById('input_tour_member_count_bgn').value === 0 ) {
                     document.getElementById('input_member_count_zero_error').style.display = "block";
                     return;
                 }
@@ -147,7 +161,9 @@
                 editParamaters.startdate = document.getElementById('input_tour_start').value.replace(/-/gi, "").replace(/\./gi, "");
                 editParamaters.enddate = document.getElementById('input_tour_end').value.replace(/-/gi, "").replace(/\./gi, "");
                 editParamaters.place = document.getElementById('input_tour_place').value;
-                editParamaters.member = document.getElementById('input_tour_member_count').value;
+                editParamaters.member = parseInt(document.getElementById('input_tour_member_count_ins').value) + parseInt(document.getElementById('input_tour_member_count_bgn').value);
+                editParamaters.insCount = parseInt(document.getElementById('input_tour_member_count_ins').value);
+                editParamaters.bgnCount = parseInt(document.getElementById('input_tour_member_count_bgn').value);
                 editParamaters.description = document.getElementById('input_tour_description').value;
 
                 if( document.getElementById('imgInp').files[0] != undefined )

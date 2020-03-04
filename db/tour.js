@@ -21,15 +21,18 @@ exports.addTour = function(db, params, callbackSuccess, callbackFail) {
                 enddate     : params.enddate,
                 place       : params.place,
                 member      : params.member,
+                insCount    : params.insCount,
+                bgnCount    : params.bgnCount,
                 description : params.description,
                 image       : params.image,
-                participant : [params.insId],
+                participant : [{ id: params.insId, memo: '' }],
                 waiting     : [],
                 interesting : [],
                 schedule    : "",
                 cost        : { foc: {flag: false, charge: "", free: ""}, details: [], profit: {type: "", value: ""}, total: "0" },
                 date        : year + (month < 10 ? "0" : "") + month + (day < 10 ? "0" : "") + day,
-                time        : (hour < 10 ? "0" : "") + hour + (min < 10 ? "0" : "") + min + (sec < 10 ? "0" : "") + sec
+                time        : (hour < 10 ? "0" : "") + hour + (min < 10 ? "0" : "") + min + (sec < 10 ? "0" : "") + sec,
+                status      : 'HIDE'
             }, function(err, res) {
                 if (err) throw err;
 
@@ -84,6 +87,10 @@ exports.updateTour = function(db, params, callbackSuccess, callbackFail) {
 
                 updateData.member = params.member;
             }
+            if( params.insCount != undefined )
+                updateData.insCount = params.insCount;
+            if( params.bgnCount != undefined )
+                updateData.bgnCount = params.bgnCount;
             if( params.description != undefined )
                 updateData.description = params.description;
             if( params.schedule != undefined )
@@ -327,7 +334,7 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
         }, {
             $lookup: {
                 from          : "account",
-                localField    : "participant",
+                localField    : "participant.id",
                 foreignField  : "id",
                 as            : "participant"
             }
@@ -353,12 +360,15 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
                 enddate     : { "$first": "$enddate" },
                 place       : { "$first": "$place" },
                 member      : { "$first": "$member" },
+                insCount    : { "$first": "$insCount" },
+                bgnCount    : { "$first": "$bgnCount" },
                 description : { "$first": "$description" },
                 image       : { "$first": "$image" },
                 schedule    : { "$first": "$schedule" },
                 cost        : { "$first": "$cost" },
                 date        : { "$first": "$date" },
                 time        : { "$first": "$time" },
+                status      : { "$first": "$status" },
                 ins_id      : { "$first": "$ins.id" },
                 ins_name    : { "$first": "$ins.name" },
                 ins_group   : { "$first": "$ins.group" },
@@ -370,7 +380,7 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
         }, {
             $lookup: {
                 from          : "account",
-                localField    : "waiting",
+                localField    : "waiting.id",
                 foreignField  : "id",
                 as            : "waiting"
             }
@@ -387,12 +397,15 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
                 enddate     : { "$first": "$enddate" },
                 place       : { "$first": "$place" },
                 member      : { "$first": "$member" },
+                insCount    : { "$first": "$insCount" },
+                bgnCount    : { "$first": "$bgnCount" },
                 description : { "$first": "$description" },
                 image       : { "$first": "$image" },
                 schedule    : { "$first": "$schedule" },
                 cost        : { "$first": "$cost" },
                 date        : { "$first": "$date" },
                 time        : { "$first": "$time" },
+                status      : { "$first": "$status" },
                 ins_id      : { "$first": "$ins_id" },
                 ins_name    : { "$first": "$ins_name" },
                 ins_group   : { "$first": "$ins_group" },
@@ -404,7 +417,7 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
         }, {
             $lookup: {
                 from          : "account",
-                localField    : "interesting",
+                localField    : "interesting.id",
                 foreignField  : "id",
                 as            : "interesting"
             }
@@ -421,12 +434,15 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
                 enddate     : { "$first": "$enddate" },
                 place       : { "$first": "$place" },
                 member      : { "$first": "$member" },
+                insCount    : { "$first": "$insCount" },
+                bgnCount    : { "$first": "$bgnCount" },
                 description : { "$first": "$description" },
                 image       : { "$first": "$image" },
                 schedule    : { "$first": "$schedule" },
                 cost        : { "$first": "$cost" },
                 date        : { "$first": "$date" },
                 time        : { "$first": "$time" },
+                status      : { "$first": "$status" },
                 ins_id      : { "$first": "$ins_id" },
                 ins_name    : { "$first": "$ins_name" },
                 ins_group   : { "$first": "$ins_group" },
@@ -455,6 +471,26 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
     });
 };
 
+exports.changeTourParticipantMemo = function(db, params, callbackSuccess, callbackFail) {
+    db.collection('tour').updateOne({
+        _id   : params.tourId
+    }, {
+        $set  : {
+            participant     : params.participant
+        }
+    }, function(err, doc) {
+        if (err) throw err;
+
+        callbackSuccess({
+            code    : "0000",
+            message : "Success",
+            result  : {
+
+            }
+        });
+    });
+};
+
 exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
     db.collection('tour').findOne({ _id: params.tourId }, function(err, doc) {
         if (err) throw err;
@@ -475,32 +511,55 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                 return;
             }
 
-            if( params.type == 1 ) {
-                if( doc.waiting.indexOf(params.id) >= 0 )
-                    doc.waiting.splice(doc.waiting.indexOf(params.id), 1);
-                if( doc.interesting.indexOf(params.id) >= 0 )
-                    doc.interesting.splice(doc.interesting.indexOf(params.id), 1);
+            var item = null;
+            var indexWaiting = doc.waiting.map(item => item.id).indexOf(params.id);
+            var indexInteresting = doc.interesting.map(item => item.id).indexOf(params.id);
+            var indexParticipant = doc.participant.map(item => item.id).indexOf(params.id);
 
-                if( doc.participant.indexOf(params.id) < 0 )
-                    doc.participant.push(params.id);
+            if( params.type == 1 ) {
+                if (indexWaiting >= 0) {
+                    item = doc.waiting.splice(indexWaiting, 1)[0];
+                } else if (indexInteresting >= 0) {
+                    item = doc.interesting.splice(indexInteresting, 1)[0];
+                }
+
+                if (indexParticipant === -1) {
+                    if (item === null) {
+                        doc.participant.push({ id: params.id, memo: '' });
+                    } else {
+                        doc.participant.push(item);
+                    }
+                }
             }
             else if( params.type == 2 ) {
-                if( doc.waiting.indexOf(params.id) >= 0 )
-                    doc.waiting.splice(doc.waiting.indexOf(params.id), 1);
-                if( doc.participant.indexOf(params.id) >= 0 )
-                    doc.participant.splice(doc.interesting.indexOf(params.id), 1);
+                if (indexWaiting >= 0) {
+                    item = doc.waiting.splice(indexWaiting, 1)[0];
+                } else if (indexParticipant >= 0) {
+                    item = doc.participant.splice(indexParticipant, 1)[0];
+                }
 
-                if( doc.interesting.indexOf(params.id) < 0 )
-                    doc.interesting.push(params.id);
+                if (indexInteresting === -1) {
+                    if (item === null) {
+                        doc.interesting.push({ id: params.id, memo: '' });
+                    } else {
+                        doc.interesting.push(item);
+                    }
+                }
             }
             else if( params.type == 3 ) {
-                if( doc.participant.indexOf(params.id) >= 0 )
-                    doc.participant.splice(doc.waiting.indexOf(params.id), 1);
-                if( doc.interesting.indexOf(params.id) >= 0 )
-                    doc.interesting.splice(doc.interesting.indexOf(params.id), 1);
+                if (indexInteresting >= 0) {
+                    item = doc.interesting.splice(indexInteresting, 1)[0];
+                } else if (indexParticipant >= 0) {
+                    item = doc.participant.splice(indexParticipant, 1)[0];
+                }
 
-                if( doc.waiting.indexOf(params.id) < 0 )
-                    doc.waiting.push(params.id);
+                if (indexWaiting === -1) {
+                    if (item === null) {
+                        doc.waiting.push({ id: params.id, memo: '' });
+                    } else {
+                        doc.waiting.push(item);
+                    }
+                }
             }
 
             db.collection('tour').updateOne({
@@ -522,7 +581,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                     }, {
                         $lookup: {
                             from          : "account",
-                            localField    : "participant",
+                            localField    : "participant.id",
                             foreignField  : "id",
                             as            : "participant"
                         }
@@ -541,7 +600,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                     }, {
                         $lookup: {
                             from          : "account",
-                            localField    : "waiting",
+                            localField    : "waiting.id",
                             foreignField  : "id",
                             as            : "waiting"
                         }
@@ -560,7 +619,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                     }, {
                         $lookup: {
                             from          : "account",
-                            localField    : "interesting",
+                            localField    : "interesting.id",
                             foreignField  : "id",
                             as            : "interesting"
                         }
@@ -580,8 +639,6 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                 ).toArray(function(err, doc) {
                     if (err) throw err;
 
-                    console.log(doc);
-
                     if( doc.length == 0 ) {
                         callbackFail({
                             code   : "C001",
@@ -589,8 +646,6 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                         });
                     }
                     else {
-                        console.log(doc[0]);
-
                         callbackSuccess({
                             code    : "0000",
                             message : "Success",
@@ -598,6 +653,67 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                         });
                     }
                 });
+            });
+        }
+    });
+};
+
+exports.findTourParticipant = function(db, params, callbackSuccess, callbackFail) {
+    db.collection('tour').aggregate(
+        [{
+            $match: {
+                _id: params.id
+            }
+        }, {
+            $lookup: {
+                from          : "account",
+                localField    : "participant.id",
+                foreignField  : "id",
+                as            : "participants"
+            }
+        }, {
+            $unwind: {
+                path                        : "$participants",
+                preserveNullAndEmptyArrays  : true
+            }
+        }, {
+            $group: {
+                _id         : "$_id",
+                participant : {
+                    $push:  {
+                        id: "$participants.id",
+                        name: "$participants.name",
+                        image: "$participants.image",
+                        type: "$participants.type",
+                        gender: "$participants.gender",
+                        height: "$participants.height",
+                        weight: "$participants.weight",
+                        foot: "$participants.foot",
+                        disease: "$participants.disease",
+                        memo: "$participant.memo"
+                    }
+                }
+            }
+        }]
+    ).toArray(function(err, doc) {
+        if (err) throw err;
+
+        doc[0].participant = doc[0].participant.map((item, index) => {
+            item.memo = item.memo[index];
+            return item;
+        });
+
+        if( doc.length === 0 ) {
+            callbackFail({
+                code   : "C001",
+                message: "Invalid Access"
+            });
+        }
+        else {
+            callbackSuccess({
+                code    : "0000",
+                message : "Success",
+                result  : doc[0]
             });
         }
     });

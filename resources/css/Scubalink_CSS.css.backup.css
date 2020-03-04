@@ -283,18 +283,18 @@ button:focus{
 
 
 
-/*input[type="text"],input[type="tel"],input[type="email"], input[type=number]{*/
-/*  width: 246px;  */
-/*  height: 38px;*/
-/*  padding: 0 12px;*/
-/*  font-family: inherit; !* 폰트 상속 *!*/
-/*  color:#000;*/
-/*  border-radius: 2px; !* iOS 둥근모서리 제거 *!*/
-/*  -webkit-appearance: none; !* 네이티브 외형 감추기 *!*/
-/*  -moz-appearance: none; appearance: none;*/
-/*  border: solid 1px #979797; */
-/*  font-size: 15px;*/
-/*}*/
+input[type="text"],input[type="tel"],input[type="email"], input[type=number]{
+  width: 246px;  
+  height: 38px;
+  padding: 0 12px;
+  font-family: inherit; /* 폰트 상속 */
+  color:#000;
+  border-radius: 2px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none; appearance: none;
+  border: solid 1px #979797; 
+  font-size: 15px;
+}
 
 input[type=number] {
   width: 200px;  

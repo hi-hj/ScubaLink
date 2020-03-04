@@ -240,20 +240,20 @@ $(document).ready(function() {
     var lesstext = '<img src="/img/ic-arrow-ltr.svg" style="transform:rotate(270deg)">';
 
 
-    $('.more').each(function() {
-        var content = $(this).html();
-
-        if(content.length > showChar) {
-
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar, content.length - showChar);
-
-            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-
-            $(this).html(html);
-        }
-
-    });
+    // $('.more').each(function() {
+    //     var content = $(this).html();
+    //
+    //     if(content.length > showChar) {
+    //
+    //         var c = content.substr(0, showChar);
+    //         var h = content.substr(showChar, content.length - showChar);
+    //
+    //         var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+    //
+    //         $(this).html(html);
+    //     }
+    //
+    // });
 
     $(".morelink").click(function(){
         if($(this).hasClass("less")) {

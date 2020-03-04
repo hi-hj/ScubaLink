@@ -12,7 +12,7 @@
 
         <style>
             #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
-            #back_white { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #back_white { position: absolute; top: 0; left: 0; margin-top: 12px; margin-left: 15px; }
             #btn_edit { top: 0; padding-top: 0; line-height: 50px; }
 
             #tour_schedule_head .tour_content { top: 0; padding-top: 18px; }
@@ -31,7 +31,16 @@
             #collapseFour>.panel-body div[class="row"] span:first-child { margin-left: 16px; float: left; font-size: 12px; line-height: 1.17; font-weight: bold; color: #333333; }
             #collapseFour>.panel-body div[class="row"] span:nth-child(2) { margin-right: 16px; float: right; font-size: 14px; line-height: 1; color: #333333; }
 
-            #tour_basic_info pre.more { white-space: pre; font-size: 14px; line-height: 1.43; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
+            /*#tour_basic_info pre.more { white-space: pre; font-size: 14px; line-height: 1.43; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }*/
+
+            #tour_basic_info pre.more { width: 100%; white-space: pre-wrap; }
+
+            #tour_basic_info pre.more a.morelink {
+                display: block;
+                width: 24px;
+                margin: auto;
+                padding-bottom: 12px;
+            }
             #tour_basic_info .tour_comment .panel-body span.comment_date { position: relative; left: 0; padding-left: 10px; }
             #tour_basic_info .tour_comment .panel-body pre.comment_content { padding-left: 40px; }
         </style>
@@ -90,9 +99,16 @@ for(var i=0; i<interesting.length; i++) {
     }
 }
 %>
-                    <label id="switch_3_left_l" <% if(isWaiting) { %> class="blue"<% } %>>미정</label>
-                    <label id="switch_3_center_l" <% if(isInteresting) { %> class="blue"<% } %>>관심있어요</label>
-                    <label id="switch_3_right_l" <% if(isParticipant) { %> class="blue"<% } %>>참석!</label>
+
+                    <% if (userId == ins_id) { %>
+                        <label id="switch_3_left_host" <% if(status === 'HIDE') { %> class="blue"<% } %>>비공개</label>
+                        <label id="switch_3_center_host" <% if(status === 'FINISH') { %> class="blue"<% } %>>모집마감</label>
+                        <label id="switch_3_right_host" <% if(status === 'ING') { %> class="blue"<% } %>>모집중</label>
+                    <% } else { %>
+                        <label id="switch_3_left_l" <% if(isWaiting) { %> class="blue"<% } %>>미정</label>
+                        <label id="switch_3_center_l" <% if(isInteresting) { %> class="blue"<% } %>>관심있어요</label>
+                        <label id="switch_3_right_l" <% if(isParticipant) { %> class="blue"<% } %>>참석!</label>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -100,15 +116,19 @@ for(var i=0; i<interesting.length; i++) {
         <div id="tour_basic_info">
             <div class="my_profile_information">
 <% if( !locals.description || description == undefined || description == '' ) { %>
-                <p id="tour_description" class="tour_basic_explain hidden"></p>
+                <p id="tour_description" class="tour_basic_explain hidden" style="text-align:center"></p>
 <% } else { %>
-                <p id="tour_description" class="tour_basic_explain"><%= description %></p>
+                <p id="tour_description" class="tour_basic_explain" style="text-align:center"><%= description %></p>
 <% } %>
 
                 <div class="basic_information" id="id">
                     <span class="basic_information_guide">기간</span>
-                    <span id="tour_date_01" class="info_text"></span>
-                    <p id="tour_date_02" class="explain_date"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> - <%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></p>
+                    <span id="tour_date_01" class="info_text"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %></span><br>
+                    <span id="tour_date_02" class="info_text" style="margin-left:53px"><%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></span>
+
+
+<!--                    <span id="tour_date_01" class="info_text"></span>-->
+<!--                    <p id="tour_date_02" class="explain_date"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> - <%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></p>-->
                 </div>
 
                 <!--장소-->
@@ -138,13 +158,10 @@ for(var i=0; i<interesting.length; i++) {
                         <span class="INS_badge"><img src='/img/ic.png' alt="" /></span>
 
                         <span class="tour_ins_name"><%= ins_name %></span>
-                        <div class="explain_text"><% if( !locals.ins_group || ins_group == undefined || ins_group == '' ) { %>소속 없음<% } else { %><%= ins_group %><% } %></div>
-                        <span class="right_arrow"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
                     </div>
                 </div>
             </div>
 
-            <div class="tour_division" id="division_in"></div>
             <div class="tour_division"></div>
 
             <!--상세일정-->
@@ -154,7 +171,7 @@ for(var i=0; i<interesting.length; i++) {
                         <span class="panel_text_01">상세일정</span>
                     </h4>
 
-                    <button id="btn_tour_schedule" class="edit_detail <% if(userId != ins_id || schedule == "") { %>hidden<% } %>" onclick="location.href='/tour/schedule/<%= _id %>';">수정</button>
+                    <button id="btn_tour_schedule" class="edit_detail <% if(userId != ins_id || schedule == "") { %>hidden<% } %>" onclick="location.href='/tour/schedule/<%= _id %>';">편집</button>
                 </div>
 
 
@@ -167,7 +184,12 @@ for(var i=0; i<interesting.length; i++) {
                         <span id="text_tour_education">상세일정 등록</span>
                     </button>
 <%    } else { %>
-                    <pre id="tour_schedule" class="more"><%= schedule %></pre>
+
+                    <% if (schedule.length > 50) { %>
+                        <pre id="tour_schedule" class="more"><span class="schedule_text"><%= schedule.substr(0, 50) %></span><span class='moreellipses'>...</span><span class='morecontent'><span class='more_schedule'><%= schedule.substr(50) %></span><a href='#' class='morelink' onclick='moreSchedule(event, this);'><img src='/img/ic-arrow-ltr.svg' style='transform: rotate(90deg);'></a></span></pre>
+                    <% } else { %>
+                        <pre id="tour_schedule" class="more"><span class="schedule_text"><%= schedule %></span></pre>
+                    <% } %>
                     <button id="btn_tour_schedule_large" type="button" class="btn btn-block col-xs-12 hidden" onclick="location.href='/tour/schedule/<%= _id %>';">
                         <span id="text_tour_education">상세일정 등록</span>
                     </button>
@@ -176,7 +198,11 @@ for(var i=0; i<interesting.length; i++) {
       if(schedule == "") { %>
                     <pre id="tour_schedule" class="more">입력 전</pre>
 <%    } else { %>
-                    <pre id="tour_schedule" class="more"><%= schedule %></pre>
+                    <% if (schedule.length > 50) { %>
+                        <pre id="tour_schedule" class="more"><span class="schedule_text"><%= schedule.substr(0, 50) %></span><span class='moreellipses'>...</span><span class='morecontent'><span class='more_schedule'><%= schedule.substr(50) %></span><a href='#' class='morelink' onclick='moreSchedule(event, this);'><img src='/img/ic-arrow-ltr.svg' style='transform: rotate(90deg);'></a></span></pre>
+                    <% } else { %>
+                        <pre id="tour_schedule" class="more"><span class="schedule_text"><%= schedule %></span></pre>
+                    <% } %>
 <%    }
    } %>
                 </div>
@@ -273,23 +299,25 @@ for(var i=0; i<interesting.length; i++) {
 
                 <div class="panel-body">
                     <div class="instructor_profit">
-                        <div class="container <% if(isParticipant) { %>blue_text<% } %>">참석합니다 <span id="participant_count"><%= participant.length %></span>명
+                        <label class="container <% if(isParticipant) { %>blue_text<% } %>">참석합니다 <span id="participant_count"><%= participant.length %></span>명
                             <p id="participant_name"><%  for(var i=0; i<participant.length; i++) { if( i == 0 ) { %><%= participant[i].name %><% } else { %>, <%= participant[i].name %><% } } %></p>
                             <input type="radio" id="switch_3_right" name="swtich_3" <% if(isParticipant) { %>checked="checked"<% } %> />
                             <span class="checkmark"></span>
-                            <span class="right_arrow"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
-                        </div>
+                            <% if (userId == ins_id) { %>
+                                <span class="right_arrow" onclick="location.href = '/tour/participant/<%= _id %>'"><img src="/img/ic-arrow-ltr.svg" alt="" /></span>
+                            <% } %>
+                        </label>
 
-                        <div class="container <% if(isInteresting) { %>blue_text<% } %>">관심있어요 <span id="interesting_count"><% if( interesting.length == 1 && interesting[0].id == undefined ) { %>0<% } else {%><%= interesting.length %><% } %></span>명
+                        <label class="container <% if(isInteresting) { %>blue_text<% } %>">관심있어요 <span id="interesting_count"><% if( interesting.length == 1 && interesting[0].id == undefined ) { %>0<% } else {%><%= interesting.length %><% } %></span>명
                             <p id="interesting_name"><%  for(var i=0; i<waiting.length; i++) { if( i == 0 ) { %><%= interesting[i].name %><% } else { %>, <%= interesting[i].name %><% } } %></p>
                             <input type="radio" id="switch_3_center" name="swtich_3" <% if(isInteresting) { %>checked="checked"<% } %> <% if( userId == ins_id ) { %>disabled<% } %> />
                             <span class="checkmark"></span>
-                        </div>
+                        </label>
 
-                        <div class="container <% if(isWaiting) { %>blue_text<% } %>">미정 <span id="waiting_count"><% if( waiting.length == 1 && waiting[0].id == undefined ) { %>0<% } else {%><%= waiting.length %><% } %></span>명
+                        <label class="container <% if(isWaiting) { %>blue_text<% } %>">미정 <span id="waiting_count"><% if( waiting.length == 1 && waiting[0].id == undefined ) { %>0<% } else {%><%= waiting.length %><% } %></span>명
                             <input type="radio" id="switch_3_left" name="swtich_3" <% if(isWaiting) { %>checked="checked"<% } %> <% if( userId == ins_id ) { %>disabled<% } %> />
                             <span class="checkmark"></span>
-                        </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -361,37 +389,55 @@ for(var i=0; i<interesting.length; i++) {
                     return;
 
                 participateTour();
-            }
+            };
             document.getElementsByClassName('container')[1].onclick = function() {
                 if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[1].classList.contains('blue_text') )
                     return;
 
                 interestTour();
-            }
+            };
             document.getElementsByClassName('container')[2].onclick = function() {
                 if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[2].classList.contains('blue_text') )
                     return;
 
                 waitTour();
-            }
+            };
 
-            document.getElementById('switch_3_right_l').onclick = function() {
-                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[0].classList.contains('blue_text') )
-                    return;
+            if (document.getElementById('switch_3_right_l') !== null) {
+                document.getElementById('switch_3_right_l').onclick = function () {
+                    if (document.getElementsByClassName('container')[0].classList.contains('blue_text'))
+                        return;
 
-                participateTour();
-            }
-            document.getElementById('switch_3_center_l').onclick = function() {
-                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[1].classList.contains('blue_text') )
-                    return;
+                    participateTour();
+                };
+                document.getElementById('switch_3_center_l').onclick = function () {
+                    if (document.getElementsByClassName('container')[1].classList.contains('blue_text'))
+                        return;
 
-                interestTour();
-            }
-            document.getElementById('switch_3_left_l').onclick = function() {
-                if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[2].classList.contains('blue_text') )
-                    return;
+                    interestTour();
+                };
+                document.getElementById('switch_3_left_l').onclick = function () {
+                    if (document.getElementsByClassName('container')[2].classList.contains('blue_text'))
+                        return;
 
-                waitTour();
+                    waitTour();
+                };
+            } else {
+                document.getElementById('switch_3_left_host').onclick = function () {
+                    document.getElementById('switch_3_right_host').classList.remove('blue');
+                    document.getElementById('switch_3_center_host').classList.remove('blue');
+                    document.getElementById('switch_3_left_host').classList.add('blue');
+                };
+                document.getElementById('switch_3_center_host').onclick = function () {
+                    document.getElementById('switch_3_right_host').classList.remove('blue');
+                    document.getElementById('switch_3_center_host').classList.add('blue');
+                    document.getElementById('switch_3_left_host').classList.remove('blue');
+                };
+                document.getElementById('switch_3_right_host').onclick = function () {
+                    document.getElementById('switch_3_right_host').classList.add('blue');
+                    document.getElementById('switch_3_center_host').classList.remove('blue');
+                    document.getElementById('switch_3_left_host').classList.remove('blue');
+                };
             }
 
             window.onpageshow = function (event) {
@@ -406,8 +452,8 @@ for(var i=0; i<interesting.length; i++) {
                     var tempDate2 = new Date(enddate.substr(0,4)+"-"+enddate.substr(4,2)+"-"+enddate.substr(6,2)+"T00:00:00");
                     var tourDateGap = (tempDate2-tempDate1)/1000/24/60/60;
 
-                    document.getElementById('tour_date_01').innerHTML = tourDateGap+"박 "+(tourDateGap+1)+"일";
-                    document.getElementById('tour_date_02').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+". "+week[tempDate1.getDay()] + " - " + enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+". "+week[tempDate2.getDay()];
+                    document.getElementById('tour_date_01').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+" "+week[tempDate1.getDay()];
+                    document.getElementById('tour_date_02').innerHTML = enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+" "+week[tempDate2.getDay()];
 
                     if( result.description == undefined || result.description == "" ) {
                         document.getElementById('tour_description').classList.add("hidden");
@@ -455,7 +501,11 @@ for(var i=0; i<interesting.length; i++) {
                             document.getElementById('btn_tour_schedule_large').classList.remove("hidden");
                         }
                         else {
-                            document.getElementById('tour_schedule').innerHTML = result.schedule;
+                            if (result.schedule.length > 50) {
+                                document.getElementById('tour_schedule').innerHTML = "<span class='schedule_text'>" + result.schedule.substr(0, 50) + "</span><span class='moreellipses'>...</span><span class='morecontent'><span class='more_schedule'>" + result.schedule.substr(50) + "</span><a href='#' class='morelink' onclick='moreSchedule(event, this);'><img src='/img/ic-arrow-ltr.svg' style='transform: rotate(90deg);'></a></span>";
+                            } else {
+                                document.getElementById('tour_schedule').innerHTML = "<span class='schedule_text'>" + result.schedule + "</span>";
+                            }
                             document.getElementById('tour_schedule').classList.remove("hidden");
 
                             document.getElementById('btn_tour_schedule_large').classList.add("hidden");
@@ -467,7 +517,11 @@ for(var i=0; i<interesting.length; i++) {
                             document.getElementById('tour_schedule').classList.remove("hidden");
                         }
                         else {
-                            document.getElementById('tour_schedule').innerHTML = result.schedule;
+                            if (result.schedule.length > 50) {
+                                document.getElementById('tour_schedule').innerHTML = "<span class='schedule_text'>" + result.schedule.substr(0, 50) + "</span><span class='moreellipses'>...</span><span class='morecontent'><span class='more_schedule'>" + result.schedule.substr(50) + "</span><a href='#' class='morelink' onclick='moreSchedule(event, this);'><img src='/img/ic-arrow-ltr.svg' style='transform: rotate(90deg);'></a></span>";
+                            } else {
+                                document.getElementById('tour_schedule').innerHTML = "<span class='schedule_text'>" + result.schedule + "</span>";
+                            }
                             document.getElementById('tour_schedule').classList.remove("hidden");
                         }
                     }
@@ -808,6 +862,28 @@ for(var i=0; i<interesting.length; i++) {
             function addComma(num) {
                 var regexp = /\B(?=(\d{3})+(?!\d))/g;
                 return num.toString().replace(regexp, ',');
+            }
+
+            function moreSchedule (event, object) {
+                event.preventDefault();
+
+                if (object.classList.contains('less')) {
+                    object.classList.remove('less');
+                    object.innerHTML = "<img src='/img/ic-arrow-ltr.svg' style='transform:rotate(90deg)' />";
+
+                    document.getElementsByClassName('moreellipses')[0].style.display = 'inline-block';
+                    document.getElementsByClassName('schedule_text')[0].innerHTML = document.getElementsByClassName('schedule_text')[0].innerHTML.substr(0, 50);
+                    // document.getElementsByClassName('more_schedule')[0].style.display = 'none';
+                } else {
+                    object.classList.add('less');
+                    object.innerHTML = "<img src='/img/ic-arrow-ltr.svg' style='transform:rotate(270deg)' />";
+
+                    document.getElementsByClassName('moreellipses')[0].style.display = 'none';
+                    // document.getElementsByClassName('more_schedule')[0].style.display = 'inline-block';
+
+                    document.getElementsByClassName('schedule_text')[0].innerHTML = document.getElementsByClassName('schedule_text')[0].innerHTML + document.getElementsByClassName('more_schedule')[0].innerHTML;
+
+                }
             }
         </script>
     </body>

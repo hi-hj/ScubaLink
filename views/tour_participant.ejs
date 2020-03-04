@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>스쿠버 링크 : 참여자</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
+
+        <style>
+            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
+            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            #btn_edit, #btn_save { top: 0; padding-top: 0; line-height: 50px; }
+            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+            .stu_info_box span:nth-of-type(2) h5 { margin-top: -25px; }
+            .participant_memo_empty { font-size: 14px; color: #bbbbbb; margin-top: 3px; }
+            .participant_memo_text { font-size: 14px; color: #333333; margin-top: 3px; line-height: 1.43; }
+        </style>
+    </head>
+
+    <body>
+        <div class="header" name="certif">
+            <span id="header_title" class="logo_mini">참여자 정보</span>
+            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
+            <span class="header_save btn" id="btn_edit">수정</span>
+            <span class="header_save btn hidden" id="btn_save">자장</span>
+        </div>
+
+        <div class="only_ins_read">
+            <span>이 정보는 강사님만 볼 수 있습니다.</span>
+        </div>
+
+        <% for (var i = 0; i < participant.length; i++) { %>
+            <div class="stu_info_box">
+                <span>
+                    <img src="<% if(!participant[i].image || participant[i].image == undefined || participant[i].image == "") { %>/img/default_user.png<% } else {%><%= participant[i].image %><% } %>" alt="" class="img-circle" />
+                </span>
+
+                <span>
+                    <h5><%= participant[i].name %></h5>
+                </span>
+                <% if (participant[i].type == 1) { %>
+                    <p>강사</p>
+                <% } else { %>
+                    <p><% if (participant[i].gender == 1) { %>남성<% } else { %>여성<% } %>/<%= participant[i].height %>cm/<%= participant[i].weight %>kg/<%= participant[i].foot %>mm<% if (participant[i].disease != undefined && participant[i].disease != "") { %>/<%= participant[i].disease %><% } %></p>
+                <% } %>
+                <div class="participant_memo">
+                    <% if (participant[i].memo == "") { %>
+                        <p class="participant_memo_empty">메모없음</p>
+                        <p class="participant_memo_text hidden"></p>
+                    <% } else { %>
+                        <p class="participant_memo_empty hidden">메모없음</p>
+                        <p class="participant_memo_text"><%= participant[i].memo %></p>
+                    <% } %>
+                </div>
+                <div class="participant_memo_edit hidden">
+                    <textarea class="form-control autosize input_memo" id="<%= participant[i].id %>" placeholder="참여자에게 맞는장비, 기타 사항을 메모하세요"><%= participant[i].memo %></textarea>
+                    <p id="textarea_explain">400자 제한</p>
+                </div>
+            </div>
+        <% } %>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/Scubalink_js.js"></script>
+        <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript">
+            var tourId = '<%= _id %>';
+
+            document.getElementById('btn_back').onclick = function() {
+                history.back();
+            };
+
+            document.getElementById('btn_edit').onclick = function() {
+                document.getElementById('btn_edit').classList.add('hidden');
+                document.getElementById('btn_save').classList.remove('hidden');
+
+                for (var i = 0; i < document.getElementsByClassName('participant_memo').length; i++) {
+                    document.getElementsByClassName('participant_memo')[i].classList.add('hidden');
+                    document.getElementsByClassName('participant_memo_edit')[i].classList.remove('hidden');
+                }
+            };
+
+            document.getElementById('btn_save').onclick = function() {
+                var params = [];
+                for (var i = 0; i < document.getElementsByClassName('input_memo').length; i++) {
+                    params.push({
+                        id: document.getElementsByClassName('input_memo')[i].getAttribute('id'),
+                        memo: document.getElementsByClassName('input_memo')[i].value
+                    });
+                }
+
+                httpSend.send("/tour/participate/memo", {
+                    tourId          : tourId,
+                    participant     : params
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    document.getElementById('btn_edit').classList.remove('hidden');
+                    document.getElementById('btn_save').classList.add('hidden');
+
+                    for (var i = 0; i < document.getElementsByClassName('participant_memo').length; i++) {
+                        document.getElementsByClassName('participant_memo_edit')[i].classList.add('hidden');
+                        document.getElementsByClassName('participant_memo')[i].classList.remove('hidden');
+
+                        var memo = document.getElementsByClassName('input_memo')[i].value;
+                        if (memo === '') {
+                            document.getElementsByClassName('participant_memo_empty')[i].classList.remove('hidden');
+                            document.getElementsByClassName('participant_memo_text')[i].classList.add('hidden');
+                            document.getElementsByClassName('participant_memo_text')[i].innerHTML = '';
+                        } else {
+                            document.getElementsByClassName('participant_memo_text')[i].innerHTML = memo;
+                            document.getElementsByClassName('participant_memo_text')[i].classList.remove('hidden');
+                            document.getElementsByClassName('participant_memo_empty')[i].classList.add('hidden');
+                        }
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+
+
+
+        </script>
+    </body>
+</html>
