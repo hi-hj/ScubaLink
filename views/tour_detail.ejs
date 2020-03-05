@@ -424,19 +424,56 @@ for(var i=0; i<interesting.length; i++) {
                 };
             } else {
                 document.getElementById('switch_3_left_host').onclick = function () {
-                    document.getElementById('switch_3_right_host').classList.remove('blue');
-                    document.getElementById('switch_3_center_host').classList.remove('blue');
-                    document.getElementById('switch_3_left_host').classList.add('blue');
+                    if (!document.getElementById('switch_3_left_host').classList.contains('blue')) {
+                        httpSend.send("/tour/status", {
+                            tourId: tourId,
+                            status: 'HIDE'
+                        }, "POST", function(result) {
+                            document.getElementById('switch_3_right_host').classList.remove('blue');
+                            document.getElementById('switch_3_center_host').classList.remove('blue');
+                            document.getElementById('switch_3_left_host').classList.add('blue');
+                        }, function(errorCode, errorMessage) {
+                            if( errorCode == "T003" )
+                                // '참가자가 있는 경우 비공개가 불가능합니다.'
+                                alert(errorMessage);
+                            else
+                                console.log(errorMessage);
+                        });
+                    }
                 };
                 document.getElementById('switch_3_center_host').onclick = function () {
-                    document.getElementById('switch_3_right_host').classList.remove('blue');
-                    document.getElementById('switch_3_center_host').classList.add('blue');
-                    document.getElementById('switch_3_left_host').classList.remove('blue');
+                    if (!document.getElementById('switch_3_center_host').classList.contains('blue')) {
+                        httpSend.send("/tour/status", {
+                            tourId: tourId,
+                            status: 'FINISH'
+                        }, "POST", function(result) {
+                            document.getElementById('switch_3_right_host').classList.remove('blue');
+                            document.getElementById('switch_3_center_host').classList.add('blue');
+                            document.getElementById('switch_3_left_host').classList.remove('blue');
+                        }, function(errorCode, errorMessage) {
+                            if( errorCode == "T001" )
+                                alert(errorMessage);
+                            else
+                                console.log(errorMessage);
+                        });
+                    }
                 };
                 document.getElementById('switch_3_right_host').onclick = function () {
-                    document.getElementById('switch_3_right_host').classList.add('blue');
-                    document.getElementById('switch_3_center_host').classList.remove('blue');
-                    document.getElementById('switch_3_left_host').classList.remove('blue');
+                    if (!document.getElementById('switch_3_right_host').classList.contains('blue')) {
+                        httpSend.send("/tour/status", {
+                            tourId: tourId,
+                            status: 'ING'
+                        }, "POST", function(result) {
+                            document.getElementById('switch_3_right_host').classList.add('blue');
+                            document.getElementById('switch_3_center_host').classList.remove('blue');
+                            document.getElementById('switch_3_left_host').classList.remove('blue');
+                        }, function(errorCode, errorMessage) {
+                            if( errorCode == "T001" )
+                                alert(errorMessage);
+                            else
+                                console.log(errorMessage);
+                        });
+                    }
                 };
             }
 

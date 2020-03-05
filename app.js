@@ -519,7 +519,7 @@ app.get('/tour/participant/:no', function(req, res){
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
         req.body.id     = req.params.no;
 
-        dbTour.findTourParticipant(db, req.body, function(result) {
+        dbTour.findTourParticipantDetail(db, req.body, function(result) {
             result.result.userId = req.session.snsId;
             result.result.userType = req.session.type;
 
@@ -936,6 +936,23 @@ app.post('/tour/wait', function(req, res){
 
     dbTour.changeTourMember(db, req.body, function(result) {
         dbSchedule.updateSchedule(db, req.body, function(result02) {
+            res.writeHead(200);
+            res.end(JSON.stringify(result));
+        }, function(result) {
+            res.writeHead(200);
+            res.end(JSON.stringify(result));
+        });
+    }, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    });
+});
+
+app.post('/tour/status', function(req, res){
+    req.body.id = req.session.snsId;
+
+    dbTour.findTourParticipant(db, req.body, function(result) {
+        dbTour.updateTourStatus(db, req.body, function(result) {
             res.writeHead(200);
             res.end(JSON.stringify(result));
         }, function(result) {

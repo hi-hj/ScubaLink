@@ -658,7 +658,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
     });
 };
 
-exports.findTourParticipant = function(db, params, callbackSuccess, callbackFail) {
+exports.findTourParticipantDetail = function(db, params, callbackSuccess, callbackFail) {
     db.collection('tour').aggregate(
         [{
             $match: {
@@ -736,6 +736,53 @@ exports.findTourSchedule = function(db, params, callbackSuccess, callbackFail) {
               result  : doc
           });
         }
+    });
+};
+
+exports.findTourParticipant = function (db, params, callbackSuccess, callbackFail) {
+    db.collection('tour').findOne({ _id: params.tourId }, function(err, doc) {
+        if (err) throw err;
+
+        if(doc == null) {
+            callbackFail({
+                code   : "C001",
+                message: "Invalid Access"
+            });
+        }
+        else {
+            if (params.status === 'HIDE' && doc.participant.length > 1) {
+                callbackFail({
+                    code   : "T003",
+                    message: "참가자가 있는 경우 비공개가 불가능합니다."
+                });
+            } else {
+                callbackSuccess({
+                    code: "0000",
+                    message: "Success",
+                    result: doc
+                });
+            }
+        }
+    });
+};
+
+exports.updateTourStatus = function(db, params, callbackSuccess) {
+    db.collection('tour').updateOne({
+        _id   : params.tourId
+    }, {
+        $set  : {
+            status     : params.status
+        }
+    }, function(err, doc) {
+        if (err) throw err;
+
+        callbackSuccess({
+            code    : "0000",
+            message : "Success",
+            result  : {
+
+            }
+        });
     });
 };
 
