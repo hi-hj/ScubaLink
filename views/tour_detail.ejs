@@ -796,7 +796,7 @@ for(var i=0; i<interesting.length; i++) {
 
                     renewTourMember(result);
                 }, function(errorCode, errorMessage) {
-                    if( errorCode == "T001" )
+                    if( errorCode === 'T001' || errorCode === 'T004' )
                         alert(errorMessage);
                     else
                         console.log(errorMessage);
@@ -823,7 +823,10 @@ for(var i=0; i<interesting.length; i++) {
 
                     renewTourMember(result);
                 }, function(errorCode, errorMessage) {
-                    console.log(errorMessage);
+                    if( errorCode === 'T001' || errorCode === 'T004' )
+                        alert(errorMessage);
+                    else
+                        console.log(errorMessage);
                 });
             }
 
@@ -847,7 +850,10 @@ for(var i=0; i<interesting.length; i++) {
 
                     renewTourMember(result);
                 }, function(errorCode, errorMessage) {
-                    console.log(errorMessage);
+                    if( errorCode === 'T001' || errorCode === 'T004' )
+                        alert(errorMessage);
+                    else
+                        console.log(errorMessage);
                 });
             }
 

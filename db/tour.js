@@ -179,6 +179,7 @@ exports.findTours = function(db, params, callbackSuccess, callbackFail) {
                 image       : "$image",
                 date        : "$date",
                 time        : "$time",
+                status      : "$status",
                 ins_id      : "$insId",
                 ins_name    : "$ins.name",
                 ins_group   : "$ins.group",
@@ -189,6 +190,10 @@ exports.findTours = function(db, params, callbackSuccess, callbackFail) {
         }]
     ).sort({date: -1, time: -1}).toArray(function(err, doc) {
         if (err) throw err;
+
+        if (params.userId !== undefined && params.insId !== params.userId) {
+            doc = doc.filter(item => item.status !== "HIDE");
+        }
 
         callbackSuccess({
             code    : "0000",
@@ -243,6 +248,7 @@ exports.findToursByBgn = function(db, params, callbackSuccess, callbackFail) {
                 image       : "$tour.image",
                 date        : "$tour.date",
                 time        : "$tour.time",
+                status      : "$tour.status",
                 ins_id      : "$tour.insId",
                 ins_name    : "$ins.name",
                 ins_group   : "$ins.group",
@@ -302,6 +308,7 @@ exports.findToursByBgn = function(db, params, callbackSuccess, callbackFail) {
                     image       : "$tour.image",
                     date        : "$tour.date",
                     time        : "$tour.time",
+                    status      : "$tour.status",
                     ins_id      : "$tour.insId",
                     ins_name    : "$ins.name",
                     ins_group   : "$ins.group",
@@ -312,6 +319,9 @@ exports.findToursByBgn = function(db, params, callbackSuccess, callbackFail) {
             }]
         ).sort({date: -1, time: -1}).toArray(function(err, doc2) {
             if (err) throw err;
+
+            doc = doc.filter(item => item.status !== "HIDE");
+            doc2 = doc2.filter(item => item.status !== "HIDE");
 
             callbackSuccess({
                 code    : "0000",
@@ -502,7 +512,15 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
             });
         }
         else {
-            if( params.type == 1 && parseInt(doc.member) <= doc.participant.length ) {
+            if (doc.status !== 'ING') {
+                callbackFail({
+                    code   : "T004",
+                    message: "모집이 마감되었습니다."
+                });
+
+                return;
+            }
+            if (params.type == 1 && parseInt(doc.member) <= doc.participant.length) {
                 callbackFail({
                     code   : "T001",
                     message: "참가 인원이 초과되었습니다."

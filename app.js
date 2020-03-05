@@ -842,6 +842,7 @@ app.post('/tour/select', function(req, res){
     if (req.body.insId === undefined) {
         req.body.insId = req.session.snsId;
     }
+    req.body.userId = req.session.snsId;
 
     dbTour.findTours(db, req.body, function(result) {
         res.writeHead(200);

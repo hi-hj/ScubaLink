@@ -26,7 +26,7 @@
 
             <div id="header_ins_img"><img id="header_profile_image" src="<% if(!locals.image || image == "") { %>/img/default_user.png<% } else {%><%= image %><% } %>" alt="..." class="img-circle"></div>
             <div id="header_ins_info">
-                <text>투어/교육 <%= tourList.length %>회</text>
+                <text>투어/교육 <span id="tour_profile_count"><%= tourList.length %></span>회</text>
                 <text>|</text>
                 <text>교육생 <span id="txt_follow_count"><%= followCount %></span>명</text>
             </div>
@@ -81,8 +81,13 @@
             <div class="tour">
                 <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
 
-                <div class="tour_bar <% if( tourList[i].participant_count >= tourList[i].member ) { %>tour_complete<% } else { %>tour_uncomplete<% } %>" onclick="location.href='/tour/<%= tourList[i]._id %>';">
-                    <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 중</p></span>
+                <% if (tourList[i].participant_count >= tourList[i].member || tourList[i].status == "FINISH") { %>
+                    <div class="tour_bar tour_complete" onclick="location.href='/tour/<%= tourList[i]._id %>';">
+                        <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 마감</p></span>
+                <% } else { %>
+                    <div class="tour_bar tour_uncomplete" onclick="location.href='/tour/<%= tourList[i]._id %>';">
+                        <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 중</p></span>
+                <% } %>
                     <span class="right"><img src="/img/ic-keyboard-arrow-right-white.svg" alt="" /></span>
                     <span class="tour_bar_text_right"><p>자세히 보기</p></span>
                 </div>
@@ -187,6 +192,7 @@
                 }, "POST", function(result) {
                     console.log(result);
 
+                    document.getElementById('tour_profile_count').innerHTML = result.tourList.length;
                     var html = "";
                     for( var i=0; i<result.tourList.length; i++ ) {
                         html += " <div class='tour'>";
@@ -195,8 +201,13 @@
                         else
                             html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='"+result.tourList[i].image+"' alt='' /></div>";
 
-                        html+= "      <div class='tour_bar "+(result.tourList[i].participant_count >= result.tourList[i].member ? "tour_complete" : "tour_uncomplete")+"' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
-                        html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 중</p></span>";
+                        if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH') {
+                            html+= "      <div class='tour_bar tour_complete' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
+                            html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 마감</p></span>";
+                        } else {
+                            html+= "      <div class='tour_bar tour_uncomplete' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
+                            html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 중</p></span>";
+                        }
                         html+= "          <span class='right'><img src='/img/ic-keyboard-arrow-right-white.svg' alt='' /></span>";
                         html+= "          <span class='tour_bar_text_right'><p>자세히 보기</p></span>";
                         html+= "      </div>";
