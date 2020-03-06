@@ -25,7 +25,7 @@ exports.addTour = function(db, params, callbackSuccess, callbackFail) {
                 bgnCount    : params.bgnCount,
                 description : params.description,
                 image       : params.image,
-                participant : [{ id: params.insId, memo: '' }],
+                participant : [{ id: params.insId, memo: '', type: 1 }],
                 waiting     : [],
                 interesting : [],
                 schedule    : "",
@@ -87,10 +87,30 @@ exports.updateTour = function(db, params, callbackSuccess, callbackFail) {
 
                 updateData.member = params.member;
             }
-            if( params.insCount != undefined )
+            if( params.insCount != undefined ) {
+                if (parseInt(params.insCount) < doc.participant.filter(item => item.type == 1).length) {
+                    callbackFail({
+                        code   : "T002",
+                        message: "참여 정원을 줄일 수 없습니다."
+                    });
+
+                    return;
+                }
+
                 updateData.insCount = params.insCount;
-            if( params.bgnCount != undefined )
+            }
+            if( params.bgnCount != undefined ) {
+                if (parseInt(params.bgnCount) < doc.participant.filter(item => item.type == 2).length) {
+                    callbackFail({
+                        code   : "T002",
+                        message: "참여 정원을 줄일 수 없습니다."
+                    });
+
+                    return;
+                }
+
                 updateData.bgnCount = params.bgnCount;
+            }
             if( params.description != undefined )
                 updateData.description = params.description;
             if( params.schedule != undefined )
@@ -529,6 +549,29 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
                 return;
             }
 
+            // 강사가 참가 상태로 변경 요청
+            if (params.type == 1 && params.memberType == 1) {
+                if (parseInt(doc.insCount) <= doc.participant.filter(item => item.type == params.memberType).length) {
+                    callbackFail({
+                        code   : "T001",
+                        message: "참가 인원이 초과되었습니다."
+                    });
+
+                    return;
+                }
+            }
+            // 교육생이 참가 상태로 변경 요청
+            else if (params.type == 1 && params.memberType == 2) {
+                if (parseInt(doc.bgnCount) <= doc.participant.filter(item => item.type == params.memberType).length) {
+                    callbackFail({
+                        code   : "T001",
+                        message: "참가 인원이 초과되었습니다."
+                    });
+
+                    return;
+                }
+            }
+
             var item = null;
             var indexWaiting = doc.waiting.map(item => item.id).indexOf(params.id);
             var indexInteresting = doc.interesting.map(item => item.id).indexOf(params.id);
@@ -543,7 +586,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexParticipant === -1) {
                     if (item === null) {
-                        doc.participant.push({ id: params.id, memo: '' });
+                        doc.participant.push({ id: params.id, memo: '', type: params.memberType });
                     } else {
                         doc.participant.push(item);
                     }
@@ -558,7 +601,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexInteresting === -1) {
                     if (item === null) {
-                        doc.interesting.push({ id: params.id, memo: '' });
+                        doc.interesting.push({ id: params.id, memo: '', type: params.memberType });
                     } else {
                         doc.interesting.push(item);
                     }
@@ -573,7 +616,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexWaiting === -1) {
                     if (item === null) {
-                        doc.waiting.push({ id: params.id, memo: '' });
+                        doc.waiting.push({ id: params.id, memo: '', type: params.memberType });
                     } else {
                         doc.waiting.push(item);
                     }
@@ -708,7 +751,8 @@ exports.findTourParticipantDetail = function(db, params, callbackSuccess, callba
                         weight: "$participants.weight",
                         foot: "$participants.foot",
                         disease: "$participants.disease",
-                        memo: "$participant.memo"
+                        memo: "$participant.memo",
+                        type: "$participant.type"
                     }
                 }
             }
@@ -718,6 +762,7 @@ exports.findTourParticipantDetail = function(db, params, callbackSuccess, callba
 
         doc[0].participant = doc[0].participant.map((item, index) => {
             item.memo = item.memo[index];
+            item.type = item.type[index];
             return item;
         });
 

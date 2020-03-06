@@ -898,6 +898,7 @@ app.post('/tour/participate/memo', function(req, res){
 app.post('/tour/participate', function(req, res){
     req.body.id = req.session.snsId;
     req.body.type = 1;
+    req.body.memberType = req.session.type;
 
     dbTour.changeTourMember(db, req.body, function(result) {
         dbSchedule.updateSchedule(db, req.body, function(result02) {
@@ -916,6 +917,7 @@ app.post('/tour/participate', function(req, res){
 app.post('/tour/interest', function(req, res){
     req.body.id = req.session.snsId;
     req.body.type = 2;
+    req.body.memberType = req.session.type;
 
     dbTour.changeTourMember(db, req.body, function(result) {
         dbSchedule.updateSchedule(db, req.body, function(result02) {
@@ -934,6 +936,7 @@ app.post('/tour/interest', function(req, res){
 app.post('/tour/wait', function(req, res){
     req.body.id = req.session.snsId;
     req.body.type = 3;
+    req.body.memberType = req.session.type;
 
     dbTour.changeTourMember(db, req.body, function(result) {
         dbSchedule.updateSchedule(db, req.body, function(result02) {

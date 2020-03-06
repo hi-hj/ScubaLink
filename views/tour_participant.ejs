@@ -57,7 +57,7 @@
                     <% } %>
                 </div>
                 <div class="participant_memo_edit hidden">
-                    <textarea class="form-control autosize input_memo" id="<%= participant[i].id %>" placeholder="참여자에게 맞는장비, 기타 사항을 메모하세요"><%= participant[i].memo %></textarea>
+                    <textarea class="form-control autosize input_memo" id="<%= participant[i].id %>" type="<%= participant[i].type %>" placeholder="참여자에게 맞는장비, 기타 사항을 메모하세요"><%= participant[i].memo %></textarea>
                     <p id="textarea_explain">400자 제한</p>
                 </div>
             </div>
@@ -89,6 +89,7 @@
                 for (var i = 0; i < document.getElementsByClassName('input_memo').length; i++) {
                     params.push({
                         id: document.getElementsByClassName('input_memo')[i].getAttribute('id'),
+                        type: document.getElementsByClassName('input_memo')[i].getAttribute('type'),
                         memo: document.getElementsByClassName('input_memo')[i].value
                     });
                 }

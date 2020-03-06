@@ -384,19 +384,22 @@ for(var i=0; i<interesting.length; i++) {
                 history.back();
             };
 
-            document.getElementsByClassName('container')[0].onclick = function() {
+            document.getElementsByClassName('container')[0].onclick = function(event) {
+                event.preventDefault();
                 if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[0].classList.contains('blue_text') )
                     return;
 
                 participateTour();
             };
-            document.getElementsByClassName('container')[1].onclick = function() {
+            document.getElementsByClassName('container')[1].onclick = function(event) {
+                event.preventDefault();
                 if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[1].classList.contains('blue_text') )
                     return;
 
                 interestTour();
             };
-            document.getElementsByClassName('container')[2].onclick = function() {
+            document.getElementsByClassName('container')[2].onclick = function(event) {
+                event.preventDefault();
                 if( '<%= userId %>' == '<%= ins_id %>' || document.getElementsByClassName('container')[2].classList.contains('blue_text') )
                     return;
 

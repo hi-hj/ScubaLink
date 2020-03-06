@@ -20,6 +20,8 @@
             #tour_edu_plus p.t_left { margin-left: 0; margin-top: 0; color: #ffff55; }
             .my_certif_image div #img-upload.on { top: -110px; }
             #input_tour_start, #input_tour_end { background: white; }
+            #tour_edu_plus #tour_member div { display: inline-block; float: initial; }
+            #tour_edu_plus #tour_member span.c_text { position: absolute; top: initial; left: initial; float: initial; bottom: 14px; right: 16px; }
         </style>
     </head>
 
@@ -58,12 +60,12 @@
 
             <div id="tour_member" class="tour_input">
                 <p>참여자 수</p>
-                <div>
+                <div style="position: relative;">
                     <span class="ex_text">강사</span>
                     <input type="number"id="input_tour_member_count_ins" placeholder="0" min="1" max="100;" value="<%= insCount %>" />
                     <span class="c_text">명</span>
                 </div>
-                <div>
+                <div style="position: relative;">
                     <span class="ex_text">교육생</span>
                     <input type="number"id="input_tour_member_count_bgn" placeholder="0" min="1" max="100;" value="<%= bgnCount %>" />
                     <span class="c_text">명</span>
@@ -72,7 +74,7 @@
                 <p class="explain t_err t_left" id="input_member_count_zero_error">참여인원은 1명 이상이어야 합니다.</p>
             </div>
 
-            <div class="tour_input" style="margin-top:100px">
+            <div class="tour_input">
                 <p>간단한 설명(최대 140자) (선택)</p>
                 <textarea id="input_tour_description" name="test" class="form-control" placeholder="안전하고 즐거운 해양실습"><%= description %></textarea>
             </div>
@@ -150,7 +152,7 @@
                 }
 
                 // 교육 참여 인원 0 체크
-                if( document.getElementById('input_tour_member_count_ins').value === 0 || document.getElementById('input_tour_member_count_bgn').value === 0 ) {
+                if( document.getElementById('input_tour_member_count_ins').value == 0 || document.getElementById('input_tour_member_count_bgn').value == 0 ) {
                     document.getElementById('input_member_count_zero_error').style.display = "block";
                     return;
                 }
