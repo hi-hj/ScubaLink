@@ -11,772 +11,593 @@
         <link rel="stylesheet" type="text/css" href="/css/Scubalink_CSS_02.css" />
 
         <style>
-            #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
-            #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
-            #btn_save { top: 0; padding-top: 0; line-height: 50px; }
-            #header_title { top: 0; padding-top: 0; line-height: 50px; }
+            .wizard .nav>li>span {
+                padding: 0px;
+                width: 6px;
+                height: 6px;
+                border-radius: 4px 4px 4px 4px;
+                background-color: #dddddd;
+                margin-right: 4px;
+            }
 
-            #collapseThree .instructor_profit label:nth-of-type(2) { color: #333333; }
-            #collapseThree .panel-body { margin-bottom: 0; }
+            .nav-tabs>li>span {
+                border: none;
+                color: #999999;
+            }
+            .nav-tabs>li>span {
+                margin-right: 2px;
+                line-height: 1.42857143;
+                border: 1px solid transparent;
+                border-radius: 4px 4px 0 0;
+            }
+            .nav>li>span {
+                position: relative;
+                display: block;
+                padding: 10px 15px; }
 
-            #collapseFour>.panel-body div[class="row"] { margin-bottom: 16px; }
-            #collapseFour>.panel-body div[class="row"] span:first-child { margin-left: 16px; float: left; font-size: 12px; line-height: 1.17; font-weight: bold; color: #333333; }
-            #collapseFour>.panel-body div[class="row"] span:nth-child(2) { margin-right: 16px; float: right; font-size: 14px; line-height: 1; color: #333333; }
-
-            input[type=radio] { margin: 1px 0 0; }
-            .container .checkmark:after { top: 0.22em; }
-
-            div#calc_cost_last { padding-bottom: 70px; }
-
-            span[class="cost_detail"] button.disable { border: solid 1px #cccccc; color: #cccccc; }
+            .wizard .nav li.active>span {
+                background-color: #145db2;
+            }
+            .nav-tabs>li.active>span, .nav-tabs>li.active>span:focus, .nav-tabs>li.active>span:hover {
+                color: #555;
+                cursor: default;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-bottom-color: transparent;
+            }
+            .nav-tabs>li.active>span, .nav-tabs>li.active>span:focus, .nav-tabs>li.active>span:hover {
+                border-width: 0;
+            }
+            .wizard .nav>li>span::after {
+                background-color: transparent;
+            }
+            .nav-tabs>li.active>span::after, .nav-tabs>li:hover>span::after {
+                transform: scale(1);
+            }
         </style>
     </head>
 
 
     <body>
-        <div class="header">
-            <span id="header_title" class="logo_mini">비용 설정</span>
-            <div id="btn_back"><img src="/img/left-arrow.svg" id="back" alt="" /></div>
-            <span id="btn_save" class="header_save">저장</span>
-        </div>
+        <div class="wizard">
+            <ul id="step_paging" class="nav nav-tabs">
+                <li class="active">
+                    <span></span>
+                </li>
 
+                <li class="disabled">
+                    <span></span>
+                </li>
 
-        <div class="panel-group" id="accordion">
+                <li class="disabled">
+                    <span></span>
+                </li>
 
-            <!--1.기본 정보-->
-            <div class="panel panel-default" id="panel_basic">
-                <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">
-                        <h4 class="panel-title">
-                            <span class="panel_text_01">1. 기본정보</span>
-                            <span  class="panel_text_02"><span id="tour_date_01">박 일</span>/교육생 <span id="tour_member_bgn_01"><%= member-1 %></span>명, 강사 <span id="tour_member_ins_01">1</span>명</span>
-                            <i><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                        </h4>
-                    </a>
-                </div>
+                <li class="disabled">
+                    <span></span>
+                </li>
 
-                <div id="collapseOne" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <span>일정 정보</span>
-                        <button id="btn_edit_tour" class="edit_detail">수정</button>
+                <li class="disabled">
+                    <span></span>
+                </li>
+            </ul>
 
-                        <p class="panel_text_03">기간: <span id="tour_date_02" style="font-weight: initial;">박 일</span></p>
-                        <p class="panel_text_03">인원: 강사 <span id="tour_member_ins_02">1</span>명 / 교육생 <span id="tour_member_bgn_02"><%= member-1 %></span>명</p>
-                        <p class="panel_text_03">장소: <span id="tour_place" style="font-weight: initial;"><%= place %></span></p>
+            <form>
+                <div class="tab-content">
 
-                        <div id="panel-body-FOC">
-                            <span>FOC 정책 적용</span>
-
-                            <label class="toggle_swtich">
-                                <input id="input_foc_flag" type="checkbox" onchange="changeCostInfo();" <% if(cost.foc.flag == true) { %>checked<% } %> />
-                                <span class="slider round"></span>
-                            </label>
+                    <!--Step 1-->
+                    <div class="tab-pane active" role="tabpanel" id="step1">
+                        <div id="cost_header">
+                            <span>기본 정보 입력</span><br>
+                            <span>비용 항목 정보를 입력하세요.</span>
                         </div>
 
-                        <div class="FOC_box" id="FOC_box_1">
-                            <input id="input_foc_charge" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 value="<%= cost.foc.charge %>" onkeyup="changeCostInfo();" />
-                            <span class="unit" name="number">명</span>
-                            <span class="FOC_box_text">일 때</span>
+                        <div id="cost_member" class="panel-body">
+                            <div>1. 참여자 수를 입력하세요.</div>
+                            <div>
+                                <span class="ex_text">강사</span>
+                                <input type="number" id="step1_ins_count" placeholder="0" min="1" max="100" onkeyup="changeParticipantCount()" />
+                                <span class="c_text">명</span>
+                            </div>
+
+                            <div>
+                                <span class="ex_text">교육생</span>
+                                <input type="number" id="step1_bgn_count" placeholder="0" min="1" max="100" onkeyup="changeParticipantCount()" />
+                                <span class="c_text">명</span>
+                            </div>
+                            <div id="participate_empty_error" class="participate_empty_error">참여자 수를 입력하세요.</div>
                         </div>
 
-                        <div class="FOC_box">
-                            <input id="input_foc_free" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 value="<%= cost.foc.free %>" onkeyup="changeCostInfo();" />
-                            <span class="unit" name="number">명</span>
-                            <span class="FOC_box_text">무료</span>
+                        <div class="tour_division"></div>
+
+                        <div id="c_main_cur">
+                            <div>2. 기본 통화를 선택하세요.</div>
+                            <select id="step1_currency" onchange="changeExchangeRate()">
+                                <option value="원" id="step1_currency_won" selected>대한민국 원 KRW</option>
+                                <option value="달러" id="step1_currency_dollor">미국 달러 USD</option>
+                                <option value="엔" id="step1_currency_yen">일본 엔 JPY</option>
+                                <option value="페소" id="step1_currency_peso">필리핀 페소 PHP</option>
+                                <option value="유로" id="step1_currency_euro">유럽연합 유로 EUR</option>
+                            </select>
+                        </div>
+
+                        <div class="tour_division"></div>
+
+                        <div id="check_currency">
+                            <div>3. 사용하는 통화 선택 후 환율을 입력하세요.</div>
+                            <ul>
+                                <li>
+                                    <label class="cost_checkbox_container">
+                                        대한민국 원 KRW
+                                        <input type="checkbox" id="step1_won_checkbox" value="원" onchange="changeExchangeRateType(this, 'step1_won_input_wrap')" checked>
+                                        <span class="cost_checkmark"></span>
+                                    </label>
+
+                                    <div id="step1_won_input_wrap" class="custom hide">
+                                        <input type="number" id="step1_won_input" placeholder="1" onkeyup="changeExchangeRate(this, 'step1_won_input_error')">
+                                        <span id="step1_won_base_currency" class="c_text">원</span>
+                                        <span id="step1_won_exchangerate" class="cur_text">= 1원</span>
+                                        <div id="step1_won_input_error">환율을 입력하세요.</div>
+                                        <div id="step1_won_exchangerate_info">약 1원 = 1원 (2019/10/01 19:43 기준)</div>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <label class="cost_checkbox_container">
+                                        미국 달러 USD
+                                        <input type="checkbox" id="step1_dollor_checkbox" value="달러" onchange="changeExchangeRateType(this, 'step1_dollor_input_wrap')">
+                                        <span class="cost_checkmark"></span>
+                                    </label>
+
+                                    <div id="step1_dollor_input_wrap" class="custom hide">
+                                        <input type="number" id="step1_dollor_input" placeholder="1,200" onkeyup="changeExchangeRate(this, 'step1_dollor_input_error')">
+                                        <span id="step1_dollor_base_currency" class="c_text">원</span>
+                                        <span id="step1_dollor_exchangerate" class="cur_text">= 1달러</span>
+                                        <div id="step1_dollor_input_error">환율을 입력하세요.</div>
+                                        <div id="step1_dollor_exchangerate_info">약 1,200원 = 1달러 (2019/10/01 19:43 기준)</div>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <label class="cost_checkbox_container">
+                                        일본 엔 JPY
+                                        <input type="checkbox" id="step1_yen_checkbox" value="엔" onchange="changeExchangeRateType(this, 'step1_yen_input_wrap')">
+                                        <span class="cost_checkmark"></span>
+                                    </label>
+
+                                    <div id="step1_yen_input_wrap" class="custom hide">
+                                        <input type="number" id="step1_yen_input" placeholder="1,108" onkeyup="changeExchangeRate(this, 'step1_yen_input_error')">
+                                        <span id="step1_yen_base_currency" class="c_text">원</span>
+                                        <span id="step1_yen_exchangerate" class="cur_text">= 100엔</span>
+                                        <div id="step1_yen_input_error">환율을 입력하세요.</div>
+                                        <div id="step1_yen_exchangerate_info">약 1,108원 = 100 엔 (2019/10/01 19:43 기준)</div>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <label class="cost_checkbox_container">
+                                        필리핀 페소 PHP
+                                        <input type="checkbox" id="step1_peso_checkbox" value="페소" onchange="changeExchangeRateType(this, 'step1_peso_input_wrap')">
+                                        <span class="cost_checkmark"></span>
+                                    </label>
+
+                                    <div id="step1_peso_input_wrap" class="custom hide">
+                                        <input type="number" id="step1_peso_input" placeholder="2,835" onkeyup="changeExchangeRate(this, 'step1_peso_input_error')">
+                                        <span id="step1_peso_base_currency" class="c_text">원</span>
+                                        <span id="step1_peso_exchangerate" class="cur_text">= 100페소</span>
+                                        <div id="step1_peso_input_error">환율을 입력하세요.</div>
+                                        <div id="step1_peso_exchangerate_info">약 2,835원 = 100페소 (2019/10/01 19:43 기준)</div>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <label class="cost_checkbox_container">
+                                        유럽연합 유로 EUR
+                                        <input type="checkbox" id="step1_euro_checkbox" value="유로" onchange="changeExchangeRateType(this, 'step1_euro_input_wrap')">
+                                        <span class="cost_checkmark"></span>
+                                    </label>
+
+                                    <div id="step1_euro_input_wrap" class="custom hide">
+                                        <input type="number" id="step1_euro_input" placeholder="1,200" onkeyup="changeExchangeRate(this, 'step1_euro_input_error')">
+                                        <span id="step1_euro_base_currency" class="c_text">원</span>
+                                        <span id="step1_euro_exchangerate" class="cur_text">= 1유로</span>
+                                        <div id="step1_euro_input_error">환율을 입력하세요.</div>
+                                        <div id="step1_euro_exchangerate_info">약 1,300원 = 1유로 (2019/10/01 19:43 기준)</div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div id="exchange_rate_empty_error" style="width: 100%; font-size: 12px; color: #e02020; margin-top: -10px; padding-bottom: 15px; display: none;">환율을 선택하세요.</div>
+                        </div>
+
+                        <div class="tour_division"></div>
+
+                        <div>
+                            <div class="c_list">
+                                <div class="panel-body">
+                                    <text>4. 비용 항목을 입력하세요.</text>
+                                    <div id="room_type">
+                                        <div class="input_cost">
+                                            <input type="text" class="cost_name step1_cost_input" placeholder="예) 숙박비, 다이빙비" style="width: 80%;" value="" onkeyup="changeCostItem()">
+                                            <span class="remove_div btn" onclick="deleteCostItem(this)"><img src="/img/ic-close.svg"></span>
+                                        </div>
+                                        <div class="name_empty_error step1_cost_input_error" style="margin-top: -12px; margin-bottom: 12px;">항목 이름을 입력하세요.</div>
+                                    </div>
+
+                                    <div id="field" class="step1_cost_item_wrap"></div>
+                                    <button type="button" class="plus_cost btn btn-block col-xs-12" onclick="addCostItem()">
+                                        <span><img src="/img/ic-add-blue.svg"></span>
+                                        <span class="text_tour_education">항목 추가</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tour_division"></div>
+
+                        <div id="FOC_list">
+                            <div>5. FOC 할인 항목을 선택하세요.</div>
+                            <ul id="step1_foc_list">
+                                <li><label class="cost_checkbox_container">예) 숙박비, 다이빙비<input type="checkbox" class="FOC_sale" onchange="changeCostFoc()"><span class="cost_checkmark"></span></label></li>
+                            </ul>
+                        </div>
+
+                        <div class="form_wizard">
+                            <button id="step_1_prev" class="col-xs-4" type="button" onclick="prevStep1()">
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                                이전
+                            </button>
+                            <button id="step_1_next" class="col-xs-8 next-step" type="button" onclick="nextStep1()">
+                                다음
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                            </button>
+                        </div>
+                    </div>
+                    <!--end of Step 1-->
+
+                    <!--Step 2-->
+                    <div class="tab-pane" role="tabpanel" id="step2">
+                        <div id="cost_header">
+                            <span>교육생 1인 비용 계산</span><br>
+                            <span >교육생에게 공지할 금액을 입력하세요.</span>
                         </div>
 
                         <div>
-                            <p class="panel_text_04">예)4명일 때 1명 무료</p>
+                            <div class="c_list">
+                                <div id="step2_cost_input_wrap" class="panel-body">
+                                    <div id="c_first"></div>
+                                    <div id="c_sibling"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tour_division"></div>
+
+                        <div class="s2_p_cost">
+                            <div>
+                                <text id="s2_p_cost_head">교육생 1인 비용</text>
+                                <span id="s2_p_total">
+                                    <text id="step2_bgn_cost_per_person"></text>
+                                </span>
+                            </div>
+                            <div id="s2_p_cost_ex">선택한 기본 통화('<text id="main_cur">대한민국 원</text>')로 환산 후 계산됩니다.</div>
+
+                            <ul id="s2_cost_arrange">
+
+                            </ul>
+                        </div>
+
+                        <div class="form_wizard">
+                            <button class="col-xs-4 prev-step" type="button" onclick="prevStep2()">
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                                이전
+                            </button>
+
+                            <div class="col-xs-4 mid_cost">
+                                <span class="participate_n">
+                                    강사 <text id="step2_summery_ins_count" class="ins_n">0</text>명,
+                                    교육생 <text id="step2_summery_bgn_count" class="bgn_n">0</text>명<br>
+                                </span>
+                                <div class="">
+                                    1인 수입 :
+                                    <span>
+                                        <text id="step2_summery_income_per_person" class="per_cost">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    1인 수익 :
+                                    <span>
+                                        <text id="step2_summery_profit_per_person" class="per_revenue">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    총 수익 :
+                                    <span>
+                                        <text id="step2_summery_profit" class="total_revenue">0원</text>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button id="step_2_next" class="col-xs-4 next-step" type="button" onclick="nextStep2()">
+                                다음
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="tour_division"></div>
+                    <!--Step 3-->
+                    <div class="tab-pane" role="tabpanel" id="step3">
+                        <div id="cost_header">
+                            <span>실지출 입력</span><br>
+                            <span>아래 입력한 지출 비용은 교육생에게 노출되지 않습니다.</span>
+                        </div>
 
-            <!--2.비용 입력-->
-            <div class="panel panel-default" id="panel_basic">
-                <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
-                        <h4 class="panel-title">
-                            <span class="panel_text_01">2. 비용 입력</span>
-                            <span  class="panel_text_02">교통+식비 외 3개</span>
-                            <i><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                        </h4>
-                    </a>
-                </div>
+                        <div id="s3_cost_arrange">
+                            <div>1. 실지출을 수정하세요.</div>
+                            <ul id="step3_real_expense_list"></ul>
+                        </div>
 
-                <div id="collapseTwo" class="panel-collapse collapse in">
-                    <div class="panel-body">
+                        <div class="tour_division"></div>
 
-                        <div class="cost_explain">
-                            <div class="col-xs-12" class>
-                                <span>비용 입력에 대한 설명</span>
-                                <div id="read_toggle" class="btn" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                    <span id="read_toggle_1_text" class="hidden">더보기</span>
-                                    <span id="read_toggle_2_text" class="">닫기</span>
-                                    <i id="read_toggle_1" class="hidden"><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                                    <i id="read_toggle_2" class=""><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                                </div>
-                            </div>
+                        <!--추가 지출-->
+                        <div>
+                            <div class="c_list">
+                                <div class="panel-body">
+                                    <div id="extra_ex_text">2. 추가 지출이 있나요? (선택 입력)</div>
+                                    <div class="s3_ex_text">강사 교통비 등 기타 지출이 있다면 입력하세요.</div>
 
-                            <!--설명보기 내용-->
-                            <div class="collapse in" id="collapseExample">
-                                <div class="well">
-                                    <p>-비용 정보를 천천히 입력하세요.</p>
-                                    <p>-<text>교육생 비용</text>이 자동 계산됩니다.</p>
-                                    <p>-강사님 비용은 교육생 부담으로 자동 계산됩니다.</p>
+                                    <div id="c_extra_first"></div>
+                                    <div id="c_extra_sibling"></div>
+
+                                    <button type="button" class="plus_cost btn btn-block col-xs-12" onclick="addAdditionalExpenseItem()">
+                                        <span><img src="/img/ic-add-blue.svg"></span>
+                                        <span class="text_tour_education">항목 추가</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-<% for( var i=0; i<cost.details.length; i++ ) { %>
-                        <div id="room_type">
-                            <div class="input_cost">
-                                <select class="selbox input_details_type" onchange="changeCostInfo();">
-                                    <option value="" disabled <% if(cost.details[i].type == "") { %>selected<% } %>>비용 이름</option>
-                                    <option value="1" <% if(cost.details[i].type == "1") { %>selected<% } %>>교통</option>
-                                    <option value="2" <% if(cost.details[i].type == "2") { %>selected<% } %>>식비</option>
-                                    <option value="3" <% if(cost.details[i].type == "3") { %>selected<% } %>>숙박비</option>
-                                    <option value="4" <% if(cost.details[i].type == "4") { %>selected<% } %>>보트다이빙</option>
-                                    <option value="5" <% if(cost.details[i].type == "5") { %>selected<% } %>>장비대여료</option>
-                                    <option value="6" <% if(cost.details[i].type == "6") { %>selected<% } %>>직접입력</option>
-                                </select>
-                                <input type="text" class="selboxDirect input_details_title" name="selboxDirect" onkeyup="changeCostInfo();" style="display: <% if(cost.details[i].type == '6') { %>inline-block;<% } else { %>none;<% } %>" value="<%= cost.details[i].title %>" />
+                        <div class="form_wizard">
+                            <button class="col-xs-4 prev-step" type="button" onclick="prevStep3()">
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                                이전
+                            </button>
 
-                                <div class="input_box_01">
-                                    <input class="input_details_cost" type="number" pattern="\d*" placeholder="0" value="<%= cost.details[i].cost %>" onkeyup="changeCostInfo();" />
-                                    <span class="unit" name="number">원</span>
-
-                                    <span class="FOC_box_text"><img src="/img/ic-close.svg" alt="" /></span>
+                            <div class="col-xs-4 mid_cost">
+                                <span class="participate_n">
+                                    강사 <text id="step3_summery_ins_count" class="ins_n">0</text>명,
+                                    교육생 <text id="step3_summery_bgn_count" class="bgn_n">0</text>명<br>
+                                </span>
+                                <div class="">
+                                    1인 수입 :
+                                    <span>
+                                        <text id="step3_summery_income_per_person" class="per_cost">0원</text>
+                                    </span>
                                 </div>
-
-                                <div class="FOC_box">
-                                    <input class="input_details_count" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 value="<%= cost.details[i].count %>" onkeyup="changeCostInfo();" />
-                                    <span class="unit" name="number">회</span>
+                                <div>
+                                    1인 수익 :
+                                    <span>
+                                        <text id="step3_summery_profit_per_person" class="per_revenue">0원</text>
+                                    </span>
                                 </div>
-
-
-                                <div class="cost_check_box_1">
-
-                                    <label class="cost_checkbox_container">공동 비용
-                                        <input class="input_details_option1" type="checkbox" onchange="changeCostInfo();" <% if(cost.details[i].option1 == true) { %>checked<% } %> />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_1"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_1" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>공동 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt='' /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>모두 함께 쓴 비용, 참여자 수만큼 나눠야하는 공동 전체 비용. 예) 하루 총 숙박비</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>1인 당 개별 비용 예) 하루 1인 숙박비</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <label class="cost_checkbox_container">강사 비용
-                                        <input class="input_details_option2" type="checkbox" onchange="changeCostInfo();" <% if(cost.details[i].option2 == true) { %>checked<% } %> />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_2"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_2" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>강사 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>강사의 몫이 계산 되어야 하는 비용<br>FOC가 적용되어 최종적으로 할인되더라도 꼭 체크하세요.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>교육생만 지불하는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="cost_check_box_2">
-                                    <label class="cost_checkbox_container">다이빙샵 비용
-                                        <input  class="input_details_option3" type="checkbox" onchange="changeCostInfo();" <% if(cost.details[i].option3 == true) { %>checked<% } %> />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_3"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_3" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>다이빙샵 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>강사가 다이빙 샵에 지불 해야 하는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            강사가 다이빙 샵에 지불하지 않는 비용
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <label class="cost_checkbox_container">FOC할인
-                                        <input class="input_details_option4" type="checkbox" onchange="changeCostInfo();" <% if(cost.details[i].option4 == true) { %>checked<% } %> />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_4"> <img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_4" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>FOC 할인</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>FOC가 적용되는 비용. 적용 인원만큼 자동 할인</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>FOC가 적용 안 되는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div>
+                                    총 수익 :
+                                    <span>
+                                        <text id="step3_summery_profit" class="total_revenue">0원</text>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
-<% } %>
-<% if( cost.details.length == 0 ) { %>
-                        <div id="room_type">
-                            <div class="input_cost">
-                                <select class="selbox input_details_type" onchange="changeCostInfo();">
-                                    <option value="" disabled selected>비용 이름</option>
-                                    <option value="1">교통</option>
-                                    <option value="2">식비</option>
-                                    <option value="3">숙박비</option>
-                                    <option value="4">보트다이빙</option>
-                                    <option value="5">장비대여료</option>
-                                    <option value="6">직접입력</option>
-                                </select>
-                                <input type="text" class="selboxDirect input_details_title" name="selboxDirect" style="display: none;" onkeyup="changeCostInfo();" />
 
-                                <div class="input_box_01">
-                                    <input class="input_details_cost" type="number" pattern="\d*" placeholder="0" onkeyup="changeCostInfo();" />
-                                    <span class="unit" name="number">원</span>
-
-                                    <span class="FOC_box_text"><img src="/img/ic-close.svg" alt="" /></span>
-                                </div>
-
-                                <div class="FOC_box">
-                                    <input class="input_details_count" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 onkeyup="changeCostInfo();" />
-                                    <span class="unit" name="number">회</span>
-                                </div>
-
-
-                                <div class="cost_check_box_1">
-
-                                    <label class="cost_checkbox_container">공동 비용
-                                        <input class="input_details_option1" type="checkbox" onchange="changeCostInfo();" />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_1"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_1" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>공동 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt='' /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>모두 함께 쓴 비용, 참여자 수만큼 나눠야하는 공동 전체 비용. 예) 하루 총 숙박비</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>1인 당 개별 비용 예) 하루 1인 숙박비</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <label class="cost_checkbox_container">강사 비용
-                                        <input class="input_details_option2" type="checkbox" onchange="changeCostInfo();" />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_2"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_2" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>강사 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>강사의 몫이 계산 되어야 하는 비용<br>FOC가 적용되어 최종적으로 할인되더라도 꼭 체크하세요.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>교육생만 지불하는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="cost_check_box_2">
-                                    <label class="cost_checkbox_container">다이빙샵 비용
-                                        <input  class="input_details_option3" type="checkbox" onchange="changeCostInfo();" />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_3"><img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_3" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>다이빙샵 비용</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>강사가 다이빙 샵에 지불 해야 하는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            강사가 다이빙 샵에 지불하지 않는 비용
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <label class="cost_checkbox_container">FOC할인
-                                        <input class="input_details_option4" type="checkbox" onchange="changeCostInfo();" />
-                                        <span class="cost_checkmark"></span>
-                                    </label>
-                                    <i data-toggle="modal" role="dialog" href="#cost_detail_4"> <img src="/img/ic-help-outline.svg" alt="" /></i>
-
-                                    <div class="modal fade" id="cost_detail_4" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <div>FOC 할인</div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크</span>
-                                                            <p>FOC가 적용되는 비용. 적용 인원만큼 자동 할인</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span><img src='/img/ic-check-box-outline-blank.svg' alt="" /></span>
-                                                        <div class="modal_text">
-                                                            <span class="check_text">체크해제</span>
-                                                            <p>FOC가 적용 안 되는 비용</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" data-dismiss="modal">닫기</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-<% } %>
-
-                        <div id="field"></div>
-
-                        <button type="button" id="plus_cost" class="btn btn-block col-xs-12" onclick="add_div()">
-                            <span><img src="/img/ic-add-blue.svg" alt="" /></span>
-                            <span id="text_tour_education">비용 추가</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tour_division"></div>
-
-            <!--3. 강사 수익-->
-            <div class="panel panel-default" id="panel_basic">
-                <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
-                        <h4 class="panel-title">
-                            <span class="panel_text_01">3. 강사수익</span>
-                            <!-- <span  class="panel_text_02">목표 수익률 20%</span> -->
-                            <i><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                        </h4>
-                    </a>
-                </div>
-
-                <div id="collapseThree" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <p class="panel_text_02">수익 금액은 교육생 영수증에서 '교육비'로 표기됩니다</p>
-
-                        <div class="instructor_profit" style="position: relative;">
-                            <label class="container">
-                                <span class="txt_profit" <% if(cost.profit.type == "1") { %>style="color: #145db2;"<% } %>>목표 총 수익</span>
-                                <input id="input_profit_type_01" type="radio" name="radio" onchange="changeCostInfo();" <% if(cost.profit.type == "1") { %>checked<% } %> />
-                                <span class="checkmark"></span>
-                            </label>
-
-                            <div class="FOC_box" style="position: absolute; top: 54px; right: 0; top: 0;">
-                                <input id="input_profit_value_01" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 onkeyup="changeCostInfo();" value="<% if(cost.profit.type == "1") { %><%= cost.profit.value %><% } %>" />
-                                <span class="unit" name="number">원</span>
-                            </div>
-
-                            <label class="container">
-                                <span class="txt_profit" <% if(cost.profit.type == "2") { %>style="color: #145db2;"<% } %>>목표 수익률</span>
-                                <p>교육생 비용 대비</p>
-                                <input id="input_profit_type_02" type="radio" name="radio" onchange="changeCostInfo();" <% if(cost.profit.type == "2") { %>checked<% } %> />
-                                <span class="checkmark"></span>
-                            </label>
-
-                            <div class="FOC_box" style="position: absolute; top: 54px; right: 0;">
-                                <input id="input_profit_value_02" type="number" pattern="\d*" placeholder="0" min=1 max = 9999 onkeyup="changeCostInfo();" value="<% if(cost.profit.type == "2") { %><%= cost.profit.value %><% } %>" />
-                                <span class="unit" name="number">%</span>
-                            </div>
+                            <button id="step_3_next" class="col-xs-4 next-step" type="button" onclick="nextStep3()">
+                                다음
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="tour_division"></div>
 
-            <!--4.교육생 비용-->
-            <div class="panel panel-default" id="panel_basic" style="padding-bottom:50px">
-                <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#collapseFour">
-                        <h4 class="panel-title">
-                            <span class="panel_text_01">4. 교육생 비용</span>
+                    <!--Step 4-->
+                    <div class="tab-pane" role="tabpanel" id="step4">
+                        <div id="cost_header">
+                            <span>수익 조정</span><br>
+                            <span class="header_explain">아래 슬라이드를 움직여 수익을 조정하세요.</span>
+                        </div>
 
-                            <span id="btn_cost_detail" class="cost_detail">
-                                <button id='btn_cost_detail_button' class="btn disable">자세한 계산식</button>
-                            </span>
-                            <i><img src="/img/ic-arrow-ltr.svg" class="arrow-bottom" alt="" /></i>
-                        </h4>
-                    </a>
-                </div>
-
-                <div id="collapseFour" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div id="summury_cost">
-<% for( var i=0; i<cost.details.length; i++ ) { %>
-                            <div class="row">
-                                <% if( cost.details[i].type == "1" ) { %><span>교통</span><% } %>
-                                <% if( cost.details[i].type == "2" ) { %><span>식비</span><% } %>
-                                <% if( cost.details[i].type == "3" ) { %><span>숙박비</span><% } %>
-                                <% if( cost.details[i].type == "4" ) { %><span>보트다이빙</span><% } %>
-                                <% if( cost.details[i].type == "5" ) { %><span>장비대여료</span><% } %>
-                                <% if( cost.details[i].type == "6" ) { %><span><%= cost.details[i].title %></span><% } %>
-
-                                <span>+<%= cost.details[i].cost %>원/1명</span>
+                        <div class="panel-body">
+                            <div id="s4_slide_text">
+                                <text>1인 수익 조정 슬라이드</text>
                             </div>
-<% } %>
+                            <div id="slide-range-text">
+                                <text id="step4_slide_min_text">-50,000</text>
+                                <span style="display:none">0</span>
+                                <text id="step4_slide_max_text">150,000</text>
+                            </div>
+                            <input id="slide-range" type="range" min="-50000" max="150000" step="0.01" value="0" oninput="changeSlideCost('slide')">
+
+                            <table id="s4_control_cost" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="s4_cost_name">항목</th>
+                                        <th class="s4_income">1인 수입<br>
+                                            <text id="step4_income_text">650000원</text>
+                                        </th>
+                                        <th id="step4_profit_text_wrap" class="s4_revenue">1인 수익<br>
+                                            <text id="step4_profit_text">0원</text>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="s4_control_cost_input">
+                                        <th class="s4_cost_name">
+                                            <text>수익 조정을 위한 항목</text><br>
+                                            <input type="text" id="step4_slide_cost_name" placeholder="예) 교육비, 예비비" onkeyup="changeSlideCost()"><br>
+                                            <text id="step4_slide_cost_error" class="s4_input_err">항목 이름과 금액을 입력하세요.</text>
+                                        </th>
+                                        <td class="s4_income">
+                                            <text id="s4_control_income">0원</text>
+                                        </td>
+                                        <td class="s4_revenue">
+                                            <input id="s4_control_revenue" type="text" value="" onkeyup="setTimeout(() => {changeSlideCost('input');}, 100)">
+                                            <span id="step4_control_cost_type">원</span>
+                                        </td>
+                                    </tr>
+
+                                    <tbody id="step4_cost_list" style="border-top: 1px solid #ddd;">
+                                        <tr>
+                                            <th class="s4_cost_name">숙박</th>
+                                            <td class="s4_income"><text>105000</text>
+                                                <text>원</text>
+                                            </td>
+                                            <td class="s4_revenue"><text>0</text>
+                                                <text>원</text>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <hr>
+                        <div class="form_wizard">
+                            <button class="col-xs-4 prev-step" type="button" onclick="prevStep4()">
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                                이전
+                            </button>
 
-                        <div class="row">
-                            <span>교육생 1인 비용</span>
-                            <span class="cost_per"><p id="bgn_cost" style="display: inline-block;">0</p>원 / 1명</span>
+                            <div class="col-xs-4 mid_cost">
+                                <span class="participate_n">
+                                    강사 <text id="step4_summery_ins_count" class="ins_n">0</text>명,
+                                    교육생 <text id="step4_summery_bgn_count" class="bgn_n">0</text>명<br>
+                                </span>
+                                <div class="">
+                                    1인 수입 :
+                                    <span>
+                                        <text id="step4_summery_income_per_person" class="per_cost">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    1인 수익 :
+                                    <span>
+                                        <text id="step4_summery_profit_per_person" class="per_revenue">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    총 수익 :
+                                    <span>
+                                        <text id="step4_summery_profit" class="total_revenue">0원</text>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button id="step_4_next" class="col-xs-4 next-step" type="button" onclick="nextStep4();">
+                                다음
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                            </button>
+                        </div>
+                    </div><!-- panel panel-default-->
+
+                    <!--Step 5-->
+                    <div class="tab-pane" role="tabpanel" id="step5">
+                        <div id="cost_header">
+                            <span>최종 확인</span><br>
+                            <span class="header_explain">교육생 비용과 수익을 확인하세요.</span>
                         </div>
 
-                        <div class="profit_per row">
-                            <span>강사수익</span>
-                            <span>+<p id="ins_profit" style="display: inline-block;">0</p>원 / 1명</span>
+                        <div id="s5_cost_arr">
+                            <div>교육생 1인 비용
+                                <span>
+                                    <text id="step5_cost_result">650000원</text>
+                                </span>
+                            </div>
+                            <ul id="step5_cost_list"></ul>
                         </div>
 
-                        <div id="ins_profit_desc" class="row profit_per_explain" <% if(cost.profit.type == "1") { %>style="display: none;"<% } %>>
-                            <span>교육생 1인 비용*수익률</span>
-                            <span><p id="ins_origin_profit" style="display: inline-block;">0</p>원 / 1명 * <p id="ins_profit_percent" style="display: inline-block;">0</p>%</span>
+                        <div class="form_wizard">
+                            <button class="col-xs-4 prev-step" type="button" onclick="prevStep5()">
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                                이전
+                            </button>
+                            <div class="col-xs-4 mid_cost">
+                                <span class="participate_n">
+                                    강사 <text id="step5_summery_ins_count" class="ins_n">0</text>명,
+                                    교육생 <text id="step5_summery_bgn_count" class="bgn_n">0</text>명<br>
+                                </span>
+                                <div class="">
+                                    1인 수입 :
+                                    <span>
+                                        <text id="step5_summery_income_per_person" class="per_cost">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    1인 수익 :
+                                    <span>
+                                        <text id="step5_summery_profit_per_person" class="per_revenue">0원</text>
+                                    </span>
+                                </div>
+                                <div>
+                                    총 수익 :
+                                    <span>
+                                        <text id="step5_summery_profit" class="total_revenue">0원</text>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button class="col-xs-4 next-step" type="button" onclick="nextStep5();">
+                                다음
+                                <img src="/img/ic-keyboard-arrow-right-white.svg">
+                            </button>
                         </div>
-                    </div>
+
+
+                    </div><!-- panel panel-default-->
                 </div>
-            </div>
-        </div>
 
-        <div class="final_cost" style="z-index: 2;">
-            <div class="row">
-                <span>교육생 최종 비용</span>
-                <span><span id="total_bgn_cost">0</span>원 / 1명</span>
-            </div>
-            <div class="row">
-                <span>강사 총 수익</span>
-                <span><span id="total_ins_profit">0</span>원</span>
-            </div>
-        </div>
-
-        <div id="cost_detail_popup_wrap" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0; background: white; z-index: 1; display: none;">
-            <div class="header">
-                <span class="logo_mini">자세한 계산식</span>
-                <div id="btn_close_popup_wrap" class="header_close">
-                    <img src="/img/ic-close.svg" alt="" />
-                </div>
-            </div>
-
-            <!--교육생 1인 비용 -->
-            <div class="calc_cost">
-              <span>교육생 1인 비용</span>
-              <span><span id="cost_detail_popup_bgn_cost">0</span>원 / 1명</span>
-            </div>
-
-            <div id="cost_detail_popup_bgn_wrap"></div>
-
-            <!--강사 수익-->
-            <div class="calc_cost">
-              <span>강사 수익</span>
-              <span><span id="cost_detail_popup_ins_profit">0</span>원 / 1명</span>
-            </div>
-
-            <!--강사 수익 계산-->
-            <div class="calc_cost_semi" id="calc_cost_last">
-                <p>= 목표 총 수익 / 교육생 수</p>
-                <p>= 0원 * <%= member-1 %>명</p>
-                <p>= 약 0원 / 1명</p>
-            </div>
+            </form>
         </div>
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/js/Scubalink_js.js"></script>
         <script type="text/javascript" src="/js/httpUtil.js"></script>
+        <script type="text/javascript" src="/js/cost.js"></script>
         <script type="text/javascript">
             var tourId = '<%= _id %>';
-            var bgnCount = parseInt('<%= member %>')-1;
-            var isFolded = false;
+            var exchangerate = <%- JSON.stringify(exchangerateList) %>;
+            exchangerate.push({name: 'KRW', timestamp: (new Date()).getTime() * 1000, rate: 1});
 
-            document.getElementById('btn_back').onclick = function() {
-                history.back();
+            var data = {
+                insCount: 0,
+                bgnCount: 0,
+                exchangerate: [{
+                    type: '원',
+                    name: '원',
+                    price: 0
+                }],
+                currency: '원',
+                cost: [{
+                    name: '',
+                    foc: false,
+                    public: false,
+                    include: false,
+                    price: '',
+                    priceType: '',
+                    count: '',
+                    countType: '회',
+                    expense: ''
+                }],
+                additional: [{
+                    name: '',
+                    price: '',
+                    priceType: '',
+                    count: '',
+                    countType: '',
+                }],
+                adjustment: {
+                    name: '',
+                    price: 0
+                },
+                incomePerPerson: 0,
+                profitPerPerson: 0
             };
-
-            document.getElementById('btn_save').onclick = function() {
-                if( document.getElementById('input_foc_flag').checked && (document.getElementById('input_foc_charge').value == "" || document.getElementById('input_foc_free').value == "") ) {
-                    alert("FOC 정책을 입력해주세요");
-                    return;
-                }
-                if( document.getElementById('input_profit_type_01').checked && document.getElementById('input_profit_value_01').value == "" ) {
-                    alert("강사수익을 입력해주세요");
-                    return;
-                }
-                if( document.getElementById('input_profit_type_02').checked && document.getElementById('input_profit_value_02').value == "" ) {
-                    alert("강사수익을 입력해주세요");
-                    return;
-                }
-
-                var costDetails = [];
-                for( var i=0; i<document.getElementsByClassName('input_cost').length; i++ ) {
-                    var detailsObject = {};
-                    var object = document.getElementsByClassName('input_cost')[i];
-
-                    if( object.getElementsByClassName('input_details_type')[0].value == ""
-                        || object.getElementsByClassName('input_details_cost')[0].value == ""
-                        || object.getElementsByClassName('input_details_count')[0].value == "" ) {
-                        alert("비용을 입력해주세요");
-                        return;
-                    }
-
-                    detailsObject.type = object.getElementsByClassName('input_details_type')[0].value;
-                    detailsObject.cost = object.getElementsByClassName('input_details_cost')[0].value;
-                    detailsObject.count = object.getElementsByClassName('input_details_count')[0].value;
-
-                    if( object.getElementsByClassName('input_details_type')[0].value == "1" )
-                        detailsObject.title = "교통";
-                    else if( object.getElementsByClassName('input_details_type')[0].value == "2" )
-                        detailsObject.title = "식비";
-                    else if( object.getElementsByClassName('input_details_type')[0].value == "3" )
-                        detailsObject.title = "숙박비";
-                    else if( object.getElementsByClassName('input_details_type')[0].value == "4" )
-                        detailsObject.title = "보트다이빙";
-                    else if( object.getElementsByClassName('input_details_type')[0].value == "5" )
-                        detailsObject.title = "장비대여료";
-                    else if( object.getElementsByClassName('input_details_type')[0].value == "6" )
-                        detailsObject.title = object.getElementsByClassName('input_details_title')[0].value;
-
-                    if( object.getElementsByClassName('input_details_option1')[0].checked )
-                        detailsObject.option1 = true;
-                    else
-                        detailsObject.option1 = false;
-
-                    if( object.getElementsByClassName('input_details_option2')[0].checked )
-                        detailsObject.option2 = true;
-                    else
-                        detailsObject.option2 = false;
-
-                    if( object.getElementsByClassName('input_details_option3')[0].checked )
-                        detailsObject.option3 = true;
-                    else
-                        detailsObject.option3 = false;
-
-                    if( object.getElementsByClassName('input_details_option4')[0].checked )
-                        detailsObject.option4 = true;
-                    else
-                        detailsObject.option4 = false;
-
-                    costDetails.push(detailsObject);
-                }
-
-                var costData = {
-                    foc: {
-                        flag: false,
-                        charge: "",
-                        free: ""
-                    },
-                    details: [],
-                    profit: {
-                        type: "1",
-                        value: ""
-                    },
-                    total: 0
-                };
-
-                if( document.getElementById('input_foc_flag').checked )
-                    costData.foc.flag = true;
-                else
-                    costData.foc.flag = false;
-                costData.foc.charge = document.getElementById('input_foc_charge').value;
-                costData.foc.free = document.getElementById('input_foc_free').value;
-
-                costData.details = costDetails;
-
-                if( document.getElementById('input_profit_type_01').checked ) {
-                  costData.profit.type = "1";
-                  costData.profit.value = document.getElementById('input_profit_value_01').value;
-                }
-                else {
-                  costData.profit.type = "2";
-                  costData.profit.value = document.getElementById('input_profit_value_02').value;
-                }
-
-                costData.total = document.getElementById('total_bgn_cost').innerHTML.replace(/,/gi, "");
-
-                httpSend.send("/tour/cost/update", {
-                    tourId  : tourId,
-                    cost    : costData
-                }, "POST", function(result) {
-                    history.back();
-                }, function(errorCode, errorMessage) {
-                    console.log(errorMessage);
-                });
-            };
-
-            document.getElementById('btn_edit_tour').onclick = function() {
-                location.href = "/tour_edit/"+tourId;
-            };
-
-            document.getElementById('btn_cost_detail').onclick = function() {
-                if( document.getElementById('btn_cost_detail_button').classList.contains("disable") ) {
-                    return;
-                }
-
-                if( document.getElementById('collapseFour').offsetHeight <= 10 )
-                    isFolded = true;
-                else
-                    isFolded = false;
-
-                document.getElementById('accordion').style.display = "none";
-                document.getElementById('cost_detail_popup_wrap').style.display = "block";
-
-                document.documentElement.scrollTop = 0;
-            };
-
-            document.getElementById('btn_close_popup_wrap').onclick = function() {
-                if(isFolded) {
-                    document.getElementsByClassName('accordion-toggle')[3].classList.add("collapsed");
-                    document.getElementById('collapseFour').classList.remove("in");
-                    document.getElementById('collapseFour').style.height = "0px";
-                }
-                else {
-                    document.getElementsByClassName('accordion-toggle')[3].classList.remove("collapsed");
-                    document.getElementById('collapseFour').classList.add("in");
-                    document.getElementById('collapseFour').style.height = "initial";
-                }
-
-                document.getElementById('cost_detail_popup_wrap').style.display = "none";
-                document.getElementById('accordion').style.display = "block";
-
-                document.documentElement.scrollTop = 1000000;
-                document.body.scrollTop = 1000000;
-            };
-
 
             window.onpageshow = function (event) {
                 httpSend.send("/tour/detail", {
@@ -784,394 +605,257 @@
                 }, "POST", function(result) {
                     console.log(result);
 
-                    bgnCount = result.member-1;
+                    if (result.cost !== null) {
+                        data = result.cost;
 
-                    var startdate = result.startdate;
-                    var enddate = result.enddate;
-                    var tempDate1 = new Date(startdate.substr(0,4)+"-"+startdate.substr(4,2)+"-"+startdate.substr(6,2)+"T00:00:00");
-                    var tempDate2 = new Date(enddate.substr(0,4)+"-"+enddate.substr(4,2)+"-"+enddate.substr(6,2)+"T00:00:00");
-                    var tourDateGap = (tempDate2-tempDate1)/1000/24/60/60;
+                        document.getElementById('step1_ins_count').value = data.insCount;
+                        document.getElementById('step1_bgn_count').value = data.bgnCount;
 
-                    document.getElementById('tour_date_01').innerHTML = tourDateGap+"박 "+(tourDateGap+1)+"일";
-                    document.getElementById('tour_date_02').innerHTML = tourDateGap+"박 "+(tourDateGap+1)+"일";
+                        document.getElementById('step1_currency').value = data.currency;
 
-                    document.getElementById('tour_member_bgn_01').innerHTML = result.member-1;
-                    document.getElementById('tour_member_bgn_02').innerHTML = result.member-1;
+                        for (var i = 0; i < data.exchangerate.length; i++) {
+                            if (data.exchangerate[i].type === '원') {
+                                document.getElementById('step1_won_checkbox').checked = true;
+                                if (data.exchangerate[i].type !== data.currency) {
+                                    document.getElementById('step1_won_input').value = data.exchangerate[i].price;
+                                    document.getElementById('step1_won_input_wrap').classList.remove('hide');
+                                }
+                            } else if (data.exchangerate[i].type === '달러') {
+                                document.getElementById('step1_dollor_checkbox').checked = true;
+                                if (data.exchangerate[i].type !== data.currency) {
+                                    document.getElementById('step1_dollor_input').value = data.exchangerate[i].price;
+                                    document.getElementById('step1_dollor_input_wrap').classList.remove('hide');
+                                }
+                            } else if (data.exchangerate[i].type === '엔') {
+                                document.getElementById('step1_yen_checkbox').checked = true;
+                                if (data.exchangerate[i].type !== data.currency) {
+                                    document.getElementById('step1_yen_input').value = data.exchangerate[i].price;
+                                    document.getElementById('step1_yen_input_wrap').classList.remove('hide');
+                                }
+                            } else if (data.exchangerate[i].type === '페소') {
+                                document.getElementById('step1_peso_checkbox').checked = true;
+                                if (data.exchangerate[i].type !== data.currency) {
+                                    document.getElementById('step1_peso_input').value = data.exchangerate[i].price;
+                                    document.getElementById('step1_peso_input_wrap').classList.remove('hide');
+                                }
+                            } else if (data.exchangerate[i].type === '유로') {
+                                document.getElementById('step1_euro_checkbox').checked = true;
+                                if (data.exchangerate[i].type !== data.currency) {
+                                    document.getElementById('step1_euro_input').value = data.exchangerate[i].price;
+                                    document.getElementById('step1_euro_input_wrap').classList.remove('hide');
+                                }
+                            }
+                        }
 
-                    document.getElementById('tour_place').innerHTML = result.place;
+                        document.getElementById('step1_won_base_currency').innerHTML = data.currency;
+                        document.getElementById('step1_dollor_base_currency').innerHTML = data.currency;
+                        document.getElementById('step1_yen_base_currency').innerHTML = data.currency;
+                        document.getElementById('step1_peso_base_currency').innerHTML = data.currency;
+                        document.getElementById('step1_euro_base_currency').innerHTML = data.currency;
 
-                    // 인원수 갱신하여 다시 계산
-                    changeCostInfo();
+                        if (data.currency === '원') {
+                            document.getElementById('step1_won_base_currency').innerHTML = '원';
+                            document.getElementById('step1_won_exchangerate').innerHTML = '= 1원';
+                            document.getElementById('step1_dollor_base_currency').innerHTML = '원';
+                            document.getElementById('step1_dollor_exchangerate').innerHTML = '= 1달러';
+                            document.getElementById('step1_yen_base_currency').innerHTML = '원';
+                            document.getElementById('step1_yen_exchangerate').innerHTML = '= 100엔';
+                            document.getElementById('step1_peso_base_currency').innerHTML = '원';
+                            document.getElementById('step1_peso_exchangerate').innerHTML = '= 100페소';
+                            document.getElementById('step1_euro_base_currency').innerHTML = '원';
+                            document.getElementById('step1_euro_exchangerate').innerHTML = '= 1유로';
+
+                            document.getElementById('step1_won_exchangerate_info').innerHTML = '약 1원 = 1원 (2019/10/01 19:43 기준)';
+                            document.getElementById('step1_dollor_exchangerate_info').innerHTML = '약 ' + getExchangerate('KRW', 'USD', 1) + '원 = 1달러 ' + getDatetime('KRW');
+                            document.getElementById('step1_yen_exchangerate_info').innerHTML = '약 ' + getExchangerate('KRW', 'JPY', 100) + '원 = 100엔 ' + getDatetime('KRW');
+                            document.getElementById('step1_peso_exchangerate_info').innerHTML = '약 ' + getExchangerate('KRW', 'PHP', 100) + '원 = 100페소 ' + getDatetime('KRW');
+                            document.getElementById('step1_euro_exchangerate_info').innerHTML = '약 ' + getExchangerate('KRW', 'EUR', 1) + '원 = 1유로 ' + getDatetime('KRW');
+
+                            document.getElementById('step1_won_input').placeholder = '1';
+                            document.getElementById('step1_dollor_input').placeholder = getExchangerate('KRW', 'USD', 1);
+                            document.getElementById('step1_yen_input').placeholder = getExchangerate('KRW', 'JPY', 100);
+                            document.getElementById('step1_peso_input').placeholder = getExchangerate('KRW', 'PHP', 100);
+                            document.getElementById('step1_euro_input').placeholder = getExchangerate('KRW', 'EUR', 1);
+                        } else if (data.currency === '달러') {
+                            document.getElementById('step1_won_base_currency').innerHTML = '달러';
+                            document.getElementById('step1_won_exchangerate').innerHTML = '= 1000원';
+                            document.getElementById('step1_dollor_base_currency').innerHTML = '달러';
+                            document.getElementById('step1_dollor_exchangerate').innerHTML = '= 1달러';
+                            document.getElementById('step1_yen_base_currency').innerHTML = '달러';
+                            document.getElementById('step1_yen_exchangerate').innerHTML = '= 100엔';
+                            document.getElementById('step1_peso_base_currency').innerHTML = '달러';
+                            document.getElementById('step1_peso_exchangerate').innerHTML = '= 100페소';
+                            document.getElementById('step1_euro_base_currency').innerHTML = '달러';
+                            document.getElementById('step1_euro_exchangerate').innerHTML = '= 1유로';
+
+                            document.getElementById('step1_won_exchangerate_info').innerHTML = '약 ' + getExchangerate('USD', 'KRW', 1000) + '달러 = 1000원 ' + getDatetime('USD');
+                            document.getElementById('step1_dollor_exchangerate_info').innerHTML = '약 1달러 = 1달러 (2019/10/01 19:43 기준)';
+                            document.getElementById('step1_yen_exchangerate_info').innerHTML = '약 ' + getExchangerate('USD', 'JPY', 100) + '달러 = 100엔 ' + getDatetime('USD');
+                            document.getElementById('step1_peso_exchangerate_info').innerHTML = '약 ' + getExchangerate('USD', 'PHP', 100) + '달러 = 100페소 ' + getDatetime('USD');
+                            document.getElementById('step1_euro_exchangerate_info').innerHTML = '약 ' + getExchangerate('USD', 'EUR', 1) + '달러 = 1유로 ' + getDatetime('USD');
+
+                            document.getElementById('step1_won_input').placeholder = getExchangerate('USD', 'KRW', 1000);
+                            document.getElementById('step1_dollor_input').placeholder = '1';
+                            document.getElementById('step1_yen_input').placeholder = getExchangerate('USD', 'JPY', 100);
+                            document.getElementById('step1_peso_input').placeholder = getExchangerate('USD', 'PHP', 100);
+                            document.getElementById('step1_euro_input').placeholder = getExchangerate('USD', 'EUR', 1);
+                        } else if (data.currency === '엔') {
+                            document.getElementById('step1_won_base_currency').innerHTML = '엔';
+                            document.getElementById('step1_won_exchangerate').innerHTML = '= 1000원';
+                            document.getElementById('step1_dollor_base_currency').innerHTML = '엔';
+                            document.getElementById('step1_dollor_exchangerate').innerHTML = '= 1달러';
+                            document.getElementById('step1_yen_base_currency').innerHTML = '엔';
+                            document.getElementById('step1_yen_exchangerate').innerHTML = '= 1엔';
+                            document.getElementById('step1_peso_base_currency').innerHTML = '엔';
+                            document.getElementById('step1_peso_exchangerate').innerHTML = '= 100페소';
+                            document.getElementById('step1_euro_base_currency').innerHTML = '엔';
+                            document.getElementById('step1_euro_exchangerate').innerHTML = '= 1유로';
+
+                            document.getElementById('step1_won_exchangerate_info').innerHTML = '약 ' + getExchangerate('JPY', 'KRW', 1000) + '엔 = 1000원 ' + getDatetime('JPY');
+                            document.getElementById('step1_dollor_exchangerate_info').innerHTML = '약 ' + getExchangerate('JPY', 'USD', 1) + '엔 = 1달러 ' + getDatetime('JPY');
+                            document.getElementById('step1_yen_exchangerate_info').innerHTML = '약 1엔 = 1엔 (2019/10/01 19:43 기준)';
+                            document.getElementById('step1_peso_exchangerate_info').innerHTML = '약 ' + getExchangerate('JPY', 'PHP', 100) + '엔 = 100페소 ' + getDatetime('JPY');
+                            document.getElementById('step1_euro_exchangerate_info').innerHTML = '약 ' + getExchangerate('JPY', 'EUR', 1) + '엔 = 1유로 ' + getDatetime('JPY');
+
+                            document.getElementById('step1_won_input').placeholder = getExchangerate('JPY', 'KRW', 1000);
+                            document.getElementById('step1_dollor_input').placeholder = getExchangerate('JPY', 'USD', 1);
+                            document.getElementById('step1_yen_input').placeholder = '1';
+                            document.getElementById('step1_peso_input').placeholder = getExchangerate('JPY', 'PHP', 100);
+                            document.getElementById('step1_euro_input').placeholder = getExchangerate('JPY', 'EUR', 1);
+                        } else if (data.currency === '페소') {
+                            document.getElementById('step1_won_base_currency').innerHTML = '페소';
+                            document.getElementById('step1_won_exchangerate').innerHTML = '= 1000원';
+                            document.getElementById('step1_dollor_base_currency').innerHTML = '페소';
+                            document.getElementById('step1_dollor_exchangerate').innerHTML = '= 1달러';
+                            document.getElementById('step1_yen_base_currency').innerHTML = '페소';
+                            document.getElementById('step1_yen_exchangerate').innerHTML = '= 100엔';
+                            document.getElementById('step1_peso_base_currency').innerHTML = '페소';
+                            document.getElementById('step1_peso_exchangerate').innerHTML = '= 1페소';
+                            document.getElementById('step1_euro_base_currency').innerHTML = '페소';
+                            document.getElementById('step1_euro_exchangerate').innerHTML = '= 1유로';
+
+                            document.getElementById('step1_won_exchangerate_info').innerHTML = '약 ' + getExchangerate('PHP', 'KRW', 1000) + '페소 = 1000원 ' + getDatetime('PHP');
+                            document.getElementById('step1_dollor_exchangerate_info').innerHTML = '약 ' + getExchangerate('PHP', 'USD', 1) + '페소 = 1달러 ' + getDatetime('PHP');
+                            document.getElementById('step1_yen_exchangerate_info').innerHTML = '약 ' + getExchangerate('PHP', 'JPY', 100) + '페소 = 100엔 ' + getDatetime('PHP');
+                            document.getElementById('step1_peso_exchangerate_info').innerHTML = '약 1페소 = 1페소 (2019/10/01 19:43 기준)';
+                            document.getElementById('step1_euro_exchangerate_info').innerHTML = '약 ' + getExchangerate('PHP', 'EUR', 1) + '페소 = 1유로 ' + getDatetime('PHP');
+
+                            document.getElementById('step1_won_input').placeholder = getExchangerate('PHP', 'KRW', 1000);
+                            document.getElementById('step1_dollor_input').placeholder = getExchangerate('PHP', 'USD', 1);
+                            document.getElementById('step1_yen_input').placeholder = getExchangerate('PHP', 'JPY', 100);
+                            document.getElementById('step1_peso_input').placeholder = '1';
+                            document.getElementById('step1_euro_input').placeholder = getExchangerate('PHP', 'EUR', 1);
+                        } else if (data.currency === '유로') {
+                            document.getElementById('step1_won_base_currency').innerHTML = '유로';
+                            document.getElementById('step1_won_exchangerate').innerHTML = '= 1000원';
+                            document.getElementById('step1_dollor_base_currency').innerHTML = '유로';
+                            document.getElementById('step1_dollor_exchangerate').innerHTML = '= 1달러';
+                            document.getElementById('step1_yen_base_currency').innerHTML = '유로';
+                            document.getElementById('step1_yen_exchangerate').innerHTML = '= 100엔';
+                            document.getElementById('step1_peso_base_currency').innerHTML = '유로';
+                            document.getElementById('step1_peso_exchangerate').innerHTML = '= 100페소';
+                            document.getElementById('step1_euro_base_currency').innerHTML = '유로';
+                            document.getElementById('step1_euro_exchangerate').innerHTML = '= 1유로';
+
+                            document.getElementById('step1_won_exchangerate_info').innerHTML = '약 ' + getExchangerate('EUR', 'KRW', 1000) + '유로 = 1000원 ' + getDatetime('EUR');
+                            document.getElementById('step1_dollor_exchangerate_info').innerHTML = '약 ' + getExchangerate('EUR', 'USD', 1) + '유로 = 1달러 ' + getDatetime('EUR');
+                            document.getElementById('step1_yen_exchangerate_info').innerHTML = '약 ' + getExchangerate('EUR', 'JPY', 100) + '유로 = 100엔 ' + getDatetime('EUR');
+                            document.getElementById('step1_peso_exchangerate_info').innerHTML = '약 ' + getExchangerate('EUR', 'PHP', 100) + '유로 = 100페소 ' + getDatetime('EUR');
+                            document.getElementById('step1_euro_exchangerate_info').innerHTML = '약 1유로 = 1유로 (2019/10/01 19:43 기준)';
+
+                            document.getElementById('step1_won_input').placeholder = getExchangerate('EUR', 'KRW', 1000);
+                            document.getElementById('step1_dollor_input').placeholder = getExchangerate('EUR', 'USD', 1);
+                            document.getElementById('step1_yen_input').placeholder = getExchangerate('EUR', 'JPY', 100);
+                            document.getElementById('step1_peso_input').placeholder = getExchangerate('EUR', 'PHP', 100);
+                            document.getElementById('step1_euro_input').placeholder = '1';
+                        }
+
+                        for (i = 0; i < data.cost.length; i++) {
+                            if (i === 0) {
+                                document.getElementsByClassName('step1_cost_input')[0].value = data.cost[i].name;
+                            } else {
+                                var divElement = document.createElement("div");
+                                var html = '';
+                                html += '<div class="input_cost">';
+                                html +=     '<input type="text" class="cost_name step1_cost_input" placeholder="예) 숙박비, 다이빙비" value="' + data.cost[i].name + '" style="width: 80%;" value="" onkeyup="changeCostItem()" />';
+                                html +=     '<span class="remove_div btn" onclick="deleteCostItem(this)">';
+                                html +=         '<img src="/img/ic-close.svg">';
+                                html +=     '</span>';
+                                html += '</div>';
+                                html += '<div class="name_empty_error step1_cost_input_error" style="margin-top: -12px; margin-bottom: 12px;">항목 이름을 입력하세요.</div>';
+                                divElement.innerHTML = html;
+                                document.getElementsByClassName('step1_cost_item_wrap')[0].appendChild(divElement);
+                            }
+                        }
+
+                        makeFocList();
+
+                        document.getElementById('step_1_next').style.backgroundColor = '#145db2';
+                    }
                 }, function(errorCode, errorMessage) {
                     console.log(errorMessage);
                 });
             };
 
-           function changeCostInfo() {
-              var bgnCost = 0;
-              var html = "";
-              var popupHtml = "";
-              for( var i=0; i<document.getElementsByClassName('input_cost').length; i++ ) {
-                  var object = document.getElementsByClassName('input_cost')[i];
-                  var tempTitle = "";
-                  if( object.getElementsByClassName('input_details_type')[0].value == "1" ) {
-                      tempTitle = "교통";
-                  }
-                  else if( object.getElementsByClassName('input_details_type')[0].value == "2" ) {
-                      tempTitle = "식비";
-                  }
-                  else if( object.getElementsByClassName('input_details_type')[0].value == "3" ) {
-                      tempTitle = "숙박비";
-                  }
-                  else if( object.getElementsByClassName('input_details_type')[0].value == "4" ) {
-                      tempTitle = "보트다이빙";
-                  }
-                  else if( object.getElementsByClassName('input_details_type')[0].value == "5" ) {
-                      tempTitle = "장비대여료";
-                  }
-                  else if( object.getElementsByClassName('input_details_type')[0].value == "6" ) {
-                      tempTitle = object.getElementsByClassName('input_details_title')[0].value;
-                  }
+            document.getElementById('s4_control_revenue').onkeydown = function (event) {
+                if (event.keyCode === 32 || event.code === 'Space' ||
+                    event.key === '!' || event.key === '@' ||
+                    event.key === '#' || event.key === '$' ||
+                    event.key === '%' || event.key === '^' ||
+                    event.key === '&' || event.key === '*' ||
+                    event.key === '(' || event.key === ')') {
+                    return false;
+                } else if (event.keyCode === 189 || event.code === 'Minus' ||
+                    event.keyCode === 13 || event.code === 'Enter' ||
+                    event.keyCode === 8 || event.code === 'Backspace' ||
+                    event.keyCode === 37 || event.code === 'ArrowLeft' ||
+                    event.keyCode === 38 || event.code === 'ArrowUp' ||
+                    event.keyCode === 39 || event.code === 'ArrowRight' ||
+                    event.keyCode === 40 || event.code === 'ArrowDown' ||
+                    event.keyCode === 190 || event.code === 'Period' ||
+                    event.keyCode === 40 || event.code === 'ArrowDown' ||
+                    event.keyCode === 40 || event.code === 'ArrowDown' ||
+                    (48 <= event.keyCode && event.keyCode <= 57) ||
+                    (0 <= event.key && event.key <= 9)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
 
-                  var tempCost = object.getElementsByClassName('input_details_cost')[0].value * object.getElementsByClassName('input_details_count')[0].value
+            document.getElementById('s4_control_revenue').oninput = function () {
+                event.target.value = event.target.value.replace(/[^-0-9]/gi, "");
+            };
 
-                  if( tempTitle == "" || object.getElementsByClassName('input_details_cost')[0].value == "" || object.getElementsByClassName('input_details_count')[0].value == "")
-                      continue;
-
-                  var costTypeTxt = "";
-                  var costTypeDesc = "";
-                  var costType = 0;
-                  var costPrice = 0;
-
-                  if( object.getElementsByClassName('input_details_option1')[0].checked ) {
-                      costTypeTxt = "공동";
-                      costTypeDesc = "<p>= 공동비용 / 교육생 수</p>";
-
-                      if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                          costTypeTxt += ",강사";
-                      }
-
-                      if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                          costTypeTxt += ",FOC";
-                          costTypeDesc += "<p>- ((공동비용 / 교육생 수) x FOC 적용 인원 수 / 교육생 수)</p>";
-                      }
-
-                      costTypeDesc += "<p>= "+addComma(tempCost)+"원 / "+bgnCount+"명</p>";
-
-                      costPrice = parseInt(tempCost / bgnCount);
-
-                      if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                          var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
-                          costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / "+bgnCount+"명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
-                          costPrice -= parseInt(parseInt(tempCost / bgnCount)*applyFocCount/bgnCount);
-                      }
-
-                  }
-                  else {
-                      costTypeTxt = "개인";
-                      costTypeDesc = "<p>= 개인비용</p>";
-
-                      if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                          costTypeTxt += ",강사";
-                          costTypeDesc += "<p>+ (개인비용 x 강사 수 / 교육생 수)</p>";
-                      }
-
-                      if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                          costTypeTxt += ",FOC";
-                          costTypeDesc += "<p>- (개인비용 x FOC 적용 인원 수 / 교육생 수)</p>";
-                      }
-
-                      if( object.getElementsByClassName('input_details_option2')[0].checked ||
-                          object.getElementsByClassName('input_details_option3')[0].checked ||
-                          object.getElementsByClassName('input_details_option4')[0].checked) {
-                          costTypeDesc += "<p>= "+addComma(tempCost)+"원 / 1명</p>";
-                      }
-                      costPrice = tempCost;
-
-                      if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                          costTypeDesc += "<p>+ (("+addComma(tempCost)+"원 / 1명) x 1명 / "+bgnCount+"명)</p>";
-                          costPrice += parseInt(tempCost / bgnCount);
-                      }
-
-                      if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                          var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
-                          costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / 1명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
-                          costPrice -= parseInt(tempCost*applyFocCount/bgnCount);
-                      }
-                  }
-
-                  html += " <div class='row'>";
-                  html += "     <span>"+tempTitle+"</span>";
-                  html += "     <span>+"+addComma(costPrice)+"원 / 1명</span>";
-                  html += " </div>";
-
-                  popupHtml += "  <div class='calc_cost_semi'>";
-                  popupHtml += "      <div>";
-                  popupHtml += "          <span>"+tempTitle+"("+costTypeTxt+")</span>";
-                  popupHtml += "          <span>+"+addComma(costPrice)+"원 / 1명</span>";
-                  popupHtml += "      </div>";
-                  popupHtml +=        costTypeDesc;
-                  popupHtml += "      <p>= "+addComma(costPrice)+"원 / 1명</p>";
-                  popupHtml += "  </div>";
-
-                  bgnCost += costPrice;
-              }
-
-              document.getElementById('summury_cost').innerHTML = html;
-              document.getElementById('cost_detail_popup_bgn_wrap').innerHTML = popupHtml;
-
-              document.getElementById('bgn_cost').innerHTML = addComma(bgnCost);
-              document.getElementById('ins_origin_profit').innerHTML = addComma(bgnCost);
-              document.getElementById('cost_detail_popup_bgn_cost').innerHTML = addComma(bgnCost);
-
-              if( document.getElementById('input_profit_type_01').checked ) {
-                  if( document.getElementById('input_profit_value_01').value == "" ) {
-                      document.getElementById('ins_profit').innerHTML = 0;
-                      document.getElementById('total_ins_profit').innerHTML = 0;
-                      document.getElementById('cost_detail_popup_ins_profit').innerHTML = 0;
-
-                      var tempHtml = "";
-                      tempHtml += "<p>= 목표 총 수익 / 교육생 수</p>";
-                      tempHtml += "<p>= 0원 / "+bgnCount+"명</p>";
-                      tempHtml += "<p>= 약 0원 / 1명</p>";
-                      document.getElementById('calc_cost_last').innerHTML = tempHtml;
-                  }
-                  else {
-                      document.getElementById('ins_profit').innerHTML = addComma(parseInt(document.getElementById('input_profit_value_01').value / bgnCount));
-                      document.getElementById('total_ins_profit').innerHTML = addComma(parseInt(document.getElementById('input_profit_value_01').value));
-                      document.getElementById('cost_detail_popup_ins_profit').innerHTML = addComma(parseInt(document.getElementById('input_profit_value_01').value / bgnCount));
-
-                      var tempHtml = "";
-                      tempHtml += "<p>= 목표 총 수익 / 교육생 수</p>";
-                      tempHtml += "<p>= "+addComma(document.getElementById('input_profit_value_01').value)+"원 / "+bgnCount+"명</p>";
-                      tempHtml += "<p>= 약 "+addComma(parseInt(document.getElementById('input_profit_value_01').value / bgnCount))+"원 / 1명</p>";
-                      document.getElementById('calc_cost_last').innerHTML = tempHtml;
-                  }
-                  document.getElementById('total_bgn_cost').innerHTML = addComma(bgnCost + parseInt(document.getElementById('input_profit_value_01').value / bgnCount));
-
-                  document.getElementById('ins_profit_desc').style.display = "none";
-              }
-              else {
-                  if( document.getElementById('input_profit_value_02').value == "" ) {
-                      document.getElementById('ins_profit').innerHTML = 0;
-                      document.getElementById('ins_profit_percent').innerHTML = 0;
-                      document.getElementById('total_ins_profit').innerHTML = 0;
-                      document.getElementById('cost_detail_popup_ins_profit').innerHTML = 0;
-
-                      var tempHtml = "";
-                      tempHtml += "<p>= 교육생 1인 비용 * 수익률</p>";
-                      tempHtml += "<p>= ("+addComma(bgnCost)+"원 / 1명) * 0%</p>";
-                      tempHtml += "<p>= 약 0원 / 1명</p>";
-                      document.getElementById('calc_cost_last').innerHTML = tempHtml;
-                  }
-                  else {
-                      document.getElementById('ins_profit').innerHTML = addComma(parseInt(bgnCost/100*document.getElementById('input_profit_value_02').value));
-                      document.getElementById('ins_profit_percent').innerHTML = document.getElementById('input_profit_value_02').value;
-                      document.getElementById('total_ins_profit').innerHTML = addComma(parseInt(parseInt(bgnCost/100*document.getElementById('input_profit_value_02').value) * bgnCount));
-                      document.getElementById('cost_detail_popup_ins_profit').innerHTML = addComma(parseInt(bgnCost/100*document.getElementById('input_profit_value_02').value));
-
-                      var tempHtml = "";
-                      tempHtml += "<p>= 교육생 1인 비용 * 수익률</p>";
-                      tempHtml += "<p>= ("+addComma(bgnCost)+"원 / 1명) * "+document.getElementById('input_profit_value_02').value+"%</p>";
-                      tempHtml += "<p>= 약 "+addComma(parseInt(bgnCost/100*document.getElementById('input_profit_value_02').value))+"원 / 1명</p>";
-                      document.getElementById('calc_cost_last').innerHTML = tempHtml;
-                  }
-                  document.getElementById('total_bgn_cost').innerHTML = addComma(bgnCost + parseInt(bgnCost/100*document.getElementById('input_profit_value_02').value));
-
-                  document.getElementById('ins_profit_desc').style.display = "block";
-              }
-
-              if( document.getElementById('total_bgn_cost').innerHTML == "0" ) {
-                  document.getElementById('btn_cost_detail_button').classList.add("disable");
-              }
-              else {
-                  document.getElementById('btn_cost_detail_button').classList.remove("disable");
-              }
-           }
-
-            function add_div(){
-                var div = document.createElement('div');
-                var html = "";
-                html += " <div class='input_cost'>";
-                html += "     <select class='selbox input_details_type' onchange='changeCostInfo();'>";
-                html += "         <option value='' disabled selected>비용 이름</option>";
-                html += "         <option value='1'>교통</option>";
-                html += "         <option value='2'>식비</option>";
-                html += "         <option value='3'>숙박비</option>";
-                html += "         <option value='4'>보트다이빙</option>";
-                html += "         <option value='5'>장비대여료</option>";
-                html += "         <option value='6'>직접입력</option>";
-                html += "     </select>";
-                html += "     <input type='text' class='selboxDirect input_details_title' name='selboxDirect' style='display: none;' onkeyup='changeCostInfo();' />";
-
-                html += "     <div class='input_box_01'>";
-                html += "         <input class='input_details_cost' type='number' pattern='\d*' placeholder='0' onkeyup='changeCostInfo();' />";
-                html += "         <span class='unit' name='number'>원</span>";
-                html += "         <span class='FOC_box_text'><img src='/img/ic-close.svg' alt='' /></span>";
-                html += "     </div>";
-                html += "     <div class='FOC_box'>";
-                html += "         <input class='input_details_count' type='number' pattern='\d*' placeholder='0' min=1 max = 9999 onkeyup='changeCostInfo();' />";
-                html += "         <span class='unit' name='number'>회</span>";
-                html += "     </div>";
-
-                html += "     <div class='cost_check_box_1'>";
-                html += "         <label class='cost_checkbox_container'>공동 비용";
-                html += "             <input class='input_details_option1' type='checkbox' onchange='changeCostInfo();' />";
-                html += "             <span class='cost_checkmark'></span>";
-                html += "         </label>";
-                html += "         <i data-toggle='modal' role='dialog' href='#cost_detail_1'><img src='/img/ic-help-outline.svg' alt='' /></i>";
-
-                html += "         <div class='modal fade' id='cost_detail_1' role='dialog'>";
-                html += "             <div class='modal-dialog'>";
-                html += "                 <div class='modal-content'>";
-                html += "                     <div class='modal-body'>";
-                html += "                         <div>공동 비용</div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크</span>";
-                html += "                                 <p>모두 함께 쓴 비용, 참여자 수만큼 나눠야하는 공동 전체 비용. 예) 하루 총 숙박비</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크해제</span>";
-                html += "                                 <p>1인 당 개별 비용 예) 하루 1인 숙박비</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                     </div>";
-                html += "                     <div class='modal-footer'>";
-                html += "                         <button type='button' data-dismiss='modal'>닫기</button>";
-                html += "                     </div>";
-                html += "                 </div>";
-                html += "             </div>";
-                html += "         </div>";
-
-                html += "         <label class='cost_checkbox_container'>강사 비용";
-                html += "             <input class='input_details_option2' type='checkbox' onchange='changeCostInfo();' />";
-                html += "             <span class='cost_checkmark'></span>";
-                html += "         </label>";
-                html += "         <i data-toggle='modal' role='dialog' href='#cost_detail_2'><img src='/img/ic-help-outline.svg' alt='' /></i>";
-
-                html += "         <div class='modal fade' id='cost_detail_2' role='dialog'>";
-                html += "             <div class='modal-dialog'>";
-                html += "                 <div class='modal-content'>";
-                html += "                     <div class='modal-body'>";
-                html += "                         <div>강사 비용</div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크</span>";
-                html += "                                 <p>강사의 몫이 계산 되어야 하는 비용<br>FOC가 적용되어 최종적으로 할인되더라도 꼭 체크하세요.</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크해제</span>";
-                html += "                                 <p>교육생만 지불하는 비용</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                     </div>";
-                html += "                     <div class='modal-footer'>";
-                html += "                         <button type='button' data-dismiss='modal'>닫기</button>";
-                html += "                     </div>";
-                html += "                 </div>";
-                html += "             </div>";
-                html += "         </div>";
-                html += "     </div>";
-
-                html += "     <div class='cost_check_box_2'>";
-                html += "         <label class='cost_checkbox_container'>다이빙샵 비용";
-                html += "             <input  class='input_details_option3' type='checkbox' onchange='changeCostInfo();' />";
-                html += "             <span class='cost_checkmark'></span>";
-                html += "         </label>";
-                html += "         <i data-toggle='modal' role='dialog' href='#cost_detail_3'><img src='/img/ic-help-outline.svg' alt='' /></i>";
-
-                html += "         <div class='modal fade' id='cost_detail_3' role='dialog'>";
-                html += "             <div class='modal-dialog'>";
-                html += "                 <div class='modal-content'>";
-                html += "                     <div class='modal-body'>";
-                html += "                         <div>다이빙샵 비용</div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크</span>";
-                html += "                                 <p>강사가 다이빙 샵에 지불 해야 하는 비용</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크해제</span>";
-                html += "                                 강사가 다이빙 샵에 지불하지 않는 비용";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                     </div>";
-                html += "                     <div class='modal-footer'>";
-                html += "                         <button type='button' data-dismiss='modal'>닫기</button>";
-                html += "                     </div>";
-                html += "                 </div>";
-                html += "             </div>";
-                html += "         </div>";
-
-                html += "         <label class='cost_checkbox_container'>FOC할인";
-                html += "             <input class='input_details_option4' type='checkbox' onchange='changeCostInfo();' />";
-                html += "             <span class='cost_checkmark'></span>";
-                html += "         </label>";
-                html += "         <i data-toggle='modal' role='dialog' href='#cost_detail_4'> <img src='/img/ic-help-outline.svg' alt='' /></i>";
-
-                html += "         <div class='modal fade' id='cost_detail_4' role='dialog'>";
-                html += "             <div class='modal-dialog'>";
-                html += "                 <div class='modal-content'>";
-                html += "                     <div class='modal-body'>";
-                html += "                         <div>FOC 할인</div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크</span>";
-                html += "                                 <p>FOC가 적용되는 비용. 적용 인원만큼 자동 할인</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                         <div>";
-                html += "                             <span><img src='/img/ic-check-box-outline-blank.svg' alt='' /></span>";
-                html += "                             <div class='modal_text'>";
-                html += "                                 <span class='check_text'>체크해제</span>";
-                html += "                                 <p>FOC가 적용 안 되는 비용</p>";
-                html += "                             </div>";
-                html += "                         </div>";
-                html += "                     </div>";
-                html += "                     <div class='modal-footer'>";
-                html += "                         <button type='button' data-dismiss='modal'>닫기</button>";
-                html += "                     </div>";
-                html += "                 </div>";
-                html += "             </div>";
-                html += "         </div>";
-                html += "     </div>";
-                html += " </div>";
-
-                html += " <span class='remove_div btn' onclick='remove_div(this)'><img src='/img/ic-close.svg' alt='' /></span>";
-
-                div.innerHTML = html;
-                document.getElementById('field').appendChild(div);
-            }
-
-            function remove_div(obj){
-                document.getElementById('field').removeChild(obj.parentNode);
-            }
-
-            $('input:radio').click(function(){
-                $('input:radio:not(:checked)').next().removeClass("blue");
-                $('input:radio:checked').next().addClass("blue");
-
-                $('.txt_profit').css("color", "#333333");
-                $(this).parent().find('.txt_profit').css("color", "#145db2");
-            });
+            Element.prototype.remove = function() {
+                this.parentElement.removeChild(this);
+            };
+            NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+                for(var i = this.length - 1; i >= 0; i--) {
+                    if(this[i] && this[i].parentElement) {
+                        this[i].parentElement.removeChild(this[i]);
+                    }
+                }
+            };
 
             function addComma(num) {
                 var regexp = /\B(?=(\d{3})+(?!\d))/g;
                 return num.toString().replace(regexp, ',');
+            }
+
+            function getExchangerate (target, base, price) {
+                var targetExchangerate = Math.floor(exchangerate.filter(item => item.name === target)[0].rate * 100) / 100;
+                var baseExchangerate = Math.floor(exchangerate.filter(item => item.name === base)[0].rate * 100) / 100;
+                return Math.round(baseExchangerate / targetExchangerate * price * 100) / 100;
+            }
+
+            function getDatetime (target) {
+                var date = new Date(exchangerate.filter(item => item.name === target)[0].timestamp / 1000);
+                return '(' + date.getFullYear() + '/' +
+                    ((date.getMonth()+1) < 10 ? '0' + (date.getMonth()+1) : (date.getMonth())+1) + '/' +
+                    (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ' +
+                    (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' +
+                    (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ' 기준)';
             }
         </script>
     </body>

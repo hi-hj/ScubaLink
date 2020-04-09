@@ -58,3 +58,38 @@ exports.updateSchedule = function(db, params, callbackSuccess, callbackFail) {
         }
     });
 };
+
+exports.findScheduleCount = function(db, params, callbackSuccess, callbackFail) {
+    db.collection('schedule').aggregate(
+        [{
+            $match: {
+                $or: params.condition
+            }
+        }, {
+            $lookup: {
+                from          : "tour",
+                localField    : "tourid",
+                foreignField  : "_id",
+                as            : "tour"
+            }
+        }, {
+            $unwind   : "$tour"
+        }, {
+            $project: {
+                startdate   : "$tour.startdate",
+                enddate     : "$tour.enddate",
+                status      : "$tour.status",
+                insId       : "$tour.insId",
+                bgnId       : "$id"
+            }
+        }]
+    ).toArray(function(err, doc) {
+        if (err) throw err;
+
+        callbackSuccess({
+            code    : "0000",
+            message : "Success",
+            result  : doc
+        });
+    });
+};

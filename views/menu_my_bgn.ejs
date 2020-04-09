@@ -35,20 +35,24 @@
       	    <div id="myBGN_title">교육생</div>
 
           	<div>
-            		<ul id="follower_list_wrap" class="member_list">
+                <ul id="follower_list_wrap" class="member_list">
 
 <% for(var i=0; i<followerList.length; i++) { %>
-                    <li>
+                    <li onclick="location.href='/mybgn/<%= followerList[i].id %>';">
                         <span><img src="<% if(!followerList[i].image || followerList[i].image == undefined || followerList[i].image == "") { %>/img/default_user.png<% } else {%><%= followerList[i].image %><% } %>" alt="" class="img-circle" /></span>
                         <span></span>
 
                         <span>
                             <h5><%= followerList[i].name %></h5>
-                            <p class="myBGN">메모</p>
+                            <p class="myBGN">투어/교육 <%= followerList[i].tourCount %>회</p>
+                        </span>
+
+                        <span class="right">
+                            <img src="/img/ic-arrow-ltr.svg">
                         </span>
                     </li>
 <% } %>
-            		</ul>
+                </ul>
           	</div>
         </div>
 

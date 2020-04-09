@@ -3038,7 +3038,7 @@ div#calc_cost_last{
   height:40px;
 }
 .stu_info_box span:nth-of-type(2) h5{
-  color:#333333;
+  color:#000000;
   font-size:14px;
   position:absolute;
   left:71px;
@@ -3047,28 +3047,28 @@ div#calc_cost_last{
 .stu_info_box span:nth-of-type(2) p{
   position:absolute;
   left:71px;
-  margin-top:-17px;
+  margin-top:-15px;
   font-size:12px;
-  color:#333333;
+  color:#777777;
 }
 .stu_info_box>p:first-of-type{
   font-size:12px;
-  color:#333333;
+  color:#000000;
   margin-top:8px
 }
 .stu_info_box>p:nth-of-type(2){
-  font-size:14px;
-  color:#bbbbbb;
-  margin-top:3px
+  font-size:12px;
+  color:#aaaaaa;
+  margin-top:5px
 }
 .stu_info_box>p:nth-of-type(3){
-  font-size:14px;
-  color:#333333;
-  margin-top:3px;
-  line-height:1.43;
+  font-size:12px;
+  color:#000000;
+  margin-top:8px;
+  line-height:1.5;
 }
 .stu_info_box textarea{
-  font-size:14px;
+  font-size:12px;
   color:#333333;
   line-height:1.43;
   margin-top:8px;
@@ -3267,7 +3267,6 @@ ul.member_list li span:nth-of-type(3){
 ul.member_list li span:nth-of-type(3) h5{
   font-size:14px;
   color:#333333;
-  font-weight:bold;
   margin-bottom:5px;
 }
 ul.member_list li span:nth-of-type(3) p{
@@ -3276,7 +3275,13 @@ ul.member_list li span:nth-of-type(3) p{
 }
 ul.member_list li span:nth-of-type(3) p.myBGN{
   font-size:12px;
-  color:#333333;
+  color:#777777;
+}
+ul.member_list li span.right{
+  float:right;
+}
+ul.member_list li span.right img{
+  margin-top:5px;
 }
 
 #search_content .search_c_5 p.n_search_data1{
@@ -3314,8 +3319,7 @@ input#myBGN+button img{
   padding-top:65px;
   font-size:14px;
   color:#333333;
-  font-weight:bold;
-  padding-bottom:23px;
+  padding-bottom:7px;
 }
 
 #toastMessage {

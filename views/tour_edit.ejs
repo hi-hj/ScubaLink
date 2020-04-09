@@ -17,7 +17,7 @@
             #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
             #header_title { top: 0; padding-top: 0; line-height: 50px; }
 
-            #tour_edu_plus p.t_left { margin-left: 0; margin-top: 0; color: #ffff55; }
+            #tour_edu_plus p.t_left { margin-left: 0; margin-top: 0; color: #e02020; }
             .my_certif_image div #img-upload.on { top: -110px; }
             #input_tour_start, #input_tour_end { background: white; }
             #tour_edu_plus #tour_member div { display: inline-block; float: initial; }
@@ -101,6 +101,12 @@
 
             document.getElementById('btn_back').onclick = function() {
                 history.back();
+            };
+
+            document.getElementById('input_tour_start').onchange = function (event) {
+                if (document.getElementById('input_tour_end').value === '') {
+                    document.getElementById('input_tour_end').value = event.target.value;
+                }
             };
 
             document.getElementById('tour_add_submit').onclick = function() {

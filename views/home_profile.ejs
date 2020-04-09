@@ -34,14 +34,14 @@
             <div id="header_ins_btn">
                 <button onclick="location.href='/introduction/<%= id %>';">강사 소개</button>
                 <% if(userType == "1") { %>
-                <button>교육생</button>
+
                 <% } else { %>
                 <% if(isFollow < 0) { %>
-                <button id="btn_follow" style="background-color:#145db2;color:#ffffff">내 강사로 등록</button>
-                <button id="btn_unfollow" class="hidden" style="color:#777777">내 강사</button>
+                <button id="btn_follow" style="background-color:#145db2;color:#ffffff">팔로우</button>
+                <button id="btn_unfollow" class="hidden" style="color:#777777">팔로우 취소</button>
                 <% } else { %>
-                <button id="btn_follow" class="hidden" style="background-color:#145db2;color:#ffffff">내 강사로 등록</button>
-                <button id="btn_unfollow" class="" style="color:#777777">내 강사</button>
+                <button id="btn_follow" class="hidden" style="background-color:#145db2;color:#ffffff">팔로우</button>
+                <button id="btn_unfollow" class="" style="color:#777777">팔로우 취소</button>
                 <% } %>
                 <% } %>
 
@@ -54,6 +54,19 @@
                             <div class="modal-footer">
                                 <button id="btn_cancel_unfollow" type="button">닫기</button>
                                 <button id="btn_confirm_unfollow" type="button">등록 취소</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="popup_cannot_unfollow" role="dialog">
+                    <div class="modal-dialog" style="margin: 35px; position: fixed; left: 0; right: 0; top: 148px;">
+                        <div class="modal-content">
+                            <div class="modal-body" style="padding-top: 24px; color: #000000;">
+                                <p style="line-height: 1.5;">참석 예정인 일정이 있으면<br/>강사 팔로우 취소를 할 수 없습니다.<br/>참석 예정 일정을 먼저 취소 후<br/>진행하세요.</p>
+                            </div>
+                            <div class="modal-footer" style="border: none;">
+                                <button id="btn_cannot_unfollow" type="button" style="border: none; padding: 0; color: #145db2;">닫기</button>
                             </div>
                         </div>
                     </div>
@@ -81,7 +94,7 @@
             <div class="tour">
                 <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
 
-                <% if (tourList[i].participant_count >= tourList[i].member || tourList[i].status == "FINISH") { %>
+                <% if (tourList[i].participant_count >= tourList[i].member || tourList[i].status == "FINISH" || (new Date(parseInt(tourList[i].startdate.substr(0,4)), parseInt(tourList[i].startdate.substr(4,2))-1, parseInt(tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime()) { %>
                     <div class="tour_bar tour_complete" onclick="location.href='/tour/<%= tourList[i]._id %>';">
                         <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 마감</p></span>
                 <% } else { %>
@@ -122,6 +135,7 @@
         <script type="text/javascript" src="/js/httpUtil.js"></script>
         <script type="text/javascript">
             var insId = '<%= id %>';
+            var isFollow = parseInt('<%= isFollow %>');
 
             document.getElementById('btn_back').onclick = function() {
                 history.back();
@@ -172,7 +186,13 @@
 
                         document.getElementById('txt_follow_count').innerText = parseInt(document.getElementById('txt_follow_count').innerText)-1;
                     }, function(errorCode, errorMessage) {
-                        console.log(errorMessage);
+                        if (errorCode === 'T005') {
+                            document.getElementById('popup_cannot_unfollow').style.display = 'block';
+                            setTimeout(function () {
+                                document.getElementById('popup_cannot_unfollow').style.opacity = '1';
+                            }, 10);
+                        } else
+                            console.log(errorMessage);
                     });
                 }
             }
@@ -186,12 +206,33 @@
                 }
             }
 
+            if( document.getElementById('btn_cannot_unfollow') != null ) {
+                document.getElementById('btn_cannot_unfollow').onclick = function () {
+                    document.getElementById('popup_cannot_unfollow').style.opacity = '0';
+                    setTimeout(function () {
+                        document.getElementById('popup_cannot_unfollow').style.display = 'none';
+                    }, 200);
+                }
+            }
+
             window.onpageshow = function (event) {
-                httpSend.send("/tour/select", {
+                httpSend.send("/tour/select/ins", {
                     insId     : insId
                 }, "POST", function(result) {
                     console.log(result);
 
+                    isFollow = result.isFollow;
+                    if (document.getElementById('btn_follow') != null) {
+                        if (result.isFollow >= 0) {
+                            document.getElementById('btn_follow').classList.add('hidden');
+                            document.getElementById('btn_unfollow').classList.remove('hidden');
+                        } else {
+                            document.getElementById('btn_follow').classList.remove('hidden');
+                            document.getElementById('btn_unfollow').classList.add('hidden');
+                        }
+                    }
+
+                    document.getElementById('txt_follow_count').innerHTML = result.followCount;
                     document.getElementById('tour_profile_count').innerHTML = result.tourList.length;
                     var html = "";
                     for( var i=0; i<result.tourList.length; i++ ) {
@@ -201,7 +242,7 @@
                         else
                             html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='"+result.tourList[i].image+"' alt='' /></div>";
 
-                        if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH') {
+                        if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH' || (new Date(parseInt(result.tourList[i].startdate.substr(0,4)), parseInt(result.tourList[i].startdate.substr(4,2))-1, parseInt(result.tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime()) {
                             html+= "      <div class='tour_bar tour_complete' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
                             html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 마감</p></span>";
                         } else {

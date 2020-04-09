@@ -25,11 +25,11 @@ exports.addTour = function(db, params, callbackSuccess, callbackFail) {
                 bgnCount    : params.bgnCount,
                 description : params.description,
                 image       : params.image,
-                participant : [{ id: params.insId, memo: '', type: 1 }],
+                participant : [{ id: params.insId, type: 1 }],
                 waiting     : [],
                 interesting : [],
                 schedule    : "",
-                cost        : { foc: {flag: false, charge: "", free: ""}, details: [], profit: {type: "", value: ""}, total: "0" },
+                cost        : null,
                 date        : year + (month < 10 ? "0" : "") + month + (day < 10 ? "0" : "") + day,
                 time        : (hour < 10 ? "0" : "") + hour + (min < 10 ? "0" : "") + min + (sec < 10 ? "0" : "") + sec,
                 status      : 'HIDE'
@@ -343,6 +343,12 @@ exports.findToursByBgn = function(db, params, callbackSuccess, callbackFail) {
             doc = doc.filter(item => item.status !== "HIDE");
             doc2 = doc2.filter(item => item.status !== "HIDE");
 
+            doc2.forEach(item => {
+                if (doc.map(item2 => item2._id).indexOf(item._id) === -1) {
+                    doc.push(item);
+                }
+            });
+
             callbackSuccess({
                 code    : "0000",
                 message : "Success",
@@ -481,6 +487,39 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
                 waiting     : { "$first": "$waiting" },
                 interesting : { $push:  { id: "$interesting.id", name: "$interesting.name", image: "$interesting.image", type: "$interesting.type" } },
             }
+        }, {
+            $lookup: {
+                from: "follow",
+                localField: "ins_id",
+                foreignField: "ins",
+                as: "follow"
+            }
+        }, {
+            $project: {
+                _id         : "$_id",
+                name        : "$name",
+                startdate   : "$startdate",
+                enddate     : "$enddate",
+                place       : "$place",
+                member      : "$member",
+                insCount    : "$insCount",
+                bgnCount    : "$bgnCount",
+                description : "$description",
+                image       : "$image",
+                schedule    : "$schedule",
+                cost        : "$cost",
+                date        : "$date",
+                time        : "$time",
+                status      : "$status",
+                ins_id      : "$ins_id",
+                ins_name    : "$ins_name",
+                ins_group   : "$ins_group",
+                ins_image   : "$ins_image",
+                participant : "$participant",
+                waiting     : "$waiting",
+                interesting : "$interesting",
+                isFollow    : { $indexOfArray: [ "$follow.bgn", params.userId ] },
+            }
         }]
     ).sort({date: -1, time: -1}).toArray(function(err, doc) {
         if (err) throw err;
@@ -501,26 +540,6 @@ exports.findTourDetail = function(db, params, callbackSuccess, callbackFail) {
     });
 };
 
-exports.changeTourParticipantMemo = function(db, params, callbackSuccess, callbackFail) {
-    db.collection('tour').updateOne({
-        _id   : params.tourId
-    }, {
-        $set  : {
-            participant     : params.participant
-        }
-    }, function(err, doc) {
-        if (err) throw err;
-
-        callbackSuccess({
-            code    : "0000",
-            message : "Success",
-            result  : {
-
-            }
-        });
-    });
-};
-
 exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
     db.collection('tour').findOne({ _id: params.tourId }, function(err, doc) {
         if (err) throw err;
@@ -532,7 +551,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
             });
         }
         else {
-            if (doc.status !== 'ING') {
+            if (doc.status !== 'ING' || (new Date(parseInt(doc.startdate.substr(0, 4)), parseInt(doc.startdate.substr(4, 2))-1, parseInt(doc.startdate.substr(6, 2)))).getTime() < (new Date()).getTime()) {
                 callbackFail({
                     code   : "T004",
                     message: "모집이 마감되었습니다."
@@ -586,7 +605,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexParticipant === -1) {
                     if (item === null) {
-                        doc.participant.push({ id: params.id, memo: '', type: params.memberType });
+                        doc.participant.push({ id: params.id, type: params.memberType });
                     } else {
                         doc.participant.push(item);
                     }
@@ -601,7 +620,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexInteresting === -1) {
                     if (item === null) {
-                        doc.interesting.push({ id: params.id, memo: '', type: params.memberType });
+                        doc.interesting.push({ id: params.id, type: params.memberType });
                     } else {
                         doc.interesting.push(item);
                     }
@@ -616,7 +635,7 @@ exports.changeTourMember = function(db, params, callbackSuccess, callbackFail) {
 
                 if (indexWaiting === -1) {
                     if (item === null) {
-                        doc.waiting.push({ id: params.id, memo: '', type: params.memberType });
+                        doc.waiting.push({ id: params.id, type: params.memberType });
                     } else {
                         doc.waiting.push(item);
                     }
@@ -727,6 +746,13 @@ exports.findTourParticipantDetail = function(db, params, callbackSuccess, callba
             }
         }, {
             $lookup: {
+                from          : "follow",
+                localField    : "participant.id",
+                foreignField  : "bgn",
+                as            : "follow"
+            }
+        }, {
+            $lookup: {
                 from          : "account",
                 localField    : "participant.id",
                 foreignField  : "id",
@@ -745,14 +771,13 @@ exports.findTourParticipantDetail = function(db, params, callbackSuccess, callba
                         id: "$participants.id",
                         name: "$participants.name",
                         image: "$participants.image",
-                        type: "$participants.type",
                         gender: "$participants.gender",
                         height: "$participants.height",
                         weight: "$participants.weight",
                         foot: "$participants.foot",
                         disease: "$participants.disease",
-                        memo: "$participant.memo",
-                        type: "$participant.type"
+                        type: "$participants.type",
+                        memo: "$follow.memo"
                     }
                 }
             }
@@ -761,8 +786,11 @@ exports.findTourParticipantDetail = function(db, params, callbackSuccess, callba
         if (err) throw err;
 
         doc[0].participant = doc[0].participant.map((item, index) => {
-            item.memo = item.memo[index];
-            item.type = item.type[index];
+            if (index === 0) {
+                item.memo = '';
+            } else {
+                item.memo = item.memo[index-1];
+            }
             return item;
         });
 

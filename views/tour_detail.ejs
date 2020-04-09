@@ -43,6 +43,8 @@
             }
             #tour_basic_info .tour_comment .panel-body span.comment_date { position: relative; left: 0; padding-left: 10px; }
             #tour_basic_info .tour_comment .panel-body pre.comment_content { padding-left: 40px; }
+
+            #plus_cost { height: 48px; background: #145db2; color: white; }
         </style>
     </head>
 
@@ -102,8 +104,8 @@ for(var i=0; i<interesting.length; i++) {
 
                     <% if (userId == ins_id) { %>
                         <label id="switch_3_left_host" <% if(status === 'HIDE') { %> class="blue"<% } %>>비공개</label>
-                        <label id="switch_3_center_host" <% if(status === 'FINISH') { %> class="blue"<% } %>>모집마감</label>
-                        <label id="switch_3_right_host" <% if(status === 'ING') { %> class="blue"<% } %>>모집중</label>
+                        <label id="switch_3_center_host" <% if(status === 'FINISH' || (new Date(parseInt(startdate.substr(0,4)), parseInt(startdate.substr(4,2))-1, parseInt(startdate.substr(6,2)))).getTime() < (new Date()).getTime()) { %> class="blue"<% } %>>모집마감</label>
+                        <label id="switch_3_right_host" <% if(status === 'ING' && (new Date(parseInt(startdate.substr(0,4)), parseInt(startdate.substr(4,2))-1, parseInt(startdate.substr(6,2)))).getTime() >= (new Date()).getTime()) { %> class="blue"<% } %>>모집중</label>
                     <% } else { %>
                         <label id="switch_3_left_l" <% if(isWaiting) { %> class="blue"<% } %>>미정</label>
                         <label id="switch_3_center_l" <% if(isInteresting) { %> class="blue"<% } %>>관심있어요</label>
@@ -123,12 +125,10 @@ for(var i=0; i<interesting.length; i++) {
 
                 <div class="basic_information" id="id">
                     <span class="basic_information_guide">기간</span>
-                    <span id="tour_date_01" class="info_text"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %></span><br>
-                    <span id="tour_date_02" class="info_text" style="margin-left:53px"><%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></span>
 
-
-<!--                    <span id="tour_date_01" class="info_text"></span>-->
-<!--                    <p id="tour_date_02" class="explain_date"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> - <%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %></p>-->
+                    <% var arrayWeek = ['일', '월', '화', '수', '목', '금', '토']; %>
+                    <span id="tour_date_01" class="info_text"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> <%= arrayWeek[(new Date(startdate.substr(0,4), parseInt(startdate.substr(4,2))-1, startdate.substr(6,2))).getDay()] %></span><br>
+                    <span id="tour_date_02" class="info_text" style="margin-left:53px"><%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %> <%= arrayWeek[(new Date(enddate.substr(0,4), parseInt(enddate.substr(4,2))-1, enddate.substr(6,2))).getDay()] %></span>
                 </div>
 
                 <!--장소-->
@@ -145,7 +145,7 @@ for(var i=0; i<interesting.length; i++) {
         return str.toString().replace(regexp, ',');
     }
 %>
-                    <span id="tour_total_cost" class="info_text"><% if(cost.details.length == 0) { %>입력 전<% } else { %><%= addComma(cost.total) %>원<% } %></span>
+                    <span id="tour_total_cost" class="info_text"><% if (cost == null) { %>입력 전<% } else { %><%= addComma(cost.incomePerPerson) %><%= cost.currency %><% } %></span>
                 </div>
 
                 <div class="basic_information tour_instructor">
@@ -215,7 +215,7 @@ for(var i=0; i<interesting.length; i++) {
                 <h4 class="panel-title">
                     <span class="panel_text_01">비용</span>
 
-                    <span id="tour_info_edit" class="<% if(userId != ins_id || cost.details.length == 0) { %>hidden<% } %>" onclick="location.href='/tour/cost/<%= _id %>';">수정</span>
+                    <span id="tour_info_edit" class="<% if(userId != ins_id || cost == null) { %>hidden<% } %>" onclick="location.href='/tour/cost/<%= _id %>';">수정</span>
                 </h4>
             </div>
 
@@ -223,7 +223,7 @@ for(var i=0; i<interesting.length; i++) {
                 <div class="panel-body">
 
 <% if(userId == ins_id) {
-      if(cost.details.length == 0) { %>
+      if(cost === null) { %>
                     <div id="tour_cost_wrap" class="hidden"></div>
 
                     <button type="button" id="plus_cost" class="btn btn-block col-xs-12" onclick="location.href='/tour/cost/<%= _id %>';">
@@ -231,19 +231,43 @@ for(var i=0; i<interesting.length; i++) {
                     </button>
 <%    } else { %>
                     <div id="tour_cost_wrap">
-                        <div class="row">
-                            <span>교육생 비용</span>
-                            <span>350,000원/1명</span>
+                        <div class='row'>
+                            <span>1인 비용</span>
+                            <span><%= addComma(cost.incomePerPerson) %><%= cost.currency %></span>
                         </div>
 
-                        <div class="row">
-                            <span>교통(고속버스)</span>
-                            <span>40,000원/1명</span>
-                        </div>
+<%
+    for (var i = 0; i < cost.cost.length; i++) {
+        var basicIncome = cost.cost[i].price * cost.cost[i].count;
+        var income = 0;
+        var appliedIncome = 0;
+        if (cost.cost[i].public && cost.cost[i].include) {
+            income = Math.floor(basicIncome / cost.bgnCount * 100) / 100;
+        } else if (cost.cost[i].public) {
+            income = Math.floor(basicIncome / (cost.bgnCount + cost.insCount) * 100) / 100;
+        } else if (cost.cost[i].include) {
+            income = Math.floor((basicIncome + basicIncome * cost.insCount / cost.bgnCount) * 100) / 100;
+        } else {
+            income = Math.floor(basicIncome * 100) / 100;
+        }
 
-                        <div class="row">
-                            <span>교육비</span>
-                            <span>60,000원/1명</span>
+        if (cost.cost[i].priceType !== cost.currency) {
+            for (var j = 0; j < cost.exchangerate.length; j++) {
+                if (cost.cost[i].priceType === cost.exchangerate[j].type) {
+                    income = Math.floor(income * cost.exchangerate[j].price * cost.exchangerate[j].rate * 100) / 100;
+                }
+            }
+        }
+%>
+                        <div class='row'>
+                            <span><%= cost.cost[i].name %></span>
+                            <span><%= addComma(income) %><%= cost.currency %></span>
+                        </div>
+<% } %>
+
+                        <div class='row'>
+                            <span><%= cost.adjustment.name %></span>
+                            <span><%= addComma(cost.adjustment.price) %><%= cost.currency %></span>
                         </div>
 
                         <div class="row profit_per_explain">
@@ -256,25 +280,49 @@ for(var i=0; i<interesting.length; i++) {
                     </button>
 <%    }
    } else {
-      if(cost.details.length == 0) { %>
+      if(cost === null) { %>
                     <div id="tour_cost_wrap">
                         <div class="more">입력 전</div>
                     </div>
 <%    } else { %>
                     <div id="tour_cost_wrap">
-                        <div class="row">
-                            <span>교육생 비용</span>
-                            <span>350,000원/1명</span>
+                        <div class='row'>
+                            <span>1인 비용</span>
+                            <span><%= addComma(cost.incomePerPerson) %><%= cost.currency %></span>
                         </div>
 
-                        <div class="row">
-                            <span>교통(고속버스)</span>
-                            <span>40,000원/1명</span>
-                        </div>
+<%
+    for (var i = 0; i < cost.cost.length; i++) {
+        var basicIncome = cost.cost[i].price * cost.cost[i].count;
+        var income = 0;
+        var appliedIncome = 0;
+        if (cost.cost[i].public && cost.cost[i].include) {
+            income = Math.floor(basicIncome / cost.bgnCount * 100) / 100;
+        } else if (cost.cost[i].public) {
+            income = Math.floor(basicIncome / (cost.bgnCount + cost.insCount) * 100) / 100;
+        } else if (cost.cost[i].include) {
+            income = Math.floor((basicIncome + basicIncome * cost.insCount / cost.bgnCount) * 100) / 100;
+        } else {
+            income = Math.floor(basicIncome * 100) / 100;
+        }
 
-                        <div class="row">
-                            <span>교육비</span>
-                            <span>60,000원/1명</span>
+        if (cost.cost[i].priceType !== cost.currency) {
+            for (var j = 0; j < cost.exchangerate.length; j++) {
+                if (cost.cost[i].priceType === cost.exchangerate[j].type) {
+                    income = Math.floor(income * cost.exchangerate[j].price * cost.exchangerate[j].rate * 100) / 100;
+                }
+            }
+        }
+%>
+                        <div class='row'>
+                            <span><%= cost.cost[i].name %></span>
+                            <span><%= addComma(income) %><%= cost.currency %></span>
+                        </div>
+<% } %>
+
+                        <div class='row'>
+                            <span><%= cost.adjustment.name %></span>
+                            <span><%= addComma(cost.adjustment.price) %><%= cost.currency %></span>
                         </div>
 
                         <div class="row profit_per_explain">
@@ -362,6 +410,22 @@ for(var i=0; i<interesting.length; i++) {
             </div>
         </div>
 
+        <div class="header_ins" style="height: initial; box-shadow: initial;">
+            <div class="modal fade" id="ins_unfollow" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p style="text-align: center; line-height: 1.5;">팔로우한 강사의 일정만<br/>참석할 수 있습니다.<br/>‘김스쿠 강사’를 팔로우 후<br/>해당 일정에 참석하시겠습니까?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btn_cancel_unfollow" type="button" style="background-color: white;">아니오</button>
+                            <button id="btn_confirm_unfollow" type="button" style="background-color: white; color: #145db2;">팔로우 하고 일정 참석</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="space_last"></div>
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -369,14 +433,17 @@ for(var i=0; i<interesting.length; i++) {
         <script type="text/javascript" src="/js/Scubalink_js.js"></script>
         <script type="text/javascript" src="/js/httpUtil.js"></script>
         <script type="text/javascript">
+            var tourId = '<%= _id %>';
+            var insId = '<%= ins_id %>';
+            var isFollow = parseInt('<%= isFollow %>');
+            var callbackFollow = '';
+
             if( document.getElementById('tour_name').offsetHeight <= 20 ) {
                 document.getElementsByClassName('tour_mem_num')[0].style.top = "91px";
             }
             else {
                 document.getElementsByClassName('tour_mem_num')[0].style.top = "105px";
             }
-
-            var tourId = '<%= _id %>';
 
             var week = new Array('일', '월', '화', '수', '목', '금', '토');
 
@@ -480,6 +547,38 @@ for(var i=0; i<interesting.length; i++) {
                 };
             }
 
+            document.getElementById('btn_cancel_unfollow').onclick = function () {
+                document.getElementById('ins_unfollow').style.opacity = '0';
+                setTimeout(function () {
+                    document.getElementById('ins_unfollow').style.display = 'none';
+                }, 200);
+            };
+
+            document.getElementById('btn_confirm_unfollow').onclick = function () {
+                document.getElementById('ins_unfollow').style.opacity = '0';
+                setTimeout(function () {
+                    document.getElementById('ins_unfollow').style.display = 'none';
+                }, 200);
+
+                httpSend.send("/follow/update", {
+                    ins     : insId,
+                    type    : 1
+                }, "POST", function(result) {
+                    console.log(result);
+
+                    isFollow = 0;
+                    if (callbackFollow === 'PARTICIPATE') {
+                        participateTour();
+                    } else if (callbackFollow === 'INTEREST') {
+                        interestTour();
+                    } else if (callbackFollow === 'WAIT') {
+                        waitTour();
+                    }
+                }, function(errorCode, errorMessage) {
+                    console.log(errorMessage);
+                });
+            };
+
             window.onpageshow = function (event) {
                 httpSend.send("/tour/detail", {
                     id: tourId
@@ -522,10 +621,11 @@ for(var i=0; i<interesting.length; i++) {
                         document.getElementsByClassName('tour_mem_num')[0].style.top = "105px";
                     }
 
-                    if( result.cost.details.length == 0 )
+                    if (result.cost === null) {
                         document.getElementById('tour_total_cost').innerHTML = "입력 전";
-                    else
-                        document.getElementById('tour_total_cost').innerHTML = addComma(result.cost.total)+"원";
+                    } else {
+                        document.getElementById('tour_total_cost').innerHTML = addComma(result.cost.incomePerPerson) + result.cost.currency;
+                    }
 
                     // 일정
                     if( '<%= userId %>' != '<%= ins_id %>' || result.schedule == "" ) {
@@ -567,32 +667,55 @@ for(var i=0; i<interesting.length; i++) {
                     }
 
                     // 비용
-                    if( '<%= userId %>' != '<%= ins_id %>' || result.cost.details.length == 0 ) {
+                    if ('<%= userId %>' != '<%= ins_id %>' || result.cost === null) {
                         document.getElementById('tour_info_edit').classList.add("hidden");
-                    }
-                    else {
+                    } else {
                         document.getElementById('tour_info_edit').classList.remove("hidden");
                     }
 
                     if( '<%= userId %>' == '<%= ins_id %>' ) {
-                        if( result.cost.details.length == 0 ) {
+                        if (result.cost === null) {
                             document.getElementById('tour_cost_wrap').classList.add("hidden");
                             document.getElementById('plus_cost').classList.remove("hidden");
-                        }
-                        else {
+                        } else {
                             var tempHtml = "";
                             tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교육생 비용</span>";
-                            tempHtml += "     <span>350,000원/1명</span>";
+                            tempHtml += "     <span>1인 비용</span>";
+                            tempHtml += "     <span>" + addComma(result.cost.incomePerPerson) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
+
+                            for (var i = 0; i < result.cost.cost.length; i++) {
+                                var basicIncome = result.cost.cost[i].price * result.cost.cost[i].count;
+                                var income = 0;
+                                if (result.cost.cost[i].public && result.cost.cost[i].include) {
+                                    income = Math.floor(basicIncome / result.cost.bgnCount * 100) / 100;
+                                } else if (result.cost.cost[i].public) {
+                                    income = Math.floor(basicIncome / (result.cost.bgnCount + result.cost.insCount) * 100) / 100;
+                                } else if (result.cost.cost[i].include) {
+                                    income = Math.floor((basicIncome + basicIncome * result.cost.insCount / result.cost.bgnCount) * 100) / 100;
+                                } else {
+                                    income = Math.floor(basicIncome * 100) / 100;
+                                }
+
+                                if (result.cost.cost[i].priceType !== result.cost.currency) {
+                                    for (var j = 0; j < result.cost.exchangerate.length; j++) {
+                                        if (result.cost.cost[i].priceType === result.cost.exchangerate[j].type) {
+                                            income = Math.floor(income * result.cost.exchangerate[j].price * result.cost.exchangerate[j].rate * 100) / 100;
+                                        }
+                                    }
+                                }
+
+                                tempHtml += " <div class='row'>";
+                                tempHtml += "     <span>" + result.cost.cost[i].name + "</span>";
+                                tempHtml += "     <span>" + addComma(income) + result.cost.currency + "</span>";
+                                tempHtml += " </div>";
+                            }
+
                             tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교통(고속버스)</span>";
-                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += "     <span>" + result.cost.adjustment.name + "</span>";
+                            tempHtml += "     <span>" + addComma(result.cost.adjustment.price) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
-                            tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교육비</span>";
-                            tempHtml += "     <span>40,000원/1명</span>";
-                            tempHtml += " </div>";
+
                             tempHtml += " <div class='row profit_per_explain'>";
                             tempHtml += "     <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>";
                             tempHtml += " </div>";
@@ -604,24 +727,48 @@ for(var i=0; i<interesting.length; i++) {
                         }
                     }
                     else {
-                        if( result.cost.details.length == 0 ) {
+                        if (result.cost === null) {
                             document.getElementById('tour_cost_wrap').innerHTML = "<div class='more'>입력 전</div>";
                             document.getElementById('tour_cost_wrap').classList.remove("hidden");
-                        }
-                        else {
+                        } else {
                             var tempHtml = "";
                             tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교육생 비용</span>";
-                            tempHtml += "     <span>350,000원/1명</span>";
+                            tempHtml += "     <span>1인 비용</span>";
+                            tempHtml += "     <span>" + addComma(result.cost.incomePerPerson) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
+
+                            for (var i = 0; i < result.cost.cost.length; i++) {
+                                var basicIncome = result.cost.cost[i].price * result.cost.cost[i].count;
+                                var income = 0;
+                                if (result.cost.cost[i].public && result.cost.cost[i].include) {
+                                    income = Math.floor(basicIncome / result.cost.bgnCount * 100) / 100;
+                                } else if (result.cost.cost[i].public) {
+                                    income = Math.floor(basicIncome / (result.cost.bgnCount + result.cost.insCount) * 100) / 100;
+                                } else if (result.cost.cost[i].include) {
+                                    income = Math.floor((basicIncome + basicIncome * result.cost.insCount / result.cost.bgnCount) * 100) / 100;
+                                } else {
+                                    income = Math.floor(basicIncome * 100) / 100;
+                                }
+
+                                if (result.cost.cost[i].priceType !== result.cost.currency) {
+                                    for (var j = 0; j < result.cost.exchangerate.length; j++) {
+                                        if (result.cost.cost[i].priceType === result.cost.exchangerate[j].type) {
+                                            income = Math.floor(income * result.cost.exchangerate[j].price * result.cost.exchangerate[j].rate * 100) / 100;
+                                        }
+                                    }
+                                }
+
+                                tempHtml += " <div class='row'>";
+                                tempHtml += "     <span>" + result.cost.cost[i].name + "</span>";
+                                tempHtml += "     <span>" + addComma(income) + result.cost.currency + "</span>";
+                                tempHtml += " </div>";
+                            }
+
                             tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교통(고속버스)</span>";
-                            tempHtml += "     <span>40,000원/1명</span>";
+                            tempHtml += "     <span>" + result.cost.adjustment.name + "</span>";
+                            tempHtml += "     <span>" + addComma(result.cost.adjustment.price) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
-                            tempHtml += " <div class='row'>";
-                            tempHtml += "     <span>교육비</span>";
-                            tempHtml += "     <span>40,000원/1명</span>";
-                            tempHtml += " </div>";
+
                             tempHtml += " <div class='row profit_per_explain'>";
                             tempHtml += "     <span>※ 투어 상황에 따라 비용이 변동될 수 있습니다.</span>";
                             tempHtml += " </div>";
@@ -630,119 +777,6 @@ for(var i=0; i<interesting.length; i++) {
                             document.getElementById('tour_cost_wrap').classList.remove("hidden");
                         }
                     }
-
-/*
-                    var bgnCost = 0;
-                    var html = "";
-                    var popupHtml = "";
-                    for( var i=0; i<document.getElementsByClassName('input_cost').length; i++ ) {
-                        var object = document.getElementsByClassName('input_cost')[i];
-                        var tempTitle = "";
-                        if( object.getElementsByClassName('input_details_type')[0].value == "1" ) {
-                            tempTitle = "교통";
-                        }
-                        else if( object.getElementsByClassName('input_details_type')[0].value == "2" ) {
-                            tempTitle = "식비";
-                        }
-                        else if( object.getElementsByClassName('input_details_type')[0].value == "3" ) {
-                            tempTitle = "숙박비";
-                        }
-                        else if( object.getElementsByClassName('input_details_type')[0].value == "4" ) {
-                            tempTitle = "보트다이빙";
-                        }
-                        else if( object.getElementsByClassName('input_details_type')[0].value == "5" ) {
-                            tempTitle = "장비대여료";
-                        }
-                        else if( object.getElementsByClassName('input_details_type')[0].value == "6" ) {
-                            tempTitle = object.getElementsByClassName('input_details_title')[0].value;
-                        }
-
-                        var tempCost = object.getElementsByClassName('input_details_cost')[0].value * object.getElementsByClassName('input_details_count')[0].value
-
-                        if( tempTitle == "" || object.getElementsByClassName('input_details_cost')[0].value == "" || object.getElementsByClassName('input_details_count')[0].value == "")
-                            continue;
-
-                        var costTypeTxt = "";
-                        var costTypeDesc = "";
-                        var costType = 0;
-                        var costPrice = 0;
-
-                        if( object.getElementsByClassName('input_details_option1')[0].checked ) {
-                            costTypeTxt = "공동";
-                            costTypeDesc = "<p>= 공동비용 / 교육생 수</p>";
-
-                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                                costTypeTxt += ",강사";
-                            }
-
-                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                                costTypeTxt += ",FOC";
-                                costTypeDesc += "<p>- ((공동비용 / 교육생 수) x FOC 적용 인원 수 / 교육생 수)</p>";
-                            }
-
-                            costTypeDesc += "<p>= "+addComma(tempCost)+"원 / "+bgnCount+"명</p>";
-
-                            costPrice = parseInt(tempCost / bgnCount);
-
-                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                                var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
-                                costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / "+bgnCount+"명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
-                                costPrice -= parseInt(parseInt(tempCost / bgnCount)*applyFocCount/bgnCount);
-                            }
-
-                        }
-                        else {
-                            costTypeTxt = "개인";
-                            costTypeDesc = "<p>= 개인비용</p>";
-
-                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                                costTypeTxt += ",강사";
-                                costTypeDesc += "<p>+ (개인비용 x 강사 수 / 교육생 수)</p>";
-                            }
-
-                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                                costTypeTxt += ",FOC";
-                                costTypeDesc += "<p>- (개인비용 x FOC 적용 인원 수 / 교육생 수)</p>";
-                            }
-
-                            if( object.getElementsByClassName('input_details_option2')[0].checked ||
-                                object.getElementsByClassName('input_details_option3')[0].checked ||
-                                object.getElementsByClassName('input_details_option4')[0].checked) {
-                                costTypeDesc += "<p>= "+addComma(tempCost)+"원 / 1명</p>";
-                            }
-                            costPrice = tempCost;
-
-                            if( object.getElementsByClassName('input_details_option2')[0].checked ) {
-                                costTypeDesc += "<p>+ (("+addComma(tempCost)+"원 / 1명) x 1명 / "+bgnCount+"명)</p>";
-                                costPrice += parseInt(tempCost / bgnCount);
-                            }
-
-                            if( object.getElementsByClassName('input_details_option4')[0].checked && document.getElementById('input_foc_flag').checked && document.getElementById('input_foc_charge').value != "" && document.getElementById('input_foc_free').value != "" ) {
-                                var applyFocCount = parseInt(parseInt((bgnCount+1) / document.getElementById('input_foc_charge').value) * document.getElementById('input_foc_free').value);
-                                costTypeDesc += "<p>- (("+addComma(tempCost)+"원 / 1명) x "+applyFocCount+"명 / "+bgnCount+"명)</p>";
-                                costPrice -= parseInt(tempCost*applyFocCount/bgnCount);
-                            }
-                        }
-
-                        html += " <div class='row'>";
-                        html += "     <span>"+tempTitle+"</span>";
-                        html += "     <span>+"+addComma(costPrice)+"원 / 1명</span>";
-                        html += " </div>";
-
-                        popupHtml += "  <div class='calc_cost_semi'>";
-                        popupHtml += "      <div>";
-                        popupHtml += "          <span>"+tempTitle+"("+costTypeTxt+")</span>";
-                        popupHtml += "          <span>+"+addComma(costPrice)+"원 / 1명</span>";
-                        popupHtml += "      </div>";
-                        popupHtml +=        costTypeDesc;
-                        popupHtml += "      <p>= "+addComma(costPrice)+"원 / 1명</p>";
-                        popupHtml += "  </div>";
-
-                        bgnCost += costPrice;
-                    }
-
-                    document.getElementById('summury_cost').innerHTML = html;
-                    */
                 }, function(errorCode, errorMessage) {
                     console.log(errorMessage);
                 });
@@ -775,11 +809,19 @@ for(var i=0; i<interesting.length; i++) {
                 }, function(errorCode, errorMessage) {
                     console.log(errorMessage);
                 });
-
-
             }
 
             function participateTour() {
+                if (isFollow === -1) {
+                    callbackFollow = 'PARTICIPATE';
+                    document.getElementById('ins_unfollow').style.display = 'block';
+                    setTimeout(function () {
+                        document.getElementById('ins_unfollow').style.opacity = '1';
+                    }, 10);
+
+                    return;
+                }
+
                 httpSend.send("/tour/participate", {
                     tourId: tourId
                 }, "POST", function(result) {
@@ -807,6 +849,16 @@ for(var i=0; i<interesting.length; i++) {
             }
 
             function interestTour() {
+                if (isFollow === -1) {
+                    callbackFollow = 'INTEREST';
+                    document.getElementById('ins_unfollow').style.display = 'block';
+                    setTimeout(function () {
+                        document.getElementById('ins_unfollow').style.opacity = '1';
+                    }, 10);
+
+                    return;
+                }
+
                 httpSend.send("/tour/interest", {
                     tourId: tourId
                 }, "POST", function(result) {
@@ -834,6 +886,16 @@ for(var i=0; i<interesting.length; i++) {
             }
 
             function waitTour() {
+                if (isFollow === -1) {
+                    callbackFollow = 'WAIT';
+                    document.getElementById('ins_unfollow').style.display = 'block';
+                    setTimeout(function () {
+                        document.getElementById('ins_unfollow').style.opacity = '1';
+                    }, 10);
+
+                    return;
+                }
+
                 httpSend.send("/tour/wait", {
                     tourId: tourId
                 }, "POST", function(result) {

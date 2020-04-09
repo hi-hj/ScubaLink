@@ -6,6 +6,7 @@ var session         = require('express-session');
 var MongoStore      = require('connect-mongo')(session);
 var bodyParser      = require('body-parser');
 var path            = require('path');
+var request         = require('request');
 
 // AWS S3 이미지 업로드 모듈
 var aws             = require('aws-sdk')
@@ -35,13 +36,33 @@ var assert      = require('assert');
 var url         = 'mongodb://localhost:27017/scubalink';
 var db          = null;
 
-var dbAccount         = require('./db/account');
-var dbFollow          = require('./db/follow');
-var dbCertification   = require('./db/certification');
-var dbNotice          = require('./db/notice');
-var dbTour            = require('./db/tour');
-var dbSchedule        = require('./db/schedule');
-var dbComment         = require('./db/comment');
+var dbAccount           = require('./db/account');
+var dbFollow            = require('./db/follow');
+var dbCertification     = require('./db/certification');
+var dbNotice            = require('./db/notice');
+var dbTour              = require('./db/tour');
+var dbSchedule          = require('./db/schedule');
+var dbComment           = require('./db/comment');
+var dbExchangerate      = require('./db/exchangerate');
+
+function getExchangerateData (db) {
+    request('https://api.manana.kr/exchange/rate/KRW/JPY,USD,EUR,PHP.json', function (error, response, body) {
+        if (error === null) {
+            try {
+                var exchangerateData = JSON.parse(body);
+                exchangerateData.forEach(item => {
+                    dbExchangerate.insertExchangerate(db, {
+                        name        : item.name.substr(0, 3),
+                        timestamp   : item.timestamp * 1000,
+                        rate        : item.rate
+                    });
+                });
+            } catch(error) {
+                console.log(error);
+            }
+        }
+    });
+}
 
 MongoClient.connect('mongodb://localhost:27017', {
    useUnifiedTopology: true
@@ -51,6 +72,12 @@ MongoClient.connect('mongodb://localhost:27017', {
     db = client.db('scubalink');
 
     console.log('complete');
+
+    // 5분마다 환율정보 조회
+    getExchangerateData(db);
+    setInterval(() => {
+        getExchangerateData(db);
+    }, 300000);
 });
 
 // view engine setup
@@ -87,7 +114,6 @@ var transporter = nodemailer.createTransport({
         pass: 'global5378'
     }
 });
-
 
 /* Page Redirection */
 app.get('/', function(req, res) {
@@ -264,14 +290,45 @@ app.get('/profile_edit', function(req, res) {
     }
 });
 
+app.get('/mybgn/:no', function(req, res) {
+    if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
+        req.body.id     = req.params.no;
+
+        dbFollow.findFollowersDetail(db, req.body, function(result) {
+            if (result.result.insId === req.session.snsId) {
+                req.body.condition = [{id: req.params.no, type: 1}];
+                dbSchedule.findScheduleCount(db, req.body, function(result2) {
+                    result.result.tourCount = result2.result.filter(item2 => item2.bgnId === req.params.no && (new Date(parseInt(item2.enddate.substr(0, 4)), parseInt(item2.enddate.substr(4, 2))-1, parseInt(item2.enddate.substr(6, 2))+1)).getTime() < (new Date()).getTime()).length;
+
+                    res.render('menu_my_bgn_detail', result.result);
+                });
+            } else {
+                res.redirect('/');
+            }
+        }, function(result) {
+            res.redirect('/');
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+
 app.get('/mybgn', function(req, res) {
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
         req.body.id = req.session.snsId;
 
         dbFollow.findFollowers(db, req.body, function(result) {
-            res.render('menu_my_bgn', {
-                id            : req.session.snsId,
-                followerList  : result.result.followerList
+            req.body.condition = result.result.followerList.map(item => {return {id: item.id, type: 1}});
+            dbSchedule.findScheduleCount(db, req.body, function(result2) {
+                result.result.followerList.forEach(item => {
+                    item.tourCount = result2.result.filter(item2 => item2.bgnId === item.id && (new Date(parseInt(item2.enddate.substr(0, 4)), parseInt(item2.enddate.substr(4, 2))-1, parseInt(item2.enddate.substr(6, 2))+1)).getTime() < (new Date()).getTime()).length;
+                });
+
+                res.render('menu_my_bgn', {
+                    id            : req.session.snsId,
+                    followerList  : result.result.followerList
+                });
             });
         });
     }
@@ -433,6 +490,7 @@ app.get('/tour_add', function(req, res) {
 app.get('/tour/:no', function(req, res){
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
         req.body.id     = req.params.no;
+        req.body.userId = req.session.snsId;
 
         dbTour.findTourDetail(db, req.body, function(result) {
             result.result.userId = req.session.snsId;
@@ -454,16 +512,17 @@ app.get('/tour/:no', function(req, res){
 
 app.get('/tour_edit/:no', function(req, res) {
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
-      req.body.id     = req.params.no;
+        req.body.id     = req.params.no;
+        req.body.userId = req.session.snsId;
 
-      dbTour.findTourDetail(db, req.body, function(result) {
-          result.result.userId = req.session.snsId;
-          result.result.userType = req.session.type;
+        dbTour.findTourDetail(db, req.body, function(result) {
+            result.result.userId = req.session.snsId;
+            result.result.userType = req.session.type;
 
-          res.render('tour_edit', result.result);
-      }, function(result) {
-          res.redirect('/');
-      });
+            res.render('tour_edit', result.result);
+        }, function(result) {
+            res.redirect('/');
+        });
     }
     else {
         res.redirect('/');
@@ -503,9 +562,13 @@ app.get('/tour/schedule/:no', function(req, res){
 app.get('/tour/cost/:no', function(req, res){
     if( req.session && req.session.snsId != undefined && req.session.type != undefined ) {
         req.body.id     = req.params.no;
+        req.body.userId = req.session.snsId;
 
         dbTour.findTourDetail(db, req.body, function(result) {
-            res.render('tour_cost', result.result);
+            dbExchangerate.findExchangerate(db, function(result2) {
+                result.result.exchangerateList = result2.result.exchangerateList;
+                res.render('tour_cost', result.result);
+            });
         }, function(result) {
             res.redirect('/');
         });
@@ -523,7 +586,14 @@ app.get('/tour/participant/:no', function(req, res){
             result.result.userId = req.session.snsId;
             result.result.userType = req.session.type;
 
-            res.render('tour_participant', result.result);
+            req.body.condition = result.result.participant.map(item => {return {id: item.id, type: 1}});
+            dbSchedule.findScheduleCount(db, req.body, function(result2) {
+                result.result.participant.forEach(item => {
+                    item.tourCount = result2.result.filter(item2 => item2.bgnId === item.id && (new Date(parseInt(item2.enddate.substr(0, 4)), parseInt(item2.enddate.substr(4, 2))-1, parseInt(item2.enddate.substr(6, 2))+1)).getTime() < (new Date()).getTime()).length;
+                });
+
+                res.render('tour_participant', result.result);
+            });
         }, function(result) {
             res.redirect('/');
         });
@@ -707,6 +777,14 @@ app.post('/search/ins/remove', function(req, res) {
     });
 });
 
+app.post('/follow/memo/update', function(req, res) {
+    req.body.insId = req.session.snsId;
+    dbFollow.updateFollowerMemo(db, req.body, function(result) {
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+    });
+});
+
 app.post('/follow/update', function(req, res){
     req.body.bgn = req.session.snsId;
 
@@ -720,12 +798,27 @@ app.post('/follow/update', function(req, res){
         });
     }
     else if(req.body.type == 2) {
-        dbFollow.removeFollow(db, req.body, function(result) {
-            res.writeHead(200);
-            res.end(JSON.stringify(result));
-        }, function(result) {
-            res.writeHead(200);
-            res.end(JSON.stringify(result));
+        req.body.condition = [{
+            id: req.body.bgn,
+            type: 1
+        }];
+
+        dbSchedule.findScheduleCount(db, req.body, function(result) {
+            if(result.result.filter(item => req.body.ins === item.insId && (new Date(parseInt(item.startdate.substr(0, 4)), parseInt(item.startdate.substr(4, 2))-1, parseInt(item.startdate.substr(6, 2)))).getTime() >= (new Date()).getTime()).length === 0) {
+                dbFollow.removeFollow(db, req.body, function(result) {
+                    res.writeHead(200);
+                    res.end(JSON.stringify(result));
+                }, function(result) {
+                    res.writeHead(200);
+                    res.end(JSON.stringify(result));
+                });
+            } else {
+                res.writeHead(200);
+                res.end(JSON.stringify({
+                    code    : "T005",
+                    message : "팔로우를 취소할 수 없습니다"
+                }));
+            }
         });
     }
     else {
@@ -789,7 +882,7 @@ app.post('/certification/remove', function(req, res){
 app.post('/email/send', function(req, res){
     var mailOptions = {
         from: 'scubalink@naver.com',
-        to: 'shnam@12cm.co.kr',
+        to: 'skatmdgh1221@nate.com',
         subject: 'Nodemailer 테스트',
         text: 'Nodemailer 테스트 내용'
     };
@@ -850,11 +943,33 @@ app.post('/tour/select', function(req, res){
     });
 });
 
-app.post('/tour/detail', function(req, res){
-    dbTour.findTourDetail(db, req.body, function(result) {
-        res.writeHead(200);
-        res.end(JSON.stringify(result));
+app.post('/tour/select/ins', function(req, res){
+    req.body.id = req.body.insId;
+    req.body.userId = req.session.snsId;
+
+    dbAccount.findAccountAllInsInfo(db, req.body, function(result) {
+        dbTour.findTours(db, req.body, function(result2) {
+            result.result.tourList = result2.result.tourList;
+
+            res.writeHead(200);
+            res.end(JSON.stringify(result));
+        });
+    }, function(result) {
+        res.redirect('/');
     });
+});
+
+app.post('/tour/detail', function(req, res){
+    if( req.session && req.session.snsId !== undefined && req.session.type !== undefined ) {
+        req.body.userId = req.session.snsId;
+
+        dbTour.findTourDetail(db, req.body, function(result) {
+            res.writeHead(200);
+            res.end(JSON.stringify(result));
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.post('/tour/update', upload.single('tourImage'), function(req, res) {
@@ -874,19 +989,6 @@ app.post('/tour/update', upload.single('tourImage'), function(req, res) {
 
 app.post('/tour/remove', function(req, res){
     dbTour.removeTour(db, req.body, function(result) {
-        res.writeHead(200);
-        res.end(JSON.stringify(result));
-    }, function(result) {
-        res.writeHead(200);
-        res.end(JSON.stringify(result));
-    });
-});
-
-app.post('/tour/participate/memo', function(req, res){
-    req.body.id = req.session.snsId;
-    req.body.type = 1;
-
-    dbTour.changeTourParticipantMemo(db, req.body, function(result) {
         res.writeHead(200);
         res.end(JSON.stringify(result));
     }, function(result) {

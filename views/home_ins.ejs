@@ -62,7 +62,7 @@
 <!--                <li onclick="location.href='/mybgn';">내 교육생</li>-->
 <!--                <li onclick="location.href='/license';">내 자격증</li>-->
                 <li onclick="location.href='/profile_ins';">내 정보</li>
-                <li>알림 설정</li>
+<!--                <li>알림 설정</li>-->
                 <!-- <li class="none"></li> -->
                 <li onclick="location.href='/notice';">공지사항</li>
                 <li onclick="location.href='/policy';">약관 및 정책</li>
@@ -112,7 +112,7 @@
             <div class="tour">
                 <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
 
-                <% if( tourList[i].participant_count >= tourList[i].member || tourList[i].status == 'FINISH' ) { %>
+                <% if( tourList[i].participant_count >= tourList[i].member || tourList[i].status == 'FINISH' || (new Date(parseInt(tourList[i].startdate.substr(0,4)), parseInt(tourList[i].startdate.substr(4,2))-1, parseInt(tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime() ) { %>
                     <div class="tour_bar tour_complete" onclick="location.href='/tour/<%= tourList[i]._id %>';">
                         <span class="tour_bar_text_left"><p><%= tourList[i].participant_count %>/<%= tourList[i].member %> 모집 마감</p></span>
                 <% } else { %>
@@ -207,7 +207,7 @@
                         else
                             html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='"+result.tourList[i].image+"' alt='' /></div>";
 
-                        if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH') {
+                        if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH' || (new Date(parseInt(result.tourList[i].startdate.substr(0,4)), parseInt(result.tourList[i].startdate.substr(4,2))-1, parseInt(result.tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime()) {
                             html+= "      <div class='tour_bar tour_complete' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";
                             html+= "          <span class='tour_bar_text_left'><p>"+result.tourList[i].participant_count+"/"+result.tourList[i].member+" 모집 마감</p></span>";
                         } else {
