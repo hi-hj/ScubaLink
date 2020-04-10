@@ -98,6 +98,9 @@
         <script type="text/javascript" src="/js/httpUtil.js"></script>
         <script type="text/javascript">
             var tourId = '<%= _id %>';
+            var data = <%- JSON.stringify(cost) %>;
+            var bgnCount = parseInt('<%= bgnCount %>');
+            var insCount = parseInt('<%= insCount %>');
 
             document.getElementById('btn_back').onclick = function() {
                 history.back();
@@ -166,6 +169,13 @@
                     document.getElementById('input_member_count_zero_error').style.display = "none";
                 }
 
+                // 비용 재계산
+                if (data != null) {
+                    bgnCount = parseInt(document.getElementById('input_tour_member_count_bgn').value);
+                    insCount = parseInt(document.getElementById('input_tour_member_count_ins').value);
+                    calculation();
+                }
+
                 var editParameters = {};
                 editParameters.name = document.getElementById('input_tour_name').value;
                 editParameters.startdate = document.getElementById('input_tour_start').value.replace(/-/gi, "").replace(/\./gi, "");
@@ -181,7 +191,18 @@
                     editParameters.tourImage = document.getElementById('imgInp').files[0];
 
                 httpSend.upload("/tour/update", editParameters, function(result) {
-                    history.back();
+                    if (data != null) {
+                        httpSend.send("/tour/cost/update", {
+                            tourId: tourId,
+                            cost: data
+                        }, "POST", function() {
+                            history.back();
+                        }, function(errorCode, errorMessage) {
+                            console.log(errorMessage);
+                        });
+                    } else {
+                        history.back();
+                    }
                 }, function(errorCode, errorMessage) {
                     if( errorCode == "T002" )
                         alert(errorMessage);
@@ -189,6 +210,74 @@
                         console.log(errorMessage);
                 });
             };
+
+            function calculation () {
+                var incomePerPerson = 0;
+                var expensePerPerson = 0;
+                var income = 0;
+                var expense = 0;
+                for (var i = 0; i < data.cost.length; i++) {
+                    var costPrice = data.cost[i].price === '' ? 0 : data.cost[i].price;
+                    var costCount = data.cost[i].count === '' ? 0 : data.cost[i].count;
+                    var costExpense = data.cost[i].expense === '' ? 0 : data.cost[i].expense;
+                    var basicIncome = costPrice * costCount;
+                    var basicExpense = costExpense * costCount;
+
+                    if (data.cost[i].public && data.cost[i].include) {
+                        income = Math.floor(basicIncome / bgnCount * 100) / 100;
+                        expense = Math.floor(basicExpense / bgnCount * 100) / 100;
+                    } else if (data.cost[i].public) {
+                        income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
+                        expense = Math.floor(basicExpense / (bgnCount + insCount) * 100) / 100;
+                    } else if (data.cost[i].include) {
+                        income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
+                        expense = Math.floor((basicExpense + basicExpense * insCount / bgnCount) * 100) / 100;
+                    } else {
+                        income = Math.floor(basicIncome * 100) / 100;
+                        expense = Math.floor(basicExpense * 100) / 100;
+                    }
+
+                    if (data.cost[i].priceType !== data.currency) {
+                        for (var j = 0; j < data.exchangerate.length; j++) {
+                            if (data.cost[i].priceType === data.exchangerate[j].type) {
+                                income = Math.floor(income * data.exchangerate[j].price * data.exchangerate[j].rate * 100) / 100;
+                                expense = Math.floor(expense * data.exchangerate[j].price * data.exchangerate[j].rate * 100) / 100;
+                            }
+                        }
+                    }
+
+                    incomePerPerson += income;
+                    expensePerPerson += expense;
+                }
+                incomePerPerson += data.adjustment.price;
+
+                for (i = 0; i < data.additional.length; i++) {
+                    var additionalPrice = (data.additional[i].price === '' ? 0 : data.additional[i].price);
+                    var additionalCount = (data.additional[i].count === '' ? 0 : data.additional[i].count);
+                    var additionalExpense = Math.floor(additionalPrice * additionalCount / bgnCount * 100) / 100;
+                    if (data.additional[i].priceType !== data.currency) {
+                        for (j = 0; j < data.exchangerate.length; j++) {
+                            if (data.additional[i].priceType === data.exchangerate[j].type) {
+                                additionalExpense = Math.floor(additionalExpense * data.exchangerate[j].price * data.exchangerate[j].rate * 100) / 100;
+                            }
+                        }
+                    }
+                    expensePerPerson += additionalExpense;
+                }
+
+                incomePerPerson = Math.floor(incomePerPerson * 100) / 100;
+                var profitPerPerson = 0;
+                if (incomePerPerson - expensePerPerson < 0) {
+                    profitPerPerson = Math.ceil((incomePerPerson - expensePerPerson) * 100) / 100;
+                } else {
+                    profitPerPerson = Math.floor((incomePerPerson - expensePerPerson) * 100) / 100;
+                }
+                var totalProfit = Math.floor(profitPerPerson * bgnCount * 100) / 100;
+
+                data.incomePerPerson = incomePerPerson;
+                data.profitPerPerson = profitPerPerson;
+                data.profit = totalProfit;
+            }
         </script>
     </body>
 </html>

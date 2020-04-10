@@ -13,6 +13,8 @@
         <style>
             #btn_back { position: absolute; width: 40px; height: 40px; top: 0; left: 0; margin-left: 5px; margin-top: 5px; }
             #back { position: absolute; width: 16px; opacity: 0.54; top: 0; left: 0; margin-top: 12px; margin-left: 12px; }
+            .tour_image { position: relative; }
+            .tour_image img.tour_background { position: absolute; left: 0; top: 0; }
         </style>
     </head>
 
@@ -92,7 +94,10 @@
         <div id="CONTENT_ON" class="">
     <% for(var i=0; i<tourList.length; i++) { %>
             <div class="tour">
-                <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';"><img src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" /></div>
+                <div class="tour_image" onclick="location.href='/tour/<%= tourList[i]._id %>';">
+                    <img class="tour_thumbnail" src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" />
+                    <img class="tour_background" src="<% if( !locals.tourList[i].image || tourList[i].image == undefined || tourList[i].image == '' ) { %>/img/blank_tour.png<% } else { %><%= tourList[i].image %><% } %>" alt="" />
+                </div>
 
                 <% if (tourList[i].participant_count >= tourList[i].member || tourList[i].status == "FINISH" || (new Date(parseInt(tourList[i].startdate.substr(0,4)), parseInt(tourList[i].startdate.substr(4,2))-1, parseInt(tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime()) { %>
                     <div class="tour_bar tour_complete" onclick="location.href='/tour/<%= tourList[i]._id %>';">
@@ -237,10 +242,17 @@
                     var html = "";
                     for( var i=0; i<result.tourList.length; i++ ) {
                         html += " <div class='tour'>";
-                        if( result.tourList[i].image == undefined || result.tourList[i].image == "" )
-                            html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='/img/blank_tour.png' alt='' /></div>";
-                        else
-                            html += " <div class='tour_image' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'><img src='"+result.tourList[i].image+"' alt='' /></div>";
+                        if (result.tourList[i].image === null || result.tourList[i].image === undefined || result.tourList[i].image === '') {
+                            html += " <div class='tour_image' onclick='location.href=\"/tour/" + result.tourList[i]._id + "\";'>";
+                            html += "   <img class='tour_thumbnail' src='/img/blank_tour.png' alt='' />";
+                            html += "   <img class='tour_background' src='/img/blank_tour.png' alt='' />";
+                            html += " </div>";
+                        } else {
+                            html += " <div class='tour_image' onclick='location.href=\"/tour/" + result.tourList[i]._id + "\";'>";
+                            html += "   <img class='tour_thumbnail' src='" + result.tourList[i].image + "' alt='' />";
+                            html += "   <img class='tour_background' src='" + result.tourList[i].image + "' alt='' />";
+                            html += " </div>";
+                        }
 
                         if (result.tourList[i].participant_count >= result.tourList[i].member || result.tourList[i].status === 'FINISH' || (new Date(parseInt(result.tourList[i].startdate.substr(0,4)), parseInt(result.tourList[i].startdate.substr(4,2))-1, parseInt(result.tourList[i].startdate.substr(6,2)))).getTime() < (new Date()).getTime()) {
                             html+= "      <div class='tour_bar tour_complete' onclick='location.href=\"/tour/"+result.tourList[i]._id+"\";'>";

@@ -45,17 +45,6 @@ function prevStep5 () {
 function nextStep1 () {
     var isValid = true;
 
-    // 참여자 수 공백, 0 체크
-    if (document.getElementById('step1_ins_count').value === '' ||
-        document.getElementById('step1_ins_count').value === '0' ||
-        document.getElementById('step1_bgn_count').value === '' ||
-        document.getElementById('step1_bgn_count').value === '0') {
-        isValid = false;
-        document.getElementById('participate_empty_error').style.display = 'block';
-    } else {
-        document.getElementById('participate_empty_error').style.display = 'none';
-    }
-
     // 환율 선택유무 체크
     if (!document.getElementById('step1_won_checkbox').checked &&
         !document.getElementById('step1_dollor_checkbox').checked &&
@@ -109,9 +98,6 @@ function nextStep1 () {
 
     if (isValid) {
         // data setting
-        data.insCount = parseInt(document.getElementById('step1_ins_count').value);
-        data.bgnCount = parseInt(document.getElementById('step1_bgn_count').value);
-
         data.exchangerate = [];
         if (document.getElementById('step1_won_checkbox').checked) {
             var rate = 1;
@@ -214,14 +200,14 @@ function nextStep1 () {
 
         makeStep2();
 
-        document.getElementById('step2_summery_ins_count').innerHTML = data.insCount;
-        document.getElementById('step2_summery_bgn_count').innerHTML = data.bgnCount;
-        document.getElementById('step3_summery_ins_count').innerHTML = data.insCount;
-        document.getElementById('step3_summery_bgn_count').innerHTML = data.bgnCount;
-        document.getElementById('step4_summery_ins_count').innerHTML = data.insCount;
-        document.getElementById('step4_summery_bgn_count').innerHTML = data.bgnCount;
-        document.getElementById('step5_summery_ins_count').innerHTML = data.insCount;
-        document.getElementById('step5_summery_bgn_count').innerHTML = data.bgnCount;
+        document.getElementById('step2_summery_ins_count').innerHTML = insCount;
+        document.getElementById('step2_summery_bgn_count').innerHTML = bgnCount;
+        document.getElementById('step3_summery_ins_count').innerHTML = insCount;
+        document.getElementById('step3_summery_bgn_count').innerHTML = bgnCount;
+        document.getElementById('step4_summery_ins_count').innerHTML = insCount;
+        document.getElementById('step4_summery_bgn_count').innerHTML = bgnCount;
+        document.getElementById('step5_summery_ins_count').innerHTML = insCount;
+        document.getElementById('step5_summery_bgn_count').innerHTML = bgnCount;
 
         document.getElementById('step1').classList.remove('active');
         document.getElementById('step2').classList.add('active');
@@ -311,9 +297,9 @@ function nextStep4 () {
 }
 
 function nextStep5 () {
-    data.incomePerPerson = Math.floor(parseFloat(document.getElementById('step5_summery_income_per_person').innerHTML) * 100) / 100;
-    data.profitPerPerson = Math.floor(parseFloat(document.getElementById('step5_summery_profit_per_person').innerHTML) * 100) / 100;
-    data.profit = Math.floor(parseFloat(document.getElementById('step5_summery_profit').innerHTML) * 100) / 100;
+    data.incomePerPerson = Math.floor(parseFloat(document.getElementById('step5_summery_income_per_person_hidden').innerHTML) * 100) / 100;
+    data.profitPerPerson = Math.floor(parseFloat(document.getElementById('step5_summery_profit_per_person_hidden').innerHTML) * 100) / 100;
+    data.profit = Math.floor(parseFloat(document.getElementById('step5_summery_profit_hidden').innerHTML) * 100) / 100;
 
     httpSend.send("/tour/cost/update", {
         tourId: tourId,
@@ -505,13 +491,6 @@ function detectInputStep1 () {
     }
 
     var isValid = true;
-    if (document.getElementById('step1_ins_count').value === '' ||
-        document.getElementById('step1_ins_count').value === '0' ||
-        document.getElementById('step1_bgn_count').value === '' ||
-        document.getElementById('step1_bgn_count').value === '0') {
-        isValid = false;
-    }
-
     if (!document.getElementById('step1_won_checkbox').checked &&
         !document.getElementById('step1_dollor_checkbox').checked &&
         !document.getElementById('step1_yen_checkbox').checked &&
@@ -556,18 +535,6 @@ function detectInputStep1 () {
     } else {
         document.getElementById('step_1_next').style.backgroundColor = '#cccccc';
     }
-}
-
-// 참여자수 입력 시 오류 메세지 제거
-function changeParticipantCount () {
-    if (document.getElementById('step1_ins_count').value !== '' &&
-        parseInt(document.getElementById('step1_ins_count').value) > 0 &&
-        document.getElementById('step1_bgn_count').value !== '' &&
-        parseInt(document.getElementById('step1_bgn_count').value) > 0) {
-        document.getElementById('participate_empty_error').style.display = 'none';
-    }
-
-    detectInputStep1();
 }
 
 // 환율 선택 시 오류 메세지 제거
@@ -725,8 +692,8 @@ function changeStep2Cost () {
         if (document.getElementsByClassName('step2_public_input')[i].checked &&
             document.getElementsByClassName('step2_include_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + data.bgnCount + '명';
-            advancedCost = Math.floor(basicCost / data.bgnCount * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + bgnCount + '명';
+            advancedCost = Math.floor(basicCost / bgnCount * 100) / 100;
 
             data.cost[i].public = true;
             data.cost[i].include = true;
@@ -740,8 +707,8 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_include_on_tag')[i].classList.remove('hide');
         } else if (document.getElementsByClassName('step2_public_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 / 참여자 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + (data.bgnCount + data.insCount) + '명';
-            advancedCost = Math.floor(basicCost / (data.bgnCount + data.insCount) * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + (bgnCount + insCount) + '명';
+            advancedCost = Math.floor(basicCost / (bgnCount + insCount) * 100) / 100;
 
             data.cost[i].public = true;
             data.cost[i].include = false;
@@ -755,8 +722,8 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_include_off_tag')[i].classList.remove('hide');
         } else if (document.getElementsByClassName('step2_include_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 + (단가 x 횟수) x 강사 수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' + (' + priceInput + priceType + ' x ' + countInput + countType + ') x ' + data.insCount + '명' + ' / ' + data.bgnCount + '명';
-            advancedCost = Math.floor((basicCost + basicCost * data.insCount / data.bgnCount) * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' + (' + priceInput + priceType + ' x ' + countInput + countType + ') x ' + insCount + '명' + ' / ' + bgnCount + '명';
+            advancedCost = Math.floor((basicCost + basicCost * insCount / bgnCount) * 100) / 100;
 
             data.cost[i].public = false;
             data.cost[i].include = true;
@@ -821,7 +788,8 @@ function changeStep2Cost () {
         document.getElementsByClassName('step2_formula_4')[i].innerHTML = basicFormula;
     }
 
-    document.getElementById('step2_bgn_cost_per_person').innerHTML = incomePerPerson + data.currency;
+    incomePerPerson = Math.floor(incomePerPerson * 100) / 100;
+    document.getElementById('step2_bgn_cost_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
 
     if (isValid) {
         document.getElementById('step_2_next').style.backgroundColor = '#145db2';
@@ -1149,9 +1117,9 @@ function changeStep3Cost () {
 
         if (data.cost[i].public && data.cost[i].include) {
             advancedFormulaText = '단가 x 횟수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + data.bgnCount + '명';
-            advancedCost = Math.floor(basicCost / data.bgnCount * 100) / 100;
-            advancedExpenseCost = Math.floor(basicExpenseCost / data.bgnCount * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + bgnCount + '명';
+            advancedCost = Math.floor(basicCost / bgnCount * 100) / 100;
+            advancedExpenseCost = Math.floor(basicExpenseCost / bgnCount * 100) / 100;
 
             document.getElementsByClassName('step3_public_on_tag')[i].classList.remove('hide');
             document.getElementsByClassName('step3_public_off_tag')[i].classList.add('hide');
@@ -1159,9 +1127,9 @@ function changeStep3Cost () {
             document.getElementsByClassName('step3_include_off_tag')[i].classList.add('hide');
         } else if (data.cost[i].public) {
             advancedFormulaText = '단가 x 횟수 / 참여자 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + (data.bgnCount + data.insCount) + '명';
-            advancedCost = Math.floor(basicCost / (data.bgnCount + data.insCount) * 100) / 100;
-            advancedExpenseCost = Math.floor(basicExpenseCost / (data.bgnCount + data.insCount) * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + (bgnCount + insCount) + '명';
+            advancedCost = Math.floor(basicCost / (bgnCount + insCount) * 100) / 100;
+            advancedExpenseCost = Math.floor(basicExpenseCost / (bgnCount + insCount) * 100) / 100;
 
             document.getElementsByClassName('step3_public_on_tag')[i].classList.remove('hide');
             document.getElementsByClassName('step3_public_off_tag')[i].classList.add('hide');
@@ -1169,9 +1137,9 @@ function changeStep3Cost () {
             document.getElementsByClassName('step3_include_off_tag')[i].classList.remove('hide');
         } else if (data.cost[i].include) {
             advancedFormulaText = '단가 x 횟수 + (단가 x 횟수) x 강사 수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' + (' + priceInput + priceType + ' x ' + countInput + countType + ') x ' + data.insCount + '명' + ' / ' + data.bgnCount + '명';
-            advancedCost = Math.floor((basicCost + basicCost * data.insCount / data.bgnCount) * 100) / 100;
-            advancedExpenseCost = Math.floor((basicExpenseCost + basicExpenseCost * data.insCount / data.bgnCount) * 100) / 100;
+            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' + (' + priceInput + priceType + ' x ' + countInput + countType + ') x ' + insCount + '명' + ' / ' + bgnCount + '명';
+            advancedCost = Math.floor((basicCost + basicCost * insCount / bgnCount) * 100) / 100;
+            advancedExpenseCost = Math.floor((basicExpenseCost + basicExpenseCost * insCount / bgnCount) * 100) / 100;
 
             document.getElementsByClassName('step3_public_on_tag')[i].classList.add('hide');
             document.getElementsByClassName('step3_public_off_tag')[i].classList.remove('hide');
@@ -1234,7 +1202,7 @@ function changeStep3Cost () {
 
     var expensePerPerson = 0;
     for (i = 0; i < data.additional.length; i++) {
-        var additionalExpenseCost = Math.floor(data.additional[i].price * data.additional[i].count / data.bgnCount * 100) / 100;
+        var additionalExpenseCost = Math.floor(data.additional[i].price * data.additional[i].count / bgnCount * 100) / 100;
         var appliedAdditionalExpenseCost = 0;
         if (data.additional[i].priceType !== data.currency) {
             for (j = 0; j < data.exchangerate.length; j++) {
@@ -1454,14 +1422,14 @@ function makeStep4 () {
         var basicExpense = costExpense * costCount;
 
         if (data.cost[i].public && data.cost[i].include) {
-            income = Math.floor(basicIncome / data.bgnCount * 100) / 100;
-            expense = Math.floor(basicExpense / data.bgnCount * 100) / 100;
+            income = Math.floor(basicIncome / bgnCount * 100) / 100;
+            expense = Math.floor(basicExpense / bgnCount * 100) / 100;
         } else if (data.cost[i].public) {
-            income = Math.floor(basicIncome / (data.bgnCount + data.insCount) * 100) / 100;
-            expense = Math.floor(basicExpense / (data.bgnCount + data.insCount) * 100) / 100;
+            income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
+            expense = Math.floor(basicExpense / (bgnCount + insCount) * 100) / 100;
         } else if (data.cost[i].include) {
-            income = Math.floor((basicIncome + basicIncome * data.insCount / data.bgnCount) * 100) / 100;
-            expense = Math.floor((basicExpense + basicExpense * data.insCount / data.bgnCount) * 100) / 100;
+            income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
+            expense = Math.floor((basicExpense + basicExpense * insCount / bgnCount) * 100) / 100;
         } else {
             income = Math.floor(basicIncome * 100) / 100;
             expense = Math.floor(basicExpense * 100) / 100;
@@ -1500,7 +1468,7 @@ function makeStep4 () {
     for (i = 0; i < data.additional.length; i++) {
         var additionalPrice = (data.additional[i].price === '' ? 0 : data.additional[i].price);
         var additionalCount = (data.additional[i].count === '' ? 0 : data.additional[i].count);
-        var additionalExpense = Math.floor(additionalPrice * additionalCount / data.bgnCount * 100) / 100;
+        var additionalExpense = Math.floor(additionalPrice * additionalCount / bgnCount * 100) / 100;
 
         // 추가 지출 비용이 0원이면 노출하지 않음
         if (additionalExpense === 0) {
@@ -1592,14 +1560,14 @@ function makeStep5 () {
         var appliedIncome = 0;
         var appliedExpense = 0;
         if (data.cost[i].public && data.cost[i].include) {
-            income = Math.floor(basicIncome / data.bgnCount * 100) / 100;
-            expense = Math.floor(basicExpense / data.bgnCount * 100) / 100;
+            income = Math.floor(basicIncome / bgnCount * 100) / 100;
+            expense = Math.floor(basicExpense / bgnCount * 100) / 100;
         } else if (data.cost[i].public) {
-            income = Math.floor(basicIncome / (data.bgnCount + data.insCount) * 100) / 100;
-            expense = Math.floor(basicExpense / (data.bgnCount + data.insCount) * 100) / 100;
+            income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
+            expense = Math.floor(basicExpense / (bgnCount + insCount) * 100) / 100;
         } else if (data.cost[i].include) {
-            income = Math.floor((basicIncome + basicIncome * data.insCount / data.bgnCount) * 100) / 100;
-            expense = Math.floor((basicExpense + basicExpense * data.insCount / data.bgnCount) * 100) / 100;
+            income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
+            expense = Math.floor((basicExpense + basicExpense * insCount / bgnCount) * 100) / 100;
         } else {
             income = Math.floor(basicIncome * 100) / 100;
             expense = Math.floor(basicExpense * 100) / 100;
@@ -1687,7 +1655,7 @@ function makeStep5 () {
     }
     for (i = 0; i < data.additional.length; i++) {
         var basicExpense = data.additional[i].price * data.additional[i].count;
-        var expense = Math.floor(basicExpense / data.bgnCount * 100) / 100;
+        var expense = Math.floor(basicExpense / bgnCount * 100) / 100;
         var appliedExpense = 0;
 
         // 추가 지출 비용이 0원이면 노출하지 않음
@@ -1842,14 +1810,14 @@ function calculation () {
         var basicExpense = costExpense * costCount;
 
         if (data.cost[i].public && data.cost[i].include) {
-            income = Math.floor(basicIncome / data.bgnCount * 100) / 100;
-            expense = Math.floor(basicExpense / data.bgnCount * 100) / 100;
+            income = Math.floor(basicIncome / bgnCount * 100) / 100;
+            expense = Math.floor(basicExpense / bgnCount * 100) / 100;
         } else if (data.cost[i].public) {
-            income = Math.floor(basicIncome / (data.bgnCount + data.insCount) * 100) / 100;
-            expense = Math.floor(basicExpense / (data.bgnCount + data.insCount) * 100) / 100;
+            income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
+            expense = Math.floor(basicExpense / (bgnCount + insCount) * 100) / 100;
         } else if (data.cost[i].include) {
-            income = Math.floor((basicIncome + basicIncome * data.insCount / data.bgnCount) * 100) / 100;
-            expense = Math.floor((basicExpense + basicExpense * data.insCount / data.bgnCount) * 100) / 100;
+            income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
+            expense = Math.floor((basicExpense + basicExpense * insCount / bgnCount) * 100) / 100;
         } else {
             income = Math.floor(basicIncome * 100) / 100;
             expense = Math.floor(basicExpense * 100) / 100;
@@ -1872,7 +1840,7 @@ function calculation () {
     for (i = 0; i < data.additional.length; i++) {
         var additionalPrice = (data.additional[i].price === '' ? 0 : data.additional[i].price);
         var additionalCount = (data.additional[i].count === '' ? 0 : data.additional[i].count);
-        var additionalExpense = Math.floor(additionalPrice * additionalCount / data.bgnCount * 100) / 100;
+        var additionalExpense = Math.floor(additionalPrice * additionalCount / bgnCount * 100) / 100;
         if (data.additional[i].priceType !== data.currency) {
             for (j = 0; j < data.exchangerate.length; j++) {
                 if (data.additional[i].priceType === data.exchangerate[j].type) {
@@ -1890,24 +1858,27 @@ function calculation () {
     } else {
         profitPerPerson = Math.floor((incomePerPerson - expensePerPerson) * 100) / 100;
     }
-    var totalProfit = Math.floor(profitPerPerson * data.bgnCount * 100) / 100;
+    var totalProfit = Math.floor(profitPerPerson * bgnCount * 100) / 100;
 
-    document.getElementById('step2_summery_income_per_person').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step3_summery_income_per_person').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step4_summery_income_per_person').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step5_summery_income_per_person').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step2_summery_profit_per_person').innerHTML = profitPerPerson + data.currency;
-    document.getElementById('step3_summery_profit_per_person').innerHTML = profitPerPerson + data.currency;
-    document.getElementById('step4_summery_profit_per_person').innerHTML = profitPerPerson + data.currency;
-    document.getElementById('step5_summery_profit_per_person').innerHTML = profitPerPerson + data.currency;
-    document.getElementById('step2_summery_profit').innerHTML = totalProfit + data.currency;
-    document.getElementById('step3_summery_profit').innerHTML = totalProfit + data.currency;
-    document.getElementById('step4_summery_profit').innerHTML = totalProfit + data.currency;
-    document.getElementById('step5_summery_profit').innerHTML = totalProfit + data.currency;
+    document.getElementById('step2_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step3_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step4_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step5_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step2_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
+    document.getElementById('step3_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
+    document.getElementById('step4_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
+    document.getElementById('step5_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
+    document.getElementById('step2_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
+    document.getElementById('step3_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
+    document.getElementById('step4_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
+    document.getElementById('step5_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
 
+    document.getElementById('step5_summery_income_per_person_hidden').innerHTML = incomePerPerson + data.currency;
+    document.getElementById('step5_summery_profit_per_person_hidden').innerHTML = profitPerPerson + data.currency;
+    document.getElementById('step5_summery_profit_hidden').innerHTML = totalProfit + data.currency;
 
-    document.getElementById('step4_income_text').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step4_profit_text').innerHTML = profitPerPerson + data.currency;
+    document.getElementById('step4_income_text').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step4_profit_text').innerHTML = parseInt(profitPerPerson) + data.currency;
     if (profitPerPerson < 0) {
         document.getElementById('step4_profit_text_wrap').style.color = 'rgb(224, 32, 32)';
         document.getElementById('slide-range').style.background = 'rgba(224, 32, 32, 0.3)';
@@ -1918,5 +1889,5 @@ function calculation () {
         document.getElementById('slide-range').classList.remove('red');
     }
 
-    document.getElementById('step5_cost_result').innerHTML = incomePerPerson + data.currency;
+    document.getElementById('step5_cost_result').innerHTML = parseInt(incomePerPerson) + data.currency;
 }

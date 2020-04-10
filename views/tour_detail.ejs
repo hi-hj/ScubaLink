@@ -145,7 +145,7 @@ for(var i=0; i<interesting.length; i++) {
         return str.toString().replace(regexp, ',');
     }
 %>
-                    <span id="tour_total_cost" class="info_text"><% if (cost == null) { %>입력 전<% } else { %><%= addComma(cost.incomePerPerson) %><%= cost.currency %><% } %></span>
+                    <span id="tour_total_cost" class="info_text"><% if (cost == null) { %>입력 전<% } else { %><%= addComma(parseInt(cost.incomePerPerson)) %><%= cost.currency %><% } %></span>
                 </div>
 
                 <div class="basic_information tour_instructor">
@@ -158,6 +158,8 @@ for(var i=0; i<interesting.length; i++) {
                         <span class="INS_badge"><img src='/img/ic.png' alt="" /></span>
 
                         <span class="tour_ins_name"><%= ins_name %></span>
+
+                        <span id="tour_ins_more" class="tour_ins_name" style="font-weight: initial; <% if (insCount == 1) { %>display: none;<% } %>"> 외 <%= insCount-1 %>명</span>
                     </div>
                 </div>
             </div>
@@ -233,7 +235,7 @@ for(var i=0; i<interesting.length; i++) {
                     <div id="tour_cost_wrap">
                         <div class='row'>
                             <span>1인 비용</span>
-                            <span><%= addComma(cost.incomePerPerson) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(cost.incomePerPerson)) %><%= cost.currency %></span>
                         </div>
 
 <%
@@ -242,11 +244,11 @@ for(var i=0; i<interesting.length; i++) {
         var income = 0;
         var appliedIncome = 0;
         if (cost.cost[i].public && cost.cost[i].include) {
-            income = Math.floor(basicIncome / cost.bgnCount * 100) / 100;
+            income = Math.floor(basicIncome / bgnCount * 100) / 100;
         } else if (cost.cost[i].public) {
-            income = Math.floor(basicIncome / (cost.bgnCount + cost.insCount) * 100) / 100;
+            income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
         } else if (cost.cost[i].include) {
-            income = Math.floor((basicIncome + basicIncome * cost.insCount / cost.bgnCount) * 100) / 100;
+            income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
         } else {
             income = Math.floor(basicIncome * 100) / 100;
         }
@@ -261,13 +263,13 @@ for(var i=0; i<interesting.length; i++) {
 %>
                         <div class='row'>
                             <span><%= cost.cost[i].name %></span>
-                            <span><%= addComma(income) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(income)) %><%= cost.currency %></span>
                         </div>
 <% } %>
 
                         <div class='row'>
                             <span><%= cost.adjustment.name %></span>
-                            <span><%= addComma(cost.adjustment.price) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(cost.adjustment.price)) %><%= cost.currency %></span>
                         </div>
 
                         <div class="row profit_per_explain">
@@ -288,7 +290,7 @@ for(var i=0; i<interesting.length; i++) {
                     <div id="tour_cost_wrap">
                         <div class='row'>
                             <span>1인 비용</span>
-                            <span><%= addComma(cost.incomePerPerson) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(cost.incomePerPerson)) %><%= cost.currency %></span>
                         </div>
 
 <%
@@ -297,11 +299,11 @@ for(var i=0; i<interesting.length; i++) {
         var income = 0;
         var appliedIncome = 0;
         if (cost.cost[i].public && cost.cost[i].include) {
-            income = Math.floor(basicIncome / cost.bgnCount * 100) / 100;
+            income = Math.floor(basicIncome / bgnCount * 100) / 100;
         } else if (cost.cost[i].public) {
-            income = Math.floor(basicIncome / (cost.bgnCount + cost.insCount) * 100) / 100;
+            income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
         } else if (cost.cost[i].include) {
-            income = Math.floor((basicIncome + basicIncome * cost.insCount / cost.bgnCount) * 100) / 100;
+            income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
         } else {
             income = Math.floor(basicIncome * 100) / 100;
         }
@@ -316,13 +318,13 @@ for(var i=0; i<interesting.length; i++) {
 %>
                         <div class='row'>
                             <span><%= cost.cost[i].name %></span>
-                            <span><%= addComma(income) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(income)) %><%= cost.currency %></span>
                         </div>
 <% } %>
 
                         <div class='row'>
                             <span><%= cost.adjustment.name %></span>
-                            <span><%= addComma(cost.adjustment.price) %><%= cost.currency %></span>
+                            <span><%= addComma(parseInt(cost.adjustment.price)) %><%= cost.currency %></span>
                         </div>
 
                         <div class="row profit_per_explain">
@@ -437,6 +439,7 @@ for(var i=0; i<interesting.length; i++) {
             var insId = '<%= ins_id %>';
             var isFollow = parseInt('<%= isFollow %>');
             var callbackFollow = '';
+            var userType = '<%= userType %>';
 
             if( document.getElementById('tour_name').offsetHeight <= 20 ) {
                 document.getElementsByClassName('tour_mem_num')[0].style.top = "91px";
@@ -590,6 +593,8 @@ for(var i=0; i<interesting.length; i++) {
                     var tempDate1 = new Date(startdate.substr(0,4)+"-"+startdate.substr(4,2)+"-"+startdate.substr(6,2)+"T00:00:00");
                     var tempDate2 = new Date(enddate.substr(0,4)+"-"+enddate.substr(4,2)+"-"+enddate.substr(6,2)+"T00:00:00");
                     var tourDateGap = (tempDate2-tempDate1)/1000/24/60/60;
+                    var insCount = parseInt(result.insCount);
+                    var bgnCount = parseInt(result.bgnCount);
 
                     document.getElementById('tour_date_01').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+" "+week[tempDate1.getDay()];
                     document.getElementById('tour_date_02').innerHTML = enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+" "+week[tempDate2.getDay()];
@@ -609,6 +614,13 @@ for(var i=0; i<interesting.length; i++) {
                         document.getElementById('tour_image').src = result.image;
                     }
 
+                    if (insCount === 1) {
+                        document.getElementById('tour_ins_more').style.display = 'none';
+                    } else {
+                        document.getElementById('tour_ins_more').innerHTML = ' 외 ' + (insCount-1) + '명';
+                        document.getElementById('tour_ins_more').style.display = 'initial';
+                    }
+
                     document.getElementById('tour_name').innerHTML = result.name;
                     document.getElementById('tour_member_count').innerHTML = result.member;
                     document.getElementById('tour_member_count_02').innerHTML = result.member;
@@ -624,7 +636,7 @@ for(var i=0; i<interesting.length; i++) {
                     if (result.cost === null) {
                         document.getElementById('tour_total_cost').innerHTML = "입력 전";
                     } else {
-                        document.getElementById('tour_total_cost').innerHTML = addComma(result.cost.incomePerPerson) + result.cost.currency;
+                        document.getElementById('tour_total_cost').innerHTML = addComma(parseInt(result.cost.incomePerPerson)) + result.cost.currency;
                     }
 
                     // 일정
@@ -681,18 +693,18 @@ for(var i=0; i<interesting.length; i++) {
                             var tempHtml = "";
                             tempHtml += " <div class='row'>";
                             tempHtml += "     <span>1인 비용</span>";
-                            tempHtml += "     <span>" + addComma(result.cost.incomePerPerson) + result.cost.currency + "</span>";
+                            tempHtml += "     <span>" + addComma(parseInt(result.cost.incomePerPerson)) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
 
                             for (var i = 0; i < result.cost.cost.length; i++) {
                                 var basicIncome = result.cost.cost[i].price * result.cost.cost[i].count;
                                 var income = 0;
                                 if (result.cost.cost[i].public && result.cost.cost[i].include) {
-                                    income = Math.floor(basicIncome / result.cost.bgnCount * 100) / 100;
+                                    income = Math.floor(basicIncome / bgnCount * 100) / 100;
                                 } else if (result.cost.cost[i].public) {
-                                    income = Math.floor(basicIncome / (result.cost.bgnCount + result.cost.insCount) * 100) / 100;
+                                    income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
                                 } else if (result.cost.cost[i].include) {
-                                    income = Math.floor((basicIncome + basicIncome * result.cost.insCount / result.cost.bgnCount) * 100) / 100;
+                                    income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
                                 } else {
                                     income = Math.floor(basicIncome * 100) / 100;
                                 }
@@ -707,13 +719,13 @@ for(var i=0; i<interesting.length; i++) {
 
                                 tempHtml += " <div class='row'>";
                                 tempHtml += "     <span>" + result.cost.cost[i].name + "</span>";
-                                tempHtml += "     <span>" + addComma(income) + result.cost.currency + "</span>";
+                                tempHtml += "     <span>" + addComma(parseInt(income)) + result.cost.currency + "</span>";
                                 tempHtml += " </div>";
                             }
 
                             tempHtml += " <div class='row'>";
                             tempHtml += "     <span>" + result.cost.adjustment.name + "</span>";
-                            tempHtml += "     <span>" + addComma(result.cost.adjustment.price) + result.cost.currency + "</span>";
+                            tempHtml += "     <span>" + addComma(parseInt(result.cost.adjustment.price)) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
 
                             tempHtml += " <div class='row profit_per_explain'>";
@@ -734,18 +746,18 @@ for(var i=0; i<interesting.length; i++) {
                             var tempHtml = "";
                             tempHtml += " <div class='row'>";
                             tempHtml += "     <span>1인 비용</span>";
-                            tempHtml += "     <span>" + addComma(result.cost.incomePerPerson) + result.cost.currency + "</span>";
+                            tempHtml += "     <span>" + addComma(parseInt(result.cost.incomePerPerson)) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
 
                             for (var i = 0; i < result.cost.cost.length; i++) {
                                 var basicIncome = result.cost.cost[i].price * result.cost.cost[i].count;
                                 var income = 0;
                                 if (result.cost.cost[i].public && result.cost.cost[i].include) {
-                                    income = Math.floor(basicIncome / result.cost.bgnCount * 100) / 100;
+                                    income = Math.floor(basicIncome / bgnCount * 100) / 100;
                                 } else if (result.cost.cost[i].public) {
-                                    income = Math.floor(basicIncome / (result.cost.bgnCount + result.cost.insCount) * 100) / 100;
+                                    income = Math.floor(basicIncome / (bgnCount + insCount) * 100) / 100;
                                 } else if (result.cost.cost[i].include) {
-                                    income = Math.floor((basicIncome + basicIncome * result.cost.insCount / result.cost.bgnCount) * 100) / 100;
+                                    income = Math.floor((basicIncome + basicIncome * insCount / bgnCount) * 100) / 100;
                                 } else {
                                     income = Math.floor(basicIncome * 100) / 100;
                                 }
@@ -760,13 +772,13 @@ for(var i=0; i<interesting.length; i++) {
 
                                 tempHtml += " <div class='row'>";
                                 tempHtml += "     <span>" + result.cost.cost[i].name + "</span>";
-                                tempHtml += "     <span>" + addComma(income) + result.cost.currency + "</span>";
+                                tempHtml += "     <span>" + addComma(parseInt(income)) + result.cost.currency + "</span>";
                                 tempHtml += " </div>";
                             }
 
                             tempHtml += " <div class='row'>";
                             tempHtml += "     <span>" + result.cost.adjustment.name + "</span>";
-                            tempHtml += "     <span>" + addComma(result.cost.adjustment.price) + result.cost.currency + "</span>";
+                            tempHtml += "     <span>" + addComma(parseInt(result.cost.adjustment.price)) + result.cost.currency + "</span>";
                             tempHtml += " </div>";
 
                             tempHtml += " <div class='row profit_per_explain'>";
@@ -812,6 +824,11 @@ for(var i=0; i<interesting.length; i++) {
             }
 
             function participateTour() {
+                if (userType === '1') {
+                    alert('강사는 교육에 참여할 수 없습니다.');
+                    return;
+                }
+
                 if (isFollow === -1) {
                     callbackFollow = 'PARTICIPATE';
                     document.getElementById('ins_unfollow').style.display = 'block';
@@ -849,6 +866,11 @@ for(var i=0; i<interesting.length; i++) {
             }
 
             function interestTour() {
+                if (userType === '1') {
+                    alert('강사는 교육에 참여할 수 없습니다.');
+                    return;
+                }
+
                 if (isFollow === -1) {
                     callbackFollow = 'INTEREST';
                     document.getElementById('ins_unfollow').style.display = 'block';
@@ -886,6 +908,11 @@ for(var i=0; i<interesting.length; i++) {
             }
 
             function waitTour() {
+                if (userType === '1') {
+                    alert('강사는 교육에 참여할 수 없습니다.');
+                    return;
+                }
+
                 if (isFollow === -1) {
                     callbackFollow = 'WAIT';
                     document.getElementById('ins_unfollow').style.display = 'block';

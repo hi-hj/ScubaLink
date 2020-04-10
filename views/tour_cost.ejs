@@ -58,7 +58,8 @@
     </head>
 
 
-    <body>
+<!--    <body>-->
+    <body style="overflow: auto; overscroll-behavior: contain;">
         <div class="wizard">
             <ul id="step_paging" class="nav nav-tabs">
                 <li class="active">
@@ -90,22 +91,6 @@
                         <div id="cost_header">
                             <span>기본 정보 입력</span><br>
                             <span>비용 항목 정보를 입력하세요.</span>
-                        </div>
-
-                        <div id="cost_member" class="panel-body">
-                            <div>1. 참여자 수를 입력하세요.</div>
-                            <div>
-                                <span class="ex_text">강사</span>
-                                <input type="number" id="step1_ins_count" placeholder="0" min="1" max="100" onkeyup="changeParticipantCount()" />
-                                <span class="c_text">명</span>
-                            </div>
-
-                            <div>
-                                <span class="ex_text">교육생</span>
-                                <input type="number" id="step1_bgn_count" placeholder="0" min="1" max="100" onkeyup="changeParticipantCount()" />
-                                <span class="c_text">명</span>
-                            </div>
-                            <div id="participate_empty_error" class="participate_empty_error">참여자 수를 입력하세요.</div>
                         </div>
 
                         <div class="tour_division"></div>
@@ -541,13 +526,15 @@
                                 </div>
                             </div>
 
+                            <text id="step5_summery_income_per_person_hidden"></text>
+                            <text id="step5_summery_profit_per_person_hidden"></text>
+                            <text id="step5_summery_profit_hidden"></text>
+
                             <button class="col-xs-4 next-step" type="button" onclick="nextStep5();">
                                 다음
                                 <img src="/img/ic-keyboard-arrow-right-white.svg">
                             </button>
                         </div>
-
-
                     </div><!-- panel panel-default-->
                 </div>
 
@@ -564,9 +551,9 @@
             var exchangerate = <%- JSON.stringify(exchangerateList) %>;
             exchangerate.push({name: 'KRW', timestamp: (new Date()).getTime() * 1000, rate: 1});
 
+            var insCount = parseInt('<%= insCount %>');
+            var bgnCount = parseInt('<%= bgnCount %>');
             var data = {
-                insCount: 0,
-                bgnCount: 0,
                 exchangerate: [{
                     type: '원',
                     name: '원',
@@ -607,9 +594,6 @@
 
                     if (result.cost !== null) {
                         data = result.cost;
-
-                        document.getElementById('step1_ins_count').value = data.insCount;
-                        document.getElementById('step1_bgn_count').value = data.bgnCount;
 
                         document.getElementById('step1_currency').value = data.currency;
 

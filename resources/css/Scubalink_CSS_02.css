@@ -753,6 +753,7 @@ input.InputAddOn-field {
 }
 #home_tour_plus button{
   background-color:#145db2;
+  z-index:100;
   height:50px;
   position:fixed;
   bottom:0px;
@@ -1011,9 +1012,25 @@ input.InputAddOn-field {
 .tour_head span:nth-of-type(3){
   padding-top:3px;
 }
+.tour_image{
+  text-align:center;
+}
 .tour_image img{
-  height:200px;
+}
+.tour_image img.tour_thumbnail{
+  min-height:200px;
+  position:relative;
+  z-index:-1;
+  max-width:100%;
+  max-height:300px;
+}
+.tour_image img.tour_background{
+  max-height:300px;
+  min-height:200px;
   width:100%;
+  filter:blur(5px);
+  position:relative;
+  z-index: -2;
 }
 .tour_bar{
   width:100%;
@@ -4507,7 +4524,9 @@ div.custom div{
 #step3 #plus_cost{
   margin-top:16px;
 }
-
+#CONTENT_ON{
+  padding:0px;
+}
 #CONTENT_ON .tour_division{
   height:16px;
 }

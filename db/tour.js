@@ -97,7 +97,7 @@ exports.updateTour = function(db, params, callbackSuccess, callbackFail) {
                     return;
                 }
 
-                updateData.insCount = params.insCount;
+                updateData.insCount = parseInt(params.insCount);
             }
             if( params.bgnCount != undefined ) {
                 if (parseInt(params.bgnCount) < doc.participant.filter(item => item.type == 2).length) {
@@ -109,7 +109,7 @@ exports.updateTour = function(db, params, callbackSuccess, callbackFail) {
                     return;
                 }
 
-                updateData.bgnCount = params.bgnCount;
+                updateData.bgnCount = parseInt(params.bgnCount);
             }
             if( params.description != undefined )
                 updateData.description = params.description;
