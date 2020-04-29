@@ -82,7 +82,7 @@ MongoClient.connect('mongodb://localhost:27017', {
 
 // view engine setup
 app.set('view engine', 'ejs');
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 80);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
