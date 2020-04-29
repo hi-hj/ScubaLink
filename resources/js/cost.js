@@ -1287,7 +1287,7 @@ function makeStep3 () {
         html +=     '<div class="s3_cost_expense">';
         html +=         '<span>';
         html +=             '<text>지출</text>';
-        html +=             '<input type="number" class="step3_cost_expense_input" value="' + (data.cost[i].expense === '' ? data.cost[i].price : data.cost[i].expense) + '" placeholder="0" onkeyup="changeStep3CostExpense()">';
+        html +=             '<input type="number" class="step3_cost_expense_input" value="' + (data.cost[i].expense === '' ? data.cost[i].price : data.cost[i].expense) + '" placeholder="0" onkeyup="changeStep3CostExpense()" style="width: 100px;">';
         html +=             '<text class="s3_cost_currency">' + data.cost[i].priceType + '</text>';
         html +=             '<text> x </text>';
         html +=             '<text class="s3_cost_p2">' + data.cost[i].count + '</text>';
