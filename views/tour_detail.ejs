@@ -124,11 +124,17 @@ for(var i=0; i<interesting.length; i++) {
 <% } %>
 
                 <div class="basic_information" id="id">
-                    <span class="basic_information_guide">기간</span>
+                    <span class="basic_information_guide" style="font-size:12px;color:#777777">기간</span>
 
+<%
+    var startdatetime = new Date(startdate.substr(0, 4)+'-'+startdate.substr(4, 2)+'-'+startdate.substr(6, 2)).getTime();
+    var enddatetime = new Date(enddate.substr(0, 4)+'-'+enddate.substr(4, 2)+'-'+enddate.substr(6, 2)).getTime();
+    var dayandnight = Math.abs(enddatetime - startdatetime) / 1000 / 24 / 60 / 60;
+%>
+                    <span id="tour_day_and_night" class="info_text"><%= dayandnight %>박 <%= dayandnight + 1 %>일</span><br>
                     <% var arrayWeek = ['일', '월', '화', '수', '목', '금', '토']; %>
-                    <span id="tour_date_01" class="info_text"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> <%= arrayWeek[(new Date(startdate.substr(0,4), parseInt(startdate.substr(4,2))-1, startdate.substr(6,2))).getDay()] %></span><br>
-                    <span id="tour_date_02" class="info_text" style="margin-left:53px"><%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %> <%= arrayWeek[(new Date(enddate.substr(0,4), parseInt(enddate.substr(4,2))-1, enddate.substr(6,2))).getDay()] %></span>
+                    <span id="tour_date_01" class="info_text" style="margin-left:53px"><%= startdate.substr(0,4) %>. <%= startdate.substr(4,2) %>. <%= startdate.substr(6,2) %> (<%= arrayWeek[(new Date(startdate.substr(0,4), parseInt(startdate.substr(4,2))-1, startdate.substr(6,2))).getDay()] %>)</span><br>
+                    <span id="tour_date_02" class="info_text" style="margin-left:53px"><%= enddate.substr(0,4) %>. <%= enddate.substr(4,2) %>. <%= enddate.substr(6,2) %> (<%= arrayWeek[(new Date(enddate.substr(0,4), parseInt(enddate.substr(4,2))-1, enddate.substr(6,2))).getDay()] %>)</span>
                 </div>
 
                 <!--장소-->
@@ -596,8 +602,9 @@ for(var i=0; i<interesting.length; i++) {
                     var insCount = parseInt(result.insCount);
                     var bgnCount = parseInt(result.bgnCount);
 
-                    document.getElementById('tour_date_01').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+" "+week[tempDate1.getDay()];
-                    document.getElementById('tour_date_02').innerHTML = enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+" "+week[tempDate2.getDay()];
+                    document.getElementById('tour_day_and_night').innerHTML = tourDateGap + '박 ' + (tourDateGap+1) + '일';
+                    document.getElementById('tour_date_01').innerHTML = startdate.substr(0,4)+". "+startdate.substr(4,2)+". "+startdate.substr(6,2)+" ("+week[tempDate1.getDay()] + ')';
+                    document.getElementById('tour_date_02').innerHTML = enddate.substr(0,4)+". "+enddate.substr(4,2)+". "+enddate.substr(6,2)+" ("+week[tempDate2.getDay()] + ')';
 
                     if( result.description == undefined || result.description == "" ) {
                         document.getElementById('tour_description').classList.add("hidden");

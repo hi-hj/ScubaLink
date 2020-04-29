@@ -36,6 +36,7 @@
                 <p>투어/교육 이름 (필수)</p>
                 <input id="input_tour_name" type="text" class="form-control" placeholder="예) 동해 오픈워터 해양실습" value="<%= name %>" />
                 <p class="explain t_err t_left" id="input_name_empty_error">교육 이름을 입력하세요.</p>
+                <p class="explain t_err t_left" id="input_name_limit_error">20자 이하로 입력하세요.</p>
             </div>
 
             <div id="tour_date" class="tour_input">
@@ -120,6 +121,15 @@
                 }
                 else {
                     document.getElementById('input_name_empty_error').style.display = "none";
+                }
+
+                // 교육이름 20자 제한 체크
+                if( document.getElementById('input_tour_name').value.length > 20 ) {
+                    document.getElementById('input_name_limit_error').style.display = "block";
+                    return;
+                }
+                else {
+                    document.getElementById('input_name_limit_error').style.display = "none";
                 }
 
                 // 교육기간 빈칸 체크

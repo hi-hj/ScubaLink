@@ -40,7 +40,7 @@
 
                 <div class="input_radio">
                     <input type="radio" id="scuba_r1" name="radio" checked="checked" />
-                    <label for="scuba_r1">
+                    <label for="scuba_r1" onclick="changeCount(1)">
                         <span>0회</span>
                     </label>
                 </div>
@@ -48,7 +48,7 @@
                 <div class="input_radio">
                     <div class="ir_wrap f_left" style="float: none; display: inline-block;">
                         <input type="radio" id="scuba_r2" name="radio" />
-                        <label for="scuba_r2">
+                        <label for="scuba_r2" onclick="changeCount(2)">
                             <span>1회 이상</span>
                         </label>
                     </div>
@@ -64,7 +64,7 @@
             <div class="input_box" id="experienced_data">
                 <p class="q_text">2. 가장 최근 다이빙 날짜를 말씀해주세요.</p>
                 <div class="input_box m_btm">
-                    <select id="input_year" class="i_year f_left">
+                    <select id="input_year" class="i_year f_left" onchange="changeYearAndMonth()">
                         <option value="" selected disabled="disabled">년도</option>
                         <option value="2010">2010년</option>
                         <option value="2011">2011년</option>
@@ -75,9 +75,11 @@
                         <option value="2016">2016년</option>
                         <option value="2017">2017년</option>
                         <option value="2018">2018년</option>
+                        <option value="2017">2019년</option>
+                        <option value="2018">2020년</option>
                     </select>
 
-                    <select id="input_month" class="i_month f_left">
+                    <select id="input_month" class="i_month f_left" onchange="changeYearAndMonth()">
                         <option value="" selected disabled="disabled">월</option>
                         <option value="1">1월</option>
                         <option value="2">2월</option>
@@ -105,11 +107,29 @@
                 history.back();
             };
 
+            function changeCount (radioValue) {
+                if (radioValue === 1) {
+                    document.getElementById('experienced_data').style.display = 'none';
+                    document.getElementById('scuba_r1').checked = true;
+                    document.getElementById('scuba_r2').checked = false;
+                } else {
+                    document.getElementById('experienced_data').style.display = 'block';
+                    document.getElementById('scuba_r1').checked = false;
+                    document.getElementById('scuba_r2').checked = true;
+                }
+            }
+
+            function changeYearAndMonth () {
+                if (document.getElementById('input_year').value !== '' && document.getElementById('input_month').value !== '') {
+                    document.getElementById('input_year_month_empty_error').style.display = "none";
+                }
+            }
+
             document.getElementById('nextBtn').onclick = function() {
                 var paramCount = 0;
-                if( document.getElementById('scuba_r2').checked == true ) {
+                if (document.getElementById('scuba_r2').checked) {
                     // 이름 빈칸 체크
-                    if( document.getElementById('input_count').value == "" ) {
+                    if (document.getElementById('input_count').value === '') {
                         document.getElementById('input_count_wrap').classList.remove("m_btm");
                         document.getElementById('input_count_empty_error').style.display = "block";
                         return;
@@ -121,7 +141,7 @@
                     }
 
                     // 다이빙 날짜 빈칸 체크
-                    if( document.getElementById('input_year').value == "" || document.getElementById('input_month').value == "" ) {
+                    if (document.getElementById('input_year').value === '' || document.getElementById('input_month').value === '') {
                         document.getElementById('input_year_month_empty_error').style.display = "block";
                         return;
                     }
@@ -129,14 +149,6 @@
                         document.getElementById('input_year_month_empty_error').style.display = "none";
                     }
                 }
-
-                // 다음 이동
-                console.log("success");
-                console.log({
-                    userExpCount    : paramCount.toString(),
-                    userExpYear     : document.getElementById('input_year').value,
-                    userExpMonth    : document.getElementById('input_month').value
-                });
 
                 httpSend.send("/join/scubalink", {
                     expCount    : paramCount.toString(),

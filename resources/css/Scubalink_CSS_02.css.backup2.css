@@ -3903,12 +3903,6 @@ input[type="radio"]:checked + label span{
   padding-right:6px;
 }
 
-#step2 .step2_count_input::-webkit-inner-spin-button, 
-#step2 .step2_count_input::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
 .cost_check_box_1{
   margin-top:16px;
 }
@@ -4715,14 +4709,11 @@ div.custom div{
   color:#145db2;
 }
 #step3 .s3_cost_expense input{
-  min-width:72px;
-  max-width:150px;
+  width:72px;
   height:28px;
   text-align:right;
   margin-left:8px;
   font-size:12px;
-  padding-left:5px;
-  padding-right:5px;
 }
 #step3 .s3_cost_p1,
 #step5 .s5_cost_p1{

@@ -674,7 +674,7 @@ function changeStep2Cost () {
         var countInput = document.getElementsByClassName('step2_count_input')[i].value === '' ? 0 : parseInt(document.getElementsByClassName('step2_count_input')[i].value);
         var countType = document.getElementsByClassName('step2_count_type')[i].value;
 
-        var basicFormula = priceInput + priceType + ' x ' + countInput + countType;
+        var basicFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType;
         var basicCost = (priceInput * countInput);
 
         var advancedFormulaText = '';
@@ -692,7 +692,7 @@ function changeStep2Cost () {
         if (document.getElementsByClassName('step2_public_input')[i].checked &&
             document.getElementsByClassName('step2_include_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + bgnCount + '명';
+            advancedFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType + ' / ' + bgnCount + '명';
             advancedCost = Math.floor(basicCost / bgnCount * 100) / 100;
 
             data.cost[i].public = true;
@@ -707,7 +707,7 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_include_on_tag')[i].classList.remove('hide');
         } else if (document.getElementsByClassName('step2_public_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 / 참여자 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' / ' + (bgnCount + insCount) + '명';
+            advancedFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType + ' / ' + (bgnCount + insCount) + '명';
             advancedCost = Math.floor(basicCost / (bgnCount + insCount) * 100) / 100;
 
             data.cost[i].public = true;
@@ -722,7 +722,7 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_include_off_tag')[i].classList.remove('hide');
         } else if (document.getElementsByClassName('step2_include_input')[i].checked) {
             advancedFormulaText = '단가 x 횟수 + (단가 x 횟수) x 강사 수 / 교육생 수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType + ' + (' + priceInput + priceType + ' x ' + countInput + countType + ') x ' + insCount + '명' + ' / ' + bgnCount + '명';
+            advancedFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType + ' + (' + addComma(priceInput) + priceType + ' x ' + countInput + countType + ') x ' + insCount + '명' + ' / ' + bgnCount + '명';
             advancedCost = Math.floor((basicCost + basicCost * insCount / bgnCount) * 100) / 100;
 
             data.cost[i].public = false;
@@ -737,7 +737,7 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_public_off_tag')[i].classList.remove('hide');
         } else {
             advancedFormulaText = '단가 x 횟수';
-            advancedFormula = priceInput + priceType + ' x ' + countInput + countType;
+            advancedFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType;
             advancedCost = Math.floor(basicCost * 100) / 100;
 
             data.cost[i].public = false;
@@ -752,7 +752,7 @@ function changeStep2Cost () {
             document.getElementsByClassName('step2_include_off_tag')[i].classList.remove('hide');
         }
 
-        advancedResult = advancedCost + priceType;
+        advancedResult = addComma(advancedCost) + priceType;
         if (data.cost[i].priceType !== data.currency) {
             for (var j = 0; j < data.exchangerate.length; j++) {
                 if (data.cost[i].priceType === data.exchangerate[j].type) {
@@ -769,7 +769,7 @@ function changeStep2Cost () {
         document.getElementsByClassName('step2_formula_3')[i].innerHTML = '= ' + advancedResult;
         document.getElementsByClassName('step2_formula_result')[i].innerHTML = advancedResult;
         document.getElementsByClassName('step2_formula_5')[i].innerHTML = advancedResult + ' = ';
-        document.getElementsByClassName('step2_formula_6')[i].innerHTML = appliedCost + data.currency;
+        document.getElementsByClassName('step2_formula_6')[i].innerHTML = addComma(appliedCost) + data.currency;
 
         if (data.cost[i].priceType !== data.currency) {
             document.getElementsByClassName('step2_formula_5')[i].classList.remove('hide');
@@ -789,7 +789,7 @@ function changeStep2Cost () {
     }
 
     incomePerPerson = Math.floor(incomePerPerson * 100) / 100;
-    document.getElementById('step2_bgn_cost_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step2_bgn_cost_per_person').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
 
     if (isValid) {
         document.getElementById('step_2_next').style.backgroundColor = '#145db2';
@@ -824,7 +824,7 @@ function makeStep2 () {
         html +=             '</div>';
         html +=             '<span>X</span>';
         html +=             '<div class="cost_p2">';
-        html +=                 '<input type="number" class="step2_count_input" placeholder="0" max="999" value="' + data.cost[i].count + '" onkeyup="changeStep2Cost()" />';
+        html +=                 '<input type="number" class="step2_count_input" placeholder="0" max="999" value="' + (data.cost[i].count === 0 ? '' : data.cost[i].count) + '" onkeyup="changeStep2Cost()" />';
         html +=                 '<span class="unit" name="number">';
         html +=                     '<select class="step2_count_type" onchange="changeStep2Cost()">';
         html +=                         '<option value="회" ' + (data.cost[i].countType === '회' ? 'selected' : '') + '>회</option>';
@@ -1088,12 +1088,18 @@ function changeStep3Cost () {
             isValid = false;
         }
 
+        if (data.cost[i].expense === '') {
+            data.cost[i].expense = data.cost[i].price;
+
+            document.getElementsByClassName('step3_cost_expense_input')[i].value = parseInt(data.cost[i].expense);
+        }
+
         var priceInput = data.cost[i].price;
         var priceType = data.cost[i].priceType;
         var countInput = data.cost[i].count;
         var countType = data.cost[i].countType;
 
-        var basicFormula = priceInput + priceType + ' x ' + countInput + countType;
+        var basicFormula = addComma(priceInput) + priceType + ' x ' + countInput + countType;
         var basicCost = priceInput * countInput;
         var basicExpenseCost = data.cost[i].expense * countInput;
 
@@ -1157,8 +1163,8 @@ function changeStep3Cost () {
             document.getElementsByClassName('step3_include_off_tag')[i].classList.remove('hide');
         }
 
-        advancedResult = advancedCost + priceType;
-        advancedExpenseResult = advancedExpenseCost + priceType;
+        advancedResult = addComma(advancedCost) + priceType;
+        advancedExpenseResult = addComma(advancedExpenseCost) + priceType;
         if (data.cost[i].priceType !== data.currency) {
             for (var j = 0; j < data.exchangerate.length; j++) {
                 if (data.cost[i].priceType === data.exchangerate[j].type) {
@@ -1179,10 +1185,10 @@ function changeStep3Cost () {
         }
         document.getElementsByClassName('step3_formula_1')[i].innerHTML = basicFormula;
         document.getElementsByClassName('step3_formula_2')[i].innerHTML = advancedResult + ' = ';
-        document.getElementsByClassName('step3_formula_3')[i].innerHTML = appliedCost + data.currency;
+        document.getElementsByClassName('step3_formula_3')[i].innerHTML = addComma(appliedCost) + data.currency;
         document.getElementsByClassName('step3_formula_4')[i].innerHTML = advancedExpenseResult + ' = ';
-        document.getElementsByClassName('step3_formula_5')[i].innerHTML = appliedExpenseCost + data.currency;
-        document.getElementsByClassName('step3_formula_6')[i].innerHTML = tempProfitPerPerson + data.currency;
+        document.getElementsByClassName('step3_formula_5')[i].innerHTML = addComma(appliedExpenseCost) + data.currency;
+        document.getElementsByClassName('step3_formula_6')[i].innerHTML = addComma(tempProfitPerPerson) + data.currency;
         if (appliedCost - appliedExpenseCost < 0) {
             document.getElementsByClassName('s3_cost_revenue')[i].style.color = 'rgb(224, 32, 32)';
         } else {
@@ -1218,9 +1224,9 @@ function changeStep3Cost () {
             additionalExpensePriceType = data.currency;
         }
 
-        document.getElementsByClassName('step3_formula_7')[i].innerHTML = additionalExpenseCost + additionalExpensePriceType + ' = ';
-        document.getElementsByClassName('step3_formula_8')[i].innerHTML = appliedAdditionalExpenseCost + data.currency;
-        document.getElementsByClassName('step3_formula_9')[i].innerHTML = (appliedAdditionalExpenseCost * -1) + data.currency;
+        document.getElementsByClassName('step3_formula_7')[i].innerHTML = addComma(additionalExpenseCost) + additionalExpensePriceType + ' = ';
+        document.getElementsByClassName('step3_formula_8')[i].innerHTML = addComma(appliedAdditionalExpenseCost) + data.currency;
+        document.getElementsByClassName('step3_formula_9')[i].innerHTML = addComma(appliedAdditionalExpenseCost * -1) + data.currency;
         if (appliedAdditionalExpenseCost > 0) {
             document.getElementsByClassName('step3_formula_9_wrap')[i].style.color = '#e02020';
         } else {
@@ -1281,7 +1287,7 @@ function makeStep3 () {
         html +=     '<div class="s3_cost_expense">';
         html +=         '<span>';
         html +=             '<text>지출</text>';
-        html +=             '<input type="number" class="step3_cost_expense_input" value="' + data.cost[i].expense + '" placeholder="0" onkeyup="changeStep3CostExpense()">';
+        html +=             '<input type="number" class="step3_cost_expense_input" value="' + (data.cost[i].expense === '' ? data.cost[i].price : data.cost[i].expense) + '" placeholder="0" onkeyup="changeStep3CostExpense()">';
         html +=             '<text class="s3_cost_currency">' + data.cost[i].priceType + '</text>';
         html +=             '<text> x </text>';
         html +=             '<text class="s3_cost_p2">' + data.cost[i].count + '</text>';
@@ -1454,14 +1460,14 @@ function makeStep4 () {
         html += '<tr>';
         html += '<th class="s4_cost_name">' + data.cost[i].name + '</th>';
         html += '<td class="s4_income">';
-        html += '<text>' + income + data.currency + '</text>';
+        html += '<text>' + addComma(income) + data.currency + '</text>';
         html += '</td>';
         if (income - expense < 0) {
             html += '<td class="s4_revenue" style="color: #e02020">';
         } else {
             html += '<td class="s4_revenue">';
         }
-        html +=         '<text class="step4_revenue_text">' + tempProfit + data.currency + '</text>';
+        html +=         '<text class="step4_revenue_text">' + addComma(tempProfit) + data.currency + '</text>';
         html +=     '</td>';
         html += '</tr>';
     }
@@ -1493,7 +1499,7 @@ function makeStep4 () {
         } else {
             html +=     '<td class="s4_revenue" style="color: #145db2">';
         }
-        html +=         '<text class="step4_revenue_text">' + (additionalExpense * -1) + data.currency + '</text>';
+        html +=         '<text class="step4_revenue_text">' + addComma(additionalExpense * -1) + data.currency + '</text>';
         html +=     '</td>';
         html += '</tr>';
     }
@@ -1608,32 +1614,32 @@ function makeStep5 () {
         html +=     '<div class="s5_cost_income">';
         html +=         '<span>';
         html +=             '<text>수입</text>';
-        html +=             '<text class="s5_cost_p1 step5_formula_1">' + data.cost[i].price + data.cost[i].priceType + ' x ' + data.cost[i].count + data.cost[i].countType + '</text>';
+        html +=             '<text class="s5_cost_p1 step5_formula_1">' + addComma(data.cost[i].price) + data.cost[i].priceType + ' x ' + data.cost[i].count + data.cost[i].countType + '</text>';
         html +=         '</span>';
         html +=         '<span class="s5_calc_income">';
         if (data.cost[i].priceType !== data.currency) {
             html +=             '<span class="ex_calc">';
-            html +=                 '<text class="cost3">' + income + data.cost[i].priceType + ' = </text>';
+            html +=                 '<text class="cost3">' + addComma(income) + data.cost[i].priceType + ' = </text>';
             html +=             '</span>';
         }
         html +=             '<span>';
-        html +=                 '<text class="s5_cost_fin">' + appliedIncome + data.currency + '</text>';
+        html +=                 '<text class="s5_cost_fin">' + addComma(appliedIncome) + data.currency + '</text>';
         html +=             '</span>';
         html +=         '</span>';
         html +=     '</div>';
         html +=     '<div class="s5_cost_expense">';
         html +=         '<span>';
         html +=             '<text>지출</text>';
-        html +=             '<text class="s5_cost_p1">' + data.cost[i].expense + data.cost[i].priceType + ' x ' + data.cost[i].count + data.cost[i].countType + '</text>';
+        html +=             '<text class="s5_cost_p1">' + addComma(data.cost[i].expense) + data.cost[i].priceType + ' x ' + data.cost[i].count + data.cost[i].countType + '</text>';
         html +=         '</span>';
         html +=         '<span class="s5_calc_expense">';
         if (data.cost[i].priceType !== data.currency) {
             html +=             '<span class="ex_calc">';
-            html +=                 '<text class="cost3_expense">' + expense + data.cost[i].priceType + ' = </text>';
+            html +=                 '<text class="cost3_expense">' + addComma(expense) + data.cost[i].priceType + ' = </text>';
             html +=             '</span>';
         }
         html +=             '<span>';
-        html +=                 '<text class="s5_cost_fin_expense">' + appliedExpense + data.currency + '</text>';
+        html +=                 '<text class="s5_cost_fin_expense">' + addComma(appliedExpense) + data.currency + '</text>';
         html +=             '</span>';
         html +=         '</span>';
         html +=     '</div>';
@@ -1649,7 +1655,7 @@ function makeStep5 () {
         } else {
             tempProfit = Math.floor((appliedIncome - appliedExpense) * 100) / 100;
         }
-        html +=         '<text class="s5_calc_revenue">' + tempProfit + data.currency + '</text>';
+        html +=         '<text class="s5_calc_revenue">' + addComma(tempProfit) + data.currency + '</text>';
         html +=     '</div>';
         html += '</li>';
     }
@@ -1700,16 +1706,16 @@ function makeStep5 () {
         html +=     '<div class="s5_cost_expense">';
         html +=         '<span>';
         html +=             '<text>지출</text>';
-        html +=             '<text class="s5_cost_p1">' + data.additional[i].price + data.additional[i].priceType + ' x ' + data.additional[i].count + data.additional[i].countType + '</text>';
+        html +=             '<text class="s5_cost_p1">' + addComma(data.additional[i].price) + data.additional[i].priceType + ' x ' + data.additional[i].count + data.additional[i].countType + '</text>';
         html +=         '</span>';
         html +=         '<span class="s5_calc_expense">';
         if (data.additional[i].priceType !== data.currency) {
             html +=             '<span class="ex_calc">';
-            html +=                 '<text class="cost3_expense">' + expense + data.additional[i].priceType + ' = </text>';
+            html +=                 '<text class="cost3_expense">' + addComma(expense) + data.additional[i].priceType + ' = </text>';
             html +=             '</span>';
         }
         html +=             '<span>';
-        html +=                 '<text class="s5_cost_fin_expense">' + appliedExpense + data.currency + '</text>';
+        html +=                 '<text class="s5_cost_fin_expense">' + addComma(appliedExpense) + data.currency + '</text>';
         html +=             '</span>';
         html +=         '</span>';
         html +=     '</div>';
@@ -1734,7 +1740,7 @@ function makeStep5 () {
     html +=         '<span>';
     html +=             '<text>수입</text>';
     if (data.adjustment.price >= 0) {
-        html += '<text class="s5_cost_p1 step5_formula_1">' + data.adjustment.price + data.currency + ' x 1회</text>';
+        html += '<text class="s5_cost_p1 step5_formula_1">' + addComma(data.adjustment.price) + data.currency + ' x 1회</text>';
     } else {
         html += '<text class="s5_cost_p1 step5_formula_1">0' + data.currency + ' x 1회</text>';
     }
@@ -1742,7 +1748,7 @@ function makeStep5 () {
     html +=         '<span class="s5_calc_income">';
     html +=             '<span>';
     if (data.adjustment.price >= 0) {
-        html +=                 '<text class="s5_cost_fin">' + data.adjustment.price + data.currency + '</text>';
+        html +=                 '<text class="s5_cost_fin">' + addComma(data.adjustment.price) + data.currency + '</text>';
     } else {
         html +=                 '<text class="s5_cost_fin">0' + data.currency + '</text>';
     }
@@ -1755,7 +1761,7 @@ function makeStep5 () {
     if (data.adjustment.price >= 0) {
         html +=             '<text class="s5_cost_p1">0' + data.currency + ' x 1회</text>';
     } else {
-        html +=             '<text class="s5_cost_p1">' + (data.adjustment.price * -1) + data.currency + ' x 1회</text>';
+        html +=             '<text class="s5_cost_p1">' + addComma(data.adjustment.price * -1) + data.currency + ' x 1회</text>';
     }
     html +=         '</span>';
     html +=         '<span class="s5_calc_expense">';
@@ -1763,7 +1769,7 @@ function makeStep5 () {
     if (data.adjustment.price >= 0) {
         html +=                 '<text class="s5_cost_fin_expense">0' + data.currency + '</text>';
     } else {
-        html +=                 '<text class="s5_cost_fin_expense">' + (data.adjustment.price * -1) + data.currency + '</text>';
+        html +=                 '<text class="s5_cost_fin_expense">' + addComma(data.adjustment.price * -1) + data.currency + '</text>';
     }
     html +=             '</span>';
     html +=         '</span>';
@@ -1773,7 +1779,7 @@ function makeStep5 () {
     } else {
         html += '<div class="s5_cost_revenue" style="color: #145db2;">수익: ';
     }
-    html +=         '<text class="s5_calc_revenue">' + data.adjustment.price + data.currency + '</text>';
+    html +=         '<text class="s5_calc_revenue">' + addComma(data.adjustment.price) + data.currency + '</text>';
     html +=     '</div>';
     html += '</li>';
 
@@ -1860,25 +1866,25 @@ function calculation () {
     }
     var totalProfit = Math.floor(profitPerPerson * bgnCount * 100) / 100;
 
-    document.getElementById('step2_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
-    document.getElementById('step3_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
-    document.getElementById('step4_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
-    document.getElementById('step5_summery_income_per_person').innerHTML = parseInt(incomePerPerson) + data.currency;
-    document.getElementById('step2_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
-    document.getElementById('step3_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
-    document.getElementById('step4_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
-    document.getElementById('step5_summery_profit_per_person').innerHTML = parseInt(profitPerPerson) + data.currency;
-    document.getElementById('step2_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
-    document.getElementById('step3_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
-    document.getElementById('step4_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
-    document.getElementById('step5_summery_profit').innerHTML = parseInt(totalProfit) + data.currency;
+    document.getElementById('step2_summery_income_per_person').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
+    document.getElementById('step3_summery_income_per_person').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
+    document.getElementById('step4_summery_income_per_person').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
+    document.getElementById('step5_summery_income_per_person').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
+    document.getElementById('step2_summery_profit_per_person').innerHTML = addComma(parseInt(profitPerPerson)) + data.currency;
+    document.getElementById('step3_summery_profit_per_person').innerHTML = addComma(parseInt(profitPerPerson)) + data.currency;
+    document.getElementById('step4_summery_profit_per_person').innerHTML = addComma(parseInt(profitPerPerson)) + data.currency;
+    document.getElementById('step5_summery_profit_per_person').innerHTML = addComma(parseInt(profitPerPerson)) + data.currency;
+    document.getElementById('step2_summery_profit').innerHTML = addComma(parseInt(totalProfit)) + data.currency;
+    document.getElementById('step3_summery_profit').innerHTML = addComma(parseInt(totalProfit)) + data.currency;
+    document.getElementById('step4_summery_profit').innerHTML = addComma(parseInt(totalProfit)) + data.currency;
+    document.getElementById('step5_summery_profit').innerHTML = addComma(parseInt(totalProfit)) + data.currency;
 
-    document.getElementById('step5_summery_income_per_person_hidden').innerHTML = incomePerPerson + data.currency;
-    document.getElementById('step5_summery_profit_per_person_hidden').innerHTML = profitPerPerson + data.currency;
-    document.getElementById('step5_summery_profit_hidden').innerHTML = totalProfit + data.currency;
+    document.getElementById('step5_summery_income_per_person_hidden').innerHTML = incomePerPerson;
+    document.getElementById('step5_summery_profit_per_person_hidden').innerHTML = profitPerPerson;
+    document.getElementById('step5_summery_profit_hidden').innerHTML = totalProfit;
 
-    document.getElementById('step4_income_text').innerHTML = parseInt(incomePerPerson) + data.currency;
-    document.getElementById('step4_profit_text').innerHTML = parseInt(profitPerPerson) + data.currency;
+    document.getElementById('step4_income_text').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
+    document.getElementById('step4_profit_text').innerHTML = addComma(parseInt(profitPerPerson)) + data.currency;
     if (profitPerPerson < 0) {
         document.getElementById('step4_profit_text_wrap').style.color = 'rgb(224, 32, 32)';
         document.getElementById('slide-range').style.background = 'rgba(224, 32, 32, 0.3)';
@@ -1889,5 +1895,5 @@ function calculation () {
         document.getElementById('slide-range').classList.remove('red');
     }
 
-    document.getElementById('step5_cost_result').innerHTML = parseInt(incomePerPerson) + data.currency;
+    document.getElementById('step5_cost_result').innerHTML = addComma(parseInt(incomePerPerson)) + data.currency;
 }
